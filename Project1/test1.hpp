@@ -21,4 +21,37 @@
 #define WHITESPACE      (21)
 #define COMMENT         (22)
 #define UNKNOWN         (23)
+#define EOL             (24)
+
+
+/*
+enum TOKENS_T
+{
+  TYPE = 1,
+  COMMAND_PRINT,
+  COMMAND_RANDOM, 
+  ID,
+  VAL_LITERAL,
+  CHAR_LITERAL,
+  STRING_LITERAL,
+  ASCII_CHAR,
+  ASSIGN_ADD,
+  ASSIGN_SUB,
+  ASSIGN_MULT,
+  ASSIGN_DIV,
+  COMP_EQU,
+  COMP_NEQU,
+  COMP_LESS,
+  COMP_LTE,
+  COMP_GTR,
+  COMP_GTE,
+  BOOL_AND,
+  BOOL_OR,
+  WHITESPACE,
+  COMMENT,
+  UNKNOWN,          
+  EOL
+};
+*/
+
 
