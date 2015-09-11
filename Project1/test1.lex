@@ -14,7 +14,7 @@ print                                                     return COMMAND_PRINT;
 random                                                    return COMMAND_RANDOM;
 [a-zA-Z_][a-zA-Z_0-9]*                                    return ID;
 [+\-]?[0-9]+(\.[0-9]+)?([eE][+\-]?[0-9]+)?                return VAL_LITERAL;
-\'.*\'                                                    return CHAR_LITERAL;
+\'.?\'                                                    return CHAR_LITERAL;
 \".*\"                                                    return STRING_LITERAL;
 [+\-*/()=,{}\[\]\.;]                                      return ASCII_CHAR;
 \+=                                                       return ASSIGN_ADD;
