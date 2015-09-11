@@ -2,50 +2,37 @@
 #include "test1.hpp"
 #include <iostream>
 #include <fstream>
-int comment_count = 0, line_count=0, mytokens = 0;
+int line_count=0, mytokens = 0;
 %}
 
+%option noyywrap
+%option yylineno
 
 %%
-val                                                   return TYPE;
-char                                                  return TYPE;
-string                                                return TYPE;
-print                                                 return COMMAND_PRINT;
-random                                                return COMMAND_RANDOM;
-[a-zA-Z_][a-zA-Z0-9_]*                                return ID;
-[+\-]?[0-9]+(\.0-9+)?([eE][+\-]?[0-9]+)?              return VAL_LITERAL;
-\'.*\'                                                return CHAR_LITERAL;
-\".*\"                                                return STRING_LITERAL;
-"+"                                                     return ASCII_CHAR;
-"-"                                                     return ASCII_CHAR;
-"*"                                                     return ASCII_CHAR;
-"/"                                                    return ASCII_CHAR;
-"("                                                    return ASCII_CHAR;
-")"                                                    return ASCII_CHAR;
-"="                                                     return ASCII_CHAR;
-","                                                     return ASCII_CHAR;
-"{"                                                    return ASCII_CHAR;
-"}"                                                    return ASCII_CHAR;
-"["                                                    return ASCII_CHAR;
-"]"                                                    return ASCII_CHAR;
-\.                                                    return ASCII_CHAR;
-;                                                     return ASCII_CHAR;
-"+="                                                   return ASSIGN_ADD;
-"-="                                                   return ASSIGN_SUB;
-"*="                                                   return ASSIGN_MULT;
-"/="                                                   return ASSIGN_DIV;
-"=="                                                    return COMP_EQU;
-"!="                                                    return COMP_NEQU;
-"<"                                                     return COMP_LESS; 
-"<="                                                    return COMP_LTE;
-">"                                                     return COMP_GTR;
-">="                                                    return COMP_GTE;
-"&&"                                                    return BOOL_AND;
-"||"                                                    return BOOL_OR;
-[ \t]+                                                return WHITESPACE;
-"#".*                                                 comment_count++; return COMMENT;
-.                                                     return UNKNOWN;
-[\r]?\n                                               line_count++; return EOL;
+val|char|string                                           return TYPE;
+print                                                     return COMMAND_PRINT;
+random                                                    return COMMAND_RANDOM;
+[a-zA-Z_][a-zA-Z_0-9]*                                    return ID;
+[+\-]?[0-9]+(\.[0-9]+)?([eE][+\-]?[0-9]+)?                return VAL_LITERAL;
+\'.*\'                                                    return CHAR_LITERAL;
+\".*\"                                                    return STRING_LITERAL;
+[+\-*/()=,{}\[\]\.;]                                      return ASCII_CHAR;
+\+=                                                       return ASSIGN_ADD;
+-=                                                        return ASSIGN_SUB;
+\*=                                                       return ASSIGN_MULT;
+"/="                                                      return ASSIGN_DIV;
+"=="                                                      return COMP_EQU;
+"!="                                                      return COMP_NEQU;
+"<"                                                       return COMP_LESS; 
+"<="                                                      return COMP_LTE;
+">"                                                       return COMP_GTR;
+">="                                                      return COMP_GTE;
+"&&"                                                      return BOOL_AND;
+"||"                                                      return BOOL_OR;
+[ \t]+                                                    ;
+[\r]?\n                                                   ++line_count;
+#.*                                                       ;
+.                                                         return UNKNOWN;
 %%
 
 int main(int argc, char* argv[]) 
@@ -56,17 +43,18 @@ int main(int argc, char* argv[])
     std::cout << "yytext: " << yytext << std::endl;
   }*/
 
-  if (argc < 2)
+  if (argc != 2)
   {
-    std::cout<< "Error: no input file!\nprograme halted..." << std::endl;
-    return 0;
+    std::cout<< "FORMATERROR: " << argv[0] << " [source filename] " <<\
+    "\nprograme halted...\n";
+    exit(1);
   }
   yyin = fopen(argv[1], "r");
   if (yyin == NULL)
   {
-    std::cout<< "Error: input file not found!\nprograme halted..."<< std::endl;
+    std::cout<< "Error: input file not found!\nprograme halted...\n";
     fclose(yyin);
-    return 0;
+    exit(2);
   }
   std::ofstream output_file;
   output_file.open("out.tube");
@@ -135,17 +123,10 @@ int main(int argc, char* argv[])
       case BOOL_OR:
         output_file << "BOOL_OR: " << yytext << "\n";
         break;
-      case WHITESPACE: 
-        //output_file << "WHITESPACE: " << yytext << "\n";
-        break;
-      case COMMENT:
-        //output_file << "COMMENT: " << yytext << "\n";
-        break;
       case UNKNOWN:
-        output_file << "UNKNOWN: " << yytext << "\n";
-        break;
-      case EOL:
-        //output_file << "EOL: " << yytext << "\n";
+        output_file << "Unknow token on line " << ++line_count << ": " << yytext << "\n";
+        fclose(yyin); output_file.close();
+        exit(3);
         break;
       default:
         output_file << "default: " << yytext << "\n";
@@ -153,7 +134,7 @@ int main(int argc, char* argv[])
     }
     mytokens = yylex();
   }
-  output_file<< "Line Count: "<< line_count;
+  output_file<< "Line Count: "<< line_count <<std::endl;
   output_file.close();
   fclose(yyin);
   return 0; 
