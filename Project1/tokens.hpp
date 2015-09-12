@@ -1,5 +1,5 @@
-#ifndef TUBE1_GUARD_HPP
-#define TUBE1_GUARD_HPP
+#ifndef TOKENS_GUARD_HPP
+#define TOKENS_GUARD_HPP
 
 #define TYPE            (1)
 #define COMMAND_PRINT   (2)
@@ -60,4 +60,4 @@ enum TOKENS_T
 };
 */
 
-#endif /* TUBE1_GUARD_HPP */
+#endif /* TOKENS_GUARD_HPP */
