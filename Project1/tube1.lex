@@ -1,5 +1,5 @@
 %{
-#include "test1.hpp"
+#include "tokens.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -124,18 +124,25 @@ int main
       case UNKNOWN:
         out << "Unknow token on line " << line_count << ": " << yytext << "\n";
         mytokens = EXIT;
+        break;
       case NON_TERM_STRING:
         out << "ERROR(line " << ++line_count << "): Unterminated string\n"; 
         mytokens=EXIT;
+        break;
       case NON_TERM_CHAR:
         out << "ERROR(line " << ++line_count << "): Uterminated char\n"; 
         mytokens=EXIT;
+        break;
       case MULTI_CHAR:
         out << "ERRRO(line " << ++line_count << "): Mutli char literal\n"; 
         mytokens=EXIT;
-      case EXIT:
-        fclose(yyin); std::cout<< out.str();
-        exit(3);
+        break;
+    }
+    if (mytokens == EXIT)
+    {
+      fclose(yyin); 
+      std::cout<< out.str(); 
+      exit(3);
     }
     mytokens = yylex();
   }
