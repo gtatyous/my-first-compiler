@@ -1,11 +1,11 @@
-val x__me = 3;
-
-my_val = 3.1234 * (7.2 + 12) ; #that's my comment
-print test_num;
-#this is a comment wohoooo
-
-#ANTOHER COMMENT WEHEEEE
-#$/.'
-
-"this is a string"
-40print
+''
+""
+"c"
+'c'
+'5'
+"5"
+'"'
+"string"
+"%$$#^&"
+"he said 'yes!' "
+"Don"t do that"

@@ -2,6 +2,7 @@
 #include "test1.hpp"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 int line_count=0, mytokens = 0;
 %}
 
@@ -14,8 +15,8 @@ print                                                     return COMMAND_PRINT;
 random                                                    return COMMAND_RANDOM;
 [a-zA-Z_][a-zA-Z_0-9]*                                    return ID;
 [+\-]?[0-9]+(\.[0-9]+)?([eE][+\-]?[0-9]+)?                return VAL_LITERAL;
-\'.?\'                                                    return CHAR_LITERAL;
-\".*\"                                                    return STRING_LITERAL;
+\'[^'\n]?\'                                                    return CHAR_LITERAL;
+\"[^"\n]*\"                                                    return STRING_LITERAL;
 [+\-*/()=,{}\[\]\.;]                                      return ASCII_CHAR;
 \+=                                                       return ASSIGN_ADD;
 -=                                                        return ASSIGN_SUB;
@@ -29,20 +30,15 @@ random                                                    return COMMAND_RANDOM;
 ">="                                                      return COMP_GTE;
 "&&"                                                      return BOOL_AND;
 "||"                                                      return BOOL_OR;
-[ \t]+                                                    ;
-[\r]?\n                                                   ++line_count;
-#.*                                                       ;
-.                                                         return UNKNOWN;
+[ \t]+                                                    return WHITESPACE;
+[\r]?\n                                                   ++line_count; return WHITESPACE;
+#.*                                                       return COMMENT;
+.                                                         ++line_count; return UNKNOWN;
 %%
 
-int main(int argc, char* argv[]) 
+int main
+  (int argc, char* argv[]) 
 {
-  /*FlexLexer* lexer = new yyFlexLexer();
-  while (lexer->yylex())
-  {
-    std::cout << "yytext: " << yytext << std::endl;
-  }*/
-
   if (argc != 2)
   {
     std::cout<< "FORMATERROR: " << argv[0] << " [source filename] " <<\
@@ -56,86 +52,82 @@ int main(int argc, char* argv[])
     fclose(yyin);
     exit(2);
   }
-  std::ofstream output_file;
-  output_file.open("out.tube");
+  std::stringstream out;
   mytokens = yylex();
   while (mytokens)
   {
     switch (mytokens)
     {
       case TYPE:
-        output_file << "TYPE: " << yytext << "\n";
+        out << "TYPE: " << yytext << "\n";
         break;
       case COMMAND_PRINT:
-        output_file << "COMMAND_PRINT: " << yytext << "\n";
+        out << "COMMAND_PRINT: " << yytext << "\n";
         break;
       case COMMAND_RANDOM:
-        output_file << "COMMAND_RANDOM: " << yytext << "\n";
+        out << "COMMAND_RANDOM: " << yytext << "\n";
         break;
       case ID:
-        output_file << "ID: " << yytext << "\n";
+        out << "ID: " << yytext << "\n";
         break;
       case VAL_LITERAL:
-        output_file << "VALUE_LITERAL: " << yytext << "\n";
+        out << "VALUE_LITERAL: " << yytext << "\n";
         break;
      case CHAR_LITERAL:
-        output_file << "CHAR_LITERAL;: " << yytext << "\n";
+        out << "CHAR_LITERAL: " << yytext << "\n";
         break;
       case STRING_LITERAL:
-        output_file << "STRING_LITERAL: " << yytext << "\n";
+        out << "STRING_LITERAL: " << yytext << "\n";
         break;
       case ASCII_CHAR:
-        output_file << "ASCII_CHAR: " << yytext << "\n";
+        out << "ASCII_CHAR: " << yytext << "\n";
         break;
       case ASSIGN_ADD:
-        output_file << "ASSIGN_ADD: " << yytext << "\n";
+        out << "ASSIGN_ADD: " << yytext << "\n";
         break;
       case ASSIGN_SUB:
-        output_file << "ASSIGN_SUB: " << yytext << "\n";
+        out << "ASSIGN_SUB: " << yytext << "\n";
         break;
       case ASSIGN_MULT: 
-        output_file << "ASSIGN_MULT: " << yytext << "\n";
+        out << "ASSIGN_MULT: " << yytext << "\n";
         break;
       case ASSIGN_DIV:
-        output_file << "ASSIGN_DIV: " << yytext << "\n";
+        out << "ASSIGN_DIV: " << yytext << "\n";
         break;
       case COMP_EQU:
-        output_file << "COMP_EQU: " << yytext << "\n";
+        out << "COMP_EQU: " << yytext << "\n";
         break;
       case COMP_NEQU:
-        output_file << "COMP_NEQU: " << yytext << "\n";
+        out << "COMP_NEQU: " << yytext << "\n";
         break;
       case COMP_LESS:
-        output_file << "COMP_LESS: " << yytext << "\n";
+        out << "COMP_LESS: " << yytext << "\n";
         break;
       case COMP_LTE:
-        output_file << "COMP_LTE: " << yytext << "\n";
+        out << "COMP_LTE: " << yytext << "\n";
         break;
       case COMP_GTR:
-        output_file << "COMP_GTR: " << yytext << "\n";
+        out << "COMP_GTR: " << yytext << "\n";
         break;
       case COMP_GTE:
-        output_file << "COMP_GTE: " << yytext << "\n";
+        out << "COMP_GTE: " << yytext << "\n";
         break;
       case BOOL_AND:
-        output_file << "BOOL_AND: " << yytext << "\n";
+        out << "BOOL_AND: " << yytext << "\n";
         break;
       case BOOL_OR:
-        output_file << "BOOL_OR: " << yytext << "\n";
+        out << "BOOL_OR: " << yytext << "\n";
         break;
       case UNKNOWN:
-        output_file << "Unknow token on line " << ++line_count << ": " << yytext << "\n";
-        fclose(yyin); output_file.close();
+        out << "Unknow token on line " << line_count << ": " << yytext << "\n";
+        fclose(yyin); std::cout<< out.str();
         exit(3);
-        break;
-      default:
-        output_file << "default: " << yytext << "\n";
         break;
     }
     mytokens = yylex();
   }
-  output_file<< "Line Count: "<< line_count <<std::endl;
-  output_file.close();
+  out<< "Line Count: "<< line_count <<std::endl;
+  std::cout<< out.str();
   fclose(yyin);
   return 0; 
 }
