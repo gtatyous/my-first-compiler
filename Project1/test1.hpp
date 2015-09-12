@@ -1,3 +1,6 @@
+#ifndef TUBE1_GUARD_HPP
+#define TUBE1_GUARD_HPP
+
 #define TYPE            (1)
 #define COMMAND_PRINT   (2)
 #define COMMAND_RANDOM  (3)
@@ -22,7 +25,10 @@
 #define COMMENT         (22)
 #define UNKNOWN         (23)
 #define EOL             (24)
-
+#define NON_TERM_STRING (25)
+#define NON_TERM_CHAR   (26)
+#define MULTI_CHAR      (27)
+#define EXIT            (28)
 
 /*
 enum TOKENS_T
@@ -54,4 +60,4 @@ enum TOKENS_T
 };
 */
 
-
+#endif /* TUBE1_GUARD_HPP */

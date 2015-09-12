@@ -15,8 +15,11 @@ print                                                     return COMMAND_PRINT;
 random                                                    return COMMAND_RANDOM;
 [a-zA-Z_][a-zA-Z_0-9]*                                    return ID;
 [+\-]?[0-9]+(\.[0-9]+)?([eE][+\-]?[0-9]+)?                return VAL_LITERAL;
-\'[^'\n]?\'                                                    return CHAR_LITERAL;
-\"[^"\n]*\"                                                    return STRING_LITERAL;
+\'[^'\n]?\'                                               return CHAR_LITERAL;
+\'[^'\n]{2,}\'                                            return MULTI_CHAR;
+\'                                                        return NON_TERM_CHAR;
+\"[^"\n]*\"                                               return STRING_LITERAL;
+\"                                                        return NON_TERM_STRING;
 [+\-*/()=,{}\[\]\.;]                                      return ASCII_CHAR;
 \+=                                                       return ASSIGN_ADD;
 -=                                                        return ASSIGN_SUB;
@@ -33,7 +36,7 @@ random                                                    return COMMAND_RANDOM;
 [ \t]+                                                    return WHITESPACE;
 [\r]?\n                                                   ++line_count; return WHITESPACE;
 #.*                                                       return COMMENT;
-.                                                         ++line_count; return UNKNOWN;
+.                                                         return UNKNOWN;
 %%
 
 int main
@@ -73,7 +76,7 @@ int main
       case VAL_LITERAL:
         out << "VALUE_LITERAL: " << yytext << "\n";
         break;
-     case CHAR_LITERAL:
+      case CHAR_LITERAL:
         out << "CHAR_LITERAL: " << yytext << "\n";
         break;
       case STRING_LITERAL:
@@ -120,9 +123,19 @@ int main
         break;
       case UNKNOWN:
         out << "Unknow token on line " << line_count << ": " << yytext << "\n";
+        mytokens = EXIT;
+      case NON_TERM_STRING:
+        out << "ERROR(line " << ++line_count << "): Unterminated string\n"; 
+        mytokens=EXIT;
+      case NON_TERM_CHAR:
+        out << "ERROR(line " << ++line_count << "): Uterminated char\n"; 
+        mytokens=EXIT;
+      case MULTI_CHAR:
+        out << "ERRRO(line " << ++line_count << "): Mutli char literal\n"; 
+        mytokens=EXIT;
+      case EXIT:
         fclose(yyin); std::cout<< out.str();
         exit(3);
-        break;
     }
     mytokens = yylex();
   }
