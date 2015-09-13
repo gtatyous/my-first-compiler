@@ -122,7 +122,7 @@ int main
         out << "BOOL_OR: " << yytext << "\n";
         break;
       case UNKNOWN:
-        out << "Unknow token on line " << line_count << ": " << yytext << "\n";
+        out << "Unknow token on line " << ++line_count << ": " << yytext << "\n";
         mytokens = EXIT;
         break;
       case NON_TERM_STRING:
