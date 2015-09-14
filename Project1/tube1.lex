@@ -10,33 +10,33 @@ int line_count=0, mytokens = 0;
 %option yylineno
 
 %%
-val|char|string                                             std::cout << "TYPE: " << yytext << std::endl;
-print                                                       std::cout << "COMMAND_PRINT: " << yytext << std::endl;
-random                                                      std::cout << "COMMAND_RANDOM: " << yytext << std::endl;
-[a-zA-Z_][a-zA-Z_0-9]*                                      std::cout << "ID: " << yytext << std::endl;
-([0-9]+(\.[0-9]+)?|(\.[0-9]+))([eE][+\-]?[0-9]+)?           std::cout << "VAL_LITERAL: " << yytext << std::endl;
-\'[^'\n]?\'                                                 std::cout << "CHAR_LITERAL: " << yytext << std::endl;
-\'[^'\n]{2,}\'                                              std::cout << "ERRRO(line " << ++line_count << "): Mutli char literal" << std::endl; exit(1); 
-\'                                                          std::cout << "ERROR(line " << ++line_count << "): Uterminated char" << std::endl; exit(1);
-\"[^"\n]*\"                                                 std::cout << "STRING_LITERAL: " << yytext << std::endl;
-\"                                                          std::cout << "ERROR(line " << ++line_count << "): Unterminated string" << std::endl; exit(1);
-[+\-*/()=,{}\[\]\.;]                                        std::cout << "ASCII_CHAR: " << yytext << std::endl;
-\+=                                                         std::cout << "ASSIGN_ADD: " << yytext << std::endl;
--=                                                          std::cout << "ASSIGN_SUB: " << yytext << std::endl;
-\*=                                                         std::cout << "ASSIGN_MULT: " << yytext << std::endl;
-"/="                                                        std::cout << "ASSIGN_DIV: " << yytext << std::endl;
-"=="                                                        std::cout << "COMP_EQU: " << yytext << std::endl;
-"!="                                                        std::cout << "COMP_NEQU: " << yytext << std::endl;
-"<"                                                         std::cout << "COMP_LESS: " << yytext << std::endl;
-"<="                                                        std::cout << "COMP_LTE: " << yytext << std::endl;
-">"                                                         std::cout << "COMP_GTR: " << yytext << std::endl;
-">="                                                        std::cout << "COMP_GTE: " << yytext << std::endl;
-"&&"                                                        std::cout << "BOOL_AND: " << yytext << std::endl;
-"||"                                                        std::cout << "BOOL_OR: " << yytext << std::endl;
-[ \t]+                                                      ;
-[\r]?\n                                                     ++line_count;
-#.*                                                         ;
-.                                                           std::cout << "Unknown token on line " << ++line_count << ": " << yytext << std::endl; exit(1);
+val|char|string                                           return TYPE;
+print                                                     return COMMAND_PRINT;
+random                                                    return COMMAND_RANDOM;
+[a-zA-Z_][a-zA-Z_0-9]*                                    return ID;
+([0-9]+(\.[0-9]+)?|(\.[0-9]+)){1}([eE][+\-]?[0-9]+)?      return VAL_LITERAL;
+\'[^'\n]?\'                                               return CHAR_LITERAL;
+\'[^'\n]{2,}\'                                            return MULTI_CHAR;
+\'                                                        return NON_TERM_CHAR;
+\"[^"\n]*\"                                               return STRING_LITERAL;
+\"                                                        return NON_TERM_STRING;
+[+\-*/()=,{}\[\]\.;]                                      return ASCII_CHAR;
+\+=                                                       return ASSIGN_ADD;
+-=                                                        return ASSIGN_SUB;
+\*=                                                       return ASSIGN_MULT;
+"/="                                                      return ASSIGN_DIV;
+"=="                                                      return COMP_EQU;
+"!="                                                      return COMP_NEQU;
+"<"                                                       return COMP_LESS; 
+"<="                                                      return COMP_LTE;
+">"                                                       return COMP_GTR;
+">="                                                      return COMP_GTE;
+"&&"                                                      return BOOL_AND;
+"||"                                                      return BOOL_OR;
+[ \t]+                                                    return WHITESPACE;
+[\r]?\n                                                   ++line_count; return WHITESPACE;
+#.*                                                       return COMMENT;
+.                                                         return UNKNOWN;
 %%
 
 int main
@@ -55,8 +55,99 @@ int main
     fclose(yyin);
     exit(2);
   }
+  std::stringstream out;
   mytokens = yylex();
-  fclose(yyin); 
-  std::cout << "Line Count: "<< line_count <<std::endl;
+  while (mytokens)
+  {
+    switch (mytokens)
+    {
+      case TYPE:
+        out << "TYPE: " << yytext << "\n";
+        break;
+      case COMMAND_PRINT:
+        out << "COMMAND_PRINT: " << yytext << "\n";
+        break;
+      case COMMAND_RANDOM:
+        out << "COMMAND_RANDOM: " << yytext << "\n";
+        break;
+      case ID:
+        out << "ID: " << yytext << "\n";
+        break;
+      case VAL_LITERAL:
+        out << "VAL_LITERAL: " << yytext << "\n";
+        break;
+      case CHAR_LITERAL:
+        out << "CHAR_LITERAL: " << yytext << "\n";
+        break;
+      case STRING_LITERAL:
+        out << "STRING_LITERAL: " << yytext << "\n";
+        break;
+      case ASCII_CHAR:
+        out << "ASCII_CHAR: " << yytext << "\n";
+        break;
+      case ASSIGN_ADD:
+        out << "ASSIGN_ADD: " << yytext << "\n";
+        break;
+      case ASSIGN_SUB:
+        out << "ASSIGN_SUB: " << yytext << "\n";
+        break;
+      case ASSIGN_MULT: 
+        out << "ASSIGN_MULT: " << yytext << "\n";
+        break;
+      case ASSIGN_DIV:
+        out << "ASSIGN_DIV: " << yytext << "\n";
+        break;
+      case COMP_EQU:
+        out << "COMP_EQU: " << yytext << "\n";
+        break;
+      case COMP_NEQU:
+        out << "COMP_NEQU: " << yytext << "\n";
+        break;
+      case COMP_LESS:
+        out << "COMP_LESS: " << yytext << "\n";
+        break;
+      case COMP_LTE:
+        out << "COMP_LTE: " << yytext << "\n";
+        break;
+      case COMP_GTR:
+        out << "COMP_GTR: " << yytext << "\n";
+        break;
+      case COMP_GTE:
+        out << "COMP_GTE: " << yytext << "\n";
+        break;
+      case BOOL_AND:
+        out << "BOOL_AND: " << yytext << "\n";
+        break;
+      case BOOL_OR:
+        out << "BOOL_OR: " << yytext << "\n";
+        break;
+      case UNKNOWN:
+        out << "Unknown token on line " << ++line_count << ": " << yytext << "\n";
+        mytokens = EXIT;
+        break;
+      case NON_TERM_STRING:
+        out << "ERROR(line " << ++line_count << "): Unterminated string\n"; 
+        mytokens=EXIT;
+        break;
+      case NON_TERM_CHAR:
+        out << "ERROR(line " << ++line_count << "): Uterminated char\n"; 
+        mytokens=EXIT;
+        break;
+      case MULTI_CHAR:
+        out << "ERRRO(line " << ++line_count << "): Mutli char literal\n"; 
+        mytokens=EXIT;
+        break;
+    }
+    if (mytokens == EXIT)
+    {
+      fclose(yyin); 
+      std::cout<< out.str(); 
+      exit(3);
+    }
+    mytokens = yylex();
+  }
+  out<< "Line Count: "<< line_count <<std::endl;
+  std::cout<< out.str();
+  fclose(yyin);
   return 0; 
 }
