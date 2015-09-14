@@ -14,7 +14,7 @@ val|char|string                                           return TYPE;
 print                                                     return COMMAND_PRINT;
 random                                                    return COMMAND_RANDOM;
 [a-zA-Z_][a-zA-Z_0-9]*                                    return ID;
-[+\-]?([0-9]+(\.[0-9]+)?|(\.[0-9]+)){1}([eE][+\-]?[0-9]+)? return VAL_LITERAL;
+([0-9]+(\.[0-9]+)?|(\.[0-9]+)){1}([eE][+\-]?[0-9]+)?      return VAL_LITERAL;
 \'[^'\n]?\'                                               return CHAR_LITERAL;
 \'[^'\n]{2,}\'                                            return MULTI_CHAR;
 \'                                                        return NON_TERM_CHAR;
@@ -122,7 +122,7 @@ int main
         out << "BOOL_OR: " << yytext << "\n";
         break;
       case UNKNOWN:
-        out << "Unknow token on line " << ++line_count << ": " << yytext << "\n";
+        out << "Unknown token on line " << ++line_count << ": " << yytext << "\n";
         mytokens = EXIT;
         break;
       case NON_TERM_STRING:
