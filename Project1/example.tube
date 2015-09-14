@@ -1,15 +1,23 @@
-''
-""
-"c"
-0.9
-.99999
--.99999994937218042389
-'c'
-'5'
-"5"
+#if you put a million monkeys at a million keyboards, one of them will eventually write a java program. The rest will write regex programs :)
+#.@#!$$%@#%$
+##
+
+
+#
+
+string sstring /= "s";
+char cchar += 'c';
+val vval, vvval = 0.9, .9999; #confused?
+string this_is_ASCII_CHAR_and_VAL_LITERAL = -.99999994937218042389
+'c' << !=====
+'5' {my_vall}
+"5" || '4'
 '"'
 '$'
-"string"
-"
-$$#^&"
-"he said 'yes!' "
+"'"
+"string yo"
+"#"
+"$$#^&"
+"he said 'yes!' print random papers"
+print random crap
+#ignore but count the lines, shoud be 23 lines
