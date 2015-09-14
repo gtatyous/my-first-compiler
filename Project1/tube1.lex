@@ -14,7 +14,7 @@ val|char|string                                           return TYPE;
 print                                                     return COMMAND_PRINT;
 random                                                    return COMMAND_RANDOM;
 [a-zA-Z_][a-zA-Z_0-9]*                                    return ID;
-[+\-]?[0-9]+(\.[0-9]+)?([eE][+\-]?[0-9]+)?                return VAL_LITERAL;
+[+\-]?([0-9]+(\.[0-9]+)?|(\.[0-9]+)){1}([eE][+\-]?[0-9]+)? return VAL_LITERAL;
 \'[^'\n]?\'                                               return CHAR_LITERAL;
 \'[^'\n]{2,}\'                                            return MULTI_CHAR;
 \'                                                        return NON_TERM_CHAR;
@@ -74,7 +74,7 @@ int main
         out << "ID: " << yytext << "\n";
         break;
       case VAL_LITERAL:
-        out << "VALUE_LITERAL: " << yytext << "\n";
+        out << "VAL_LITERAL: " << yytext << "\n";
         break;
       case CHAR_LITERAL:
         out << "CHAR_LITERAL: " << yytext << "\n";
