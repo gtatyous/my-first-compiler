@@ -1,3 +1,10 @@
+/*
+ * Yousef GTAT
+ * CSE450
+ * Sept 14, 2015
+ *
+ */
+
 #ifndef TOKENS_GUARD_HPP
 #define TOKENS_GUARD_HPP
 

@@ -12,6 +12,4 @@ regex.com used for checking my rules
 
 
 Quesitons as developing code:
-forward slash? what is it do? how does it look ahead in flex?
-using . for unknown, but that's only one character? will catch all?
-
+what other useful functions are inside the lexer.cpp file generate by flex?
