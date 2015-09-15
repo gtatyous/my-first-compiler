@@ -1,6 +1,7 @@
 %{
 #include "tokens.hpp"
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 int line_count=0, mytokens = 0;
@@ -36,6 +37,7 @@ random                                                    return COMMAND_RANDOM;
 [ \t]+                                                    return WHITESPACE;
 [\r]?\n                                                   ++line_count; return WHITESPACE;
 #.*                                                       return COMMENT;
+"/*"(.|[\r\n])*"*/"                                      return MULTI_LINE_COMMENT;
 .                                                         return UNKNOWN;
 %%
 
@@ -121,6 +123,12 @@ int main
       case BOOL_OR:
         out << "BOOL_OR: " << yytext << "\n";
         break;
+      case MULTI_LINE_COMMENT:
+      {
+        std::string com(yytext); //convert char* to string
+        line_count += std::count(com.begin(), com.end(), '\n');
+        break;
+      }
       case UNKNOWN:
         out << "Unknown token on line " << ++line_count << ": " << yytext << "\n";
         mytokens = EXIT;

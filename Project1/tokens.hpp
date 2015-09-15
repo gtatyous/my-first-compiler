@@ -23,12 +23,13 @@
 #define BOOL_OR         (20)
 #define WHITESPACE      (21)
 #define COMMENT         (22)
-#define UNKNOWN         (23)
-#define EOL             (24)
-#define NON_TERM_STRING (25)
-#define NON_TERM_CHAR   (26)
-#define MULTI_CHAR      (27)
-#define EXIT            (28)
+#define MULTI_LINE_COMMENT (23)
+#define UNKNOWN         (24)
+#define EOL             (25)
+#define NON_TERM_STRING (26)
+#define NON_TERM_CHAR   (27)
+#define MULTI_CHAR      (28)
+#define EXIT            (29)
 
 /*
 enum TOKENS_T

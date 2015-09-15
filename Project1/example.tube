@@ -7,6 +7,7 @@
 
 string sstring /= "s";
 char cchar += 'c';
+__space__ + = 66;
 val vval, vvval = 0.9, .9999; #confused?
 string this_is_ASCII_CHAR_and_VAL_LITERAL = -.99999994937218042389
 'c' << !=====
@@ -23,5 +24,16 @@ print random crap
 #ignore but count the linees
 
 Done'$'42jk
-"yes"butno"
-this shoudl not be scanned
+
+/*kasjdfklasjdfklsadjfkljas;lkfjasdklgjdlksajg
+
+\n
+
+print this should not be scanned
+l@#@#$@#%$@#^%^*&*(*(EWQTRREUTTJNGFBFVFDCksjgklsagjdsklagj*/
+
+print The_end
+"this should not be scanned with regular code"
+
+/**/
+/*line count should be 39*/
