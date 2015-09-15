@@ -6,6 +6,7 @@
 if [ -f tube2 ]; then 
         rm tube2
 fi;
+make clean
 make
 if [ ! -f tube2 ]; then 
 	echo "tube2 not correctly compiled";
