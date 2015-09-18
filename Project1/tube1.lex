@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 int line_count=0, mytokens = 0;
+
 %}
 
 %option noyywrap
