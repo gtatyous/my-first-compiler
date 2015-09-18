@@ -5,6 +5,7 @@
 void yyerror(char* err_string)
 {
   std::cout << "Input failed to match" << std::endl;
+  exit(1);
 }
 extern int yylex();
 extern FILE* yyin; 
@@ -41,26 +42,26 @@ int line_count;
 %token MULTI_LINE_COMMENT
 %token UNKNOWN
 
-
 %%
-line: line statment  
-    | /* nothing */  {std::cout<< "nothing"<< std::endl;}
+line: line statement {std::cout<< "statement" << std::endl;}  
+    | /* nothing */  {std::cout<< "nothing"   << std::endl;}
+    | TYPE ID ';' {std::cout<<"decl"<<std::endl;}
     ;
-statment: decl ';'  {std::cout << "declaration" << std::endl;}
-        | expr ';'  {std::cout << "experation " << std::endl;}
-        | cmd  ';'  {std::cout << "command yo " << std::endl;}
-        ;
-decl: TYPE ID 
-    | TYPE ID OPR expr
+statement: decl ';'  {std::cout << "declaration" << std::endl;}
+         | expr ';'  {std::cout << "expression " << std::endl;}
+         | cmd  ';'  {std::cout << "command yo " << std::endl;}
+         ;
+decl: TYPE ID {} 
+    | TYPE ID OPR expr {}
     ;
-expr: VAL_LITERAL OPR VAL_LITERAL
+expr: VAL_LITERAL OPR VAL_LITERAL {}
     ;
-cmd: COMMAND_PRINT '(' OUT ')'
+OPR: ASCII_CHAR {}
    ;
-OPR: ASCII_CHAR
+cmd: COMMAND_PRINT '(' OUT ')' {}
    ;
-OUT: VAL_LITERAL 
-   | ID
+OUT: VAL_LITERAL {}
+   | ID {}
    ;
 %%
 
@@ -68,7 +69,7 @@ OUT: VAL_LITERAL
 int main
   (int argc, char* argv[])
 {
-  if (argc != 2)
+  /*if (argc != 2)
   {
     std::cout<< "FORMATERROR: " << argv[0] << " [source filename] " <<\
     "\nprograme halted...\n";
@@ -80,11 +81,11 @@ int main
     std::cout<< "Error: input file not found!\nprograme halted...\n";
     fclose(yyin);
     exit(2);
-  }
+  }*/
   yyparse();
 
-  std::cout<< "successfully compiled!";
-  fclose(yyin);
+  std::cout<< "successfully compiled!" << std::endl;
+  //fclose(yyin);
   return 0;
 }
 

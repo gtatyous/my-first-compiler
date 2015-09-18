@@ -1,5 +1,6 @@
 %{
 #include "myparser.tab.hh"
+#include <iostream>
 %}
 
 %option noyywrap
