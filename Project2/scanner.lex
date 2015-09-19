@@ -1,6 +1,7 @@
 %{
 #include "myparser.tab.hh"
 #include <iostream>
+extern int yyparse();
 %}
 
 %option noyywrap
@@ -30,10 +31,8 @@ random                                                    return COMMAND_RANDOM;
 ">="                                                      return COMP_GTE;
 "&&"                                                      return BOOL_AND;
 "||"                                                      return BOOL_OR;
-[ \t]+                                                    return WHITESPACE;
-[\r]?\n                                                   return WHITESPACE;
-#.*                                                       return COMMENT;
-"/*"(.|[\r\n])*"*/"                                       return MULTI_LINE_COMMENT;
+[ \t]+                                                    ;
+[\r]?\n                                                   return NEW_LINE;
+#.*                                                       ;
+"/*"(.|[\r\n])*"*/"                                       ;
 .                                                         return UNKNOWN;
-%%
-

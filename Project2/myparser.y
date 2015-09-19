@@ -9,7 +9,7 @@ void yyerror(char* err_string)
 }
 extern int yylex();
 extern FILE* yyin; 
-int line_count;
+int line_count =0; 
 %}
 
 
@@ -36,30 +36,49 @@ int line_count;
 %token COMP_GTE
 %token BOOL_AND
 %token BOOL_OR
-%token WHITESPACE
 %token NEW_LINE
-%token COMMENT
-%token MULTI_LINE_COMMENT
+%token EOL
 %token UNKNOWN
 
+
 %%
-line: line statement {std::cout<< "statement" << std::endl;}  
-    | /* nothing */  {std::cout<< "nothing"   << std::endl;}
-    | TYPE ID ';' {std::cout<<"decl"<<std::endl;}
+
+line: line line
+    | statement
+    | err
+    | NEW_LINE {std::cout<< "Line_count: " << ++line_count <<std::endl;}
     ;
-statement: decl ';'  {std::cout << "declaration" << std::endl;}
-         | expr ';'  {std::cout << "expression " << std::endl;}
-         | cmd  ';'  {std::cout << "command yo " << std::endl;}
+
+statement: expr ASCII_CHAR  {std::cout << "expression " << std::endl;}
+         | cmd  ASCII_CHAR  {std::cout << "command yo " << std::endl;}
+         | ASCII_CHAR
          ;
-decl: TYPE ID {} 
-    | TYPE ID OPR expr {}
+
+err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
+     | NON_TERM_CHAR {std::cout<< "non term char" <<std::endl;}
+     | NON_TERM_STRING {std::cout<< "non term str" <<std::endl;}
+     | UNKNOWN {std::cout << "unknown" << std::endl;}
+     ;
+
+decl: TYPE ID 
+    | TYPE ID OPR value
     ;
-expr: VAL_LITERAL OPR VAL_LITERAL {}
-    ;
-OPR: ASCII_CHAR {}
+
+OPR: ASCII_CHAR
    ;
+
+value: VAL_LITERAL
+     ;
+
+expr: VAL_LITERAL OPR3 VAL_LITERAL {}
+    ;
+
+OPR3: ASCII_CHAR {}
+   ;
+
 cmd: COMMAND_PRINT '(' OUT ')' {}
    ;
+
 OUT: VAL_LITERAL {}
    | ID {}
    ;

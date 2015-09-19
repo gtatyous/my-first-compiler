@@ -3,3 +3,7 @@ ss.js
 tube1
 tube1-lexer.cc
 tube1-lexer.o
+
+Project2/*.tab.*
+Project2/*.o
+Project2/*.cc
