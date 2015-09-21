@@ -1,7 +1,6 @@
 %{
 #include "myparser.tab.hh"
 #include <iostream>
-extern int yyparse();
 %}
 
 %option noyywrap
@@ -36,3 +35,5 @@ random                                                    return COMMAND_RANDOM;
 #.*                                                       ;
 "/*"(.|[\r\n])*"*/"                                       ;
 .                                                         return UNKNOWN;
+
+%%

@@ -47,9 +47,11 @@ line: line line
     | statement
     | err
     | NEW_LINE {std::cout<< "Line_count: " << ++line_count <<std::endl;}
+    |
     ;
 
-statement: expr ASCII_CHAR  {std::cout << "expression " << std::endl;}
+statement: decl ASCII_CHAR  {std::cout << "decl"<<std::endl;}
+         | expr ASCII_CHAR  {std::cout << "expression " << std::endl;}
          | cmd  ASCII_CHAR  {std::cout << "command yo " << std::endl;}
          | ASCII_CHAR
          ;
@@ -60,27 +62,25 @@ err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
      | UNKNOWN {std::cout << "unknown" << std::endl;}
      ;
 
-decl: TYPE ID 
-    | TYPE ID OPR value
+decl: init
     ;
-
+init: TYPE ID OPR value
+    ;
 OPR: ASCII_CHAR
    ;
-
 value: VAL_LITERAL
      ;
 
-expr: VAL_LITERAL OPR3 VAL_LITERAL {}
+expr: ID OPR VAL_LITERAL OPR3 VAL_LITERAL
     ;
-
-OPR3: ASCII_CHAR {}
+OPR3: ASCII_CHAR
    ;
 
-cmd: COMMAND_PRINT '(' OUT ')' {}
+cmd: COMMAND_PRINT ASCII_CHAR OUT ASCII_CHAR 
    ;
-
-OUT: VAL_LITERAL {}
-   | ID {}
+OUT: VAL_LITERAL 
+   | ID
+   |
    ;
 %%
 
