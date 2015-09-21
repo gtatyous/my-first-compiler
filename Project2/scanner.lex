@@ -31,10 +31,10 @@ random                                                    return COMMAND_RANDOM;
 ">="                                                      return COMP_GTE;
 "&&"                                                      return BOOL_AND;
 "||"                                                      return BOOL_OR;
-[ \t]+                                                    ;
+[ \t]+                                                    {}
 [\r]?\n                                                   return NEW_LINE;
-#.*                                                       ;
-"/*"(.|[\r\n])*"*/"                                       ;
+#.*                                                       {}
+"/*"(.|[\r\n])*"*/"                                       {}
 .                                                         return UNKNOWN;
 
 %%

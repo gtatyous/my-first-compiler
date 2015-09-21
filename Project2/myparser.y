@@ -58,10 +58,10 @@ err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
 statement: something EOL
          ;
 
-something: decl {std::cout << "decl"<<std::endl;}
-         | expr {std::cout << "expr" << std::endl;}
-         | cmd  {std::cout << "cmd" << std::endl;}
-         |      {std::cout << "empty statement" << std::endl;} 
+something: decl {std::cout << "decl"<<std::endl;} 
+         | expr {std::cout << "expr" << std::endl;}  
+         | cmd  {std::cout << "cmd" << std::endl;} 
+         | {std::cout << "empty statement" << std::endl;} 
          ;
 
 decl: TYPE ID
@@ -102,6 +102,7 @@ int main
     fclose(yyin);
     exit(2);
   }*/
+  std::cout << "#rules: " << YYNRULES << std::endl;
   yyparse();
 
   std::cout<< "successfully compiled!" << std::endl;
