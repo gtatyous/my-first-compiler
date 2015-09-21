@@ -1,5 +1,5 @@
 %{
-#include "myparser.tab.hh"
+#include "tube2.tab.hh"
 #include <iostream>
 %}
 
@@ -17,7 +17,8 @@ random                                                    return COMMAND_RANDOM;
 \'                                                        return NON_TERM_CHAR;
 \"[^"\n]*\"                                               return STRING_LITERAL;
 \"                                                        return NON_TERM_STRING;
-[+\-*/()=,{}\[\]\.;]                                      return ASCII_CHAR;
+[+\-*/()=,{}\[\]\.]                                       return ASCII_CHAR;
+";"                                                       return EOL;
 \+=                                                       return ASSIGN_ADD;
 -=                                                        return ASSIGN_SUB;
 \*=                                                       return ASSIGN_MULT;

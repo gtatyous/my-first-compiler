@@ -12,7 +12,6 @@ extern FILE* yyin;
 int line_count =0; 
 %}
 
-
 %token TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
@@ -24,6 +23,7 @@ int line_count =0;
 %token STRING_LITERAL
 %token NON_TERM_STRING
 %token ASCII_CHAR
+%token EOL
 %token ASSIGN_ADD
 %token ASSIGN_SUB
 %token ASSIGN_MULT
@@ -37,34 +37,35 @@ int line_count =0;
 %token BOOL_AND
 %token BOOL_OR
 %token NEW_LINE
-%token EOL
 %token UNKNOWN
 
 
 %%
 
 line: line line
-    | statement
-    | err
+    | {std::cout << "epsilon" << std::endl;}
     | NEW_LINE {std::cout<< "Line_count: " << ++line_count <<std::endl;}
-    |
+    | err
+    | statement
     ;
-
-statement: decl ASCII_CHAR  {std::cout << "decl"<<std::endl;}
-         | expr ASCII_CHAR  {std::cout << "expression " << std::endl;}
-         | cmd  ASCII_CHAR  {std::cout << "command yo " << std::endl;}
-         | ASCII_CHAR
-         ;
 
 err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
-     | NON_TERM_CHAR {std::cout<< "non term char" <<std::endl;}
-     | NON_TERM_STRING {std::cout<< "non term str" <<std::endl;}
-     | UNKNOWN {std::cout << "unknown" << std::endl;}
-     ;
+   | NON_TERM_CHAR {std::cout<< "non term char" <<std::endl;}
+   | NON_TERM_STRING {std::cout<< "non term str" <<std::endl;}
+   | UNKNOWN {std::cout << "unknown" << std::endl;}
+   ;
 
-decl: init
-    ;
-init: TYPE ID OPR value
+statement: something EOL
+         ;
+
+something: decl {std::cout << "decl"<<std::endl;}
+         | expr {std::cout << "expr" << std::endl;}
+         | cmd  {std::cout << "cmd" << std::endl;}
+         |      {std::cout << "empty statement" << std::endl;} 
+         ;
+
+decl: TYPE ID
+    | TYPE ID OPR value 
     ;
 OPR: ASCII_CHAR
    ;

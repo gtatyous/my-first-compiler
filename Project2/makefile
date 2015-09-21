@@ -3,16 +3,16 @@
 
 default: all
 
-all: myparser
+all: tube2
 
-myparser.tab.cc: myparser.y
-	bison -o myparser.tab.cc -b myparser -d myparser.y
+tube2.tab.cc: myparser.y
+	bison -o tube2.tab.cc -b tube2 -d myparser.y
 
-scanner.yy.cc: scanner.lex
-	flex -o scanner.yy.cc scanner.lex
+tube2.yy.cc: scanner.lex
+	flex -o tube2.yy.cc scanner.lex
 
-myparser: myparser.tab.o scanner.yy.o
-	g++ -o myparser myparser.tab.o scanner.yy.o -ll -ly
+tube2: tube2.tab.o tube2.yy.o
+	g++ -o tube2 tube2.tab.o tube2.yy.o -ll -ly
 
 clean:
-	rm -f myparser myparser.tab.cc myparser.tab.hh scanner.yy.cc myparser.tab.o *~ *.o
+	rm -f tube2 tube2.tab.cc tube2.tab.hh tube2.yy.cc tube2.tab.o *~ *.o
