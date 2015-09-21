@@ -2,14 +2,17 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
-void yyerror(char* err_string)
-{
-  std::cout << "Input failed to match" << std::endl;
-  exit(1);
-}
+
 extern int yylex();
 extern FILE* yyin; 
 int line_count =0; 
+
+void yyerror
+  (char* err_string)
+{
+  std::cout << "Error (line " << ++line_count << "): syntax error" << std::endl;
+  exit(1);
+}
 %}
 
 %token TYPE
@@ -39,14 +42,13 @@ int line_count =0;
 %token NEW_LINE
 %token UNKNOWN
 
-
 %%
 
 line: line line
-    | {std::cout << "epsilon" << std::endl;}
     | NEW_LINE {std::cout<< "Line_count: " << ++line_count <<std::endl;}
     | err
     | statement
+    | {std::cout << "epsilon" << std::endl;}
     ;
 
 err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
@@ -61,7 +63,7 @@ statement: something EOL
 something: decl {std::cout << "decl"<<std::endl;} 
          | expr {std::cout << "expr" << std::endl;}  
          | cmd  {std::cout << "cmd" << std::endl;} 
-         | {std::cout << "empty statement" << std::endl;} 
+         | /*empty statment*/ 
          ;
 
 decl: TYPE ID
@@ -89,7 +91,7 @@ OUT: VAL_LITERAL
 int main
   (int argc, char* argv[])
 {
-  /*if (argc != 2)
+  if (argc != 2)
   {
     std::cout<< "FORMATERROR: " << argv[0] << " [source filename] " <<\
     "\nprograme halted...\n";
@@ -101,7 +103,7 @@ int main
     std::cout<< "Error: input file not found!\nprograme halted...\n";
     fclose(yyin);
     exit(2);
-  }*/
+  }
   std::cout << "#rules: " << YYNRULES << std::endl;
   yyparse();
 
