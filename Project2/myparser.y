@@ -58,12 +58,12 @@ err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
    ;
 
 statement: something EOL
+         | EOL {std::cout << "empty line" << std::endl;}
          ;
 
 something: decl {std::cout << "decl"<<std::endl;} 
          | expr {std::cout << "expr" << std::endl;}  
          | cmd  {std::cout << "cmd" << std::endl;} 
-         | /*empty statment*/ 
          ;
 
 decl: TYPE ID

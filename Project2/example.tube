@@ -1,5 +1,5 @@
 val my_val ;
-;
+\;
 val my_val = 5+1;
 5 + 6;
 print();
