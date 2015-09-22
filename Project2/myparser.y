@@ -2,16 +2,13 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
-//#include "DataStructures/bst.h"
+//#include "symbol_table.h"
 
 extern int yylex();
 extern FILE* yyin; 
 extern char* yytext;
 int line_count =0; 
-//BST* bst_tree = new BST();
-//key_int = stoi (yytext);
-//bst_tree->insert(key_int);
-
+//use map that maps from string to struct with some preoperties
 void yyerror
   (char* err_string)
 {
@@ -19,19 +16,21 @@ void yyerror
   exit(1);
 }
 %}
+%union 
+{
+  char* lexeme;
+}
 
-%token TYPE
+%token <lexeme> TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
-%token ID
+%token <lexeme> ID
 %token VAL_LITERAL
 %token CHAR_LITERAL
 %token MULTI_CHAR
 %token NON_TERM_CHAR
 %token STRING_LITERAL
 %token NON_TERM_STRING
-%token ASCII_CHAR
-%token EOL
 %token ASSIGN_ADD
 %token ASSIGN_SUB
 %token ASSIGN_MULT
@@ -46,6 +45,10 @@ void yyerror
 %token BOOL_OR
 %token NEW_LINE
 %token UNKNOWN
+
+%left '-' '+'
+%left '*' '/'
+%nonassoc UMINUS
 
 %%
 
@@ -62,8 +65,8 @@ err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
    | UNKNOWN {std::cout << "unknown" << std::endl;}
    ;
 
-statement: something EOL
-         | EOL
+statement: something ';'
+         | ';'
          ;
 
 something: decl {std::cout << "decl"<<std::endl;} 
@@ -71,28 +74,33 @@ something: decl {std::cout << "decl"<<std::endl;}
          | cmd  {std::cout << "cmd" << std::endl;} 
          ;
 
-decl: TYPE ID
-    | TYPE ID opr value
+decl: TYPE ID {std::cout << "Typbe, ID: " << $1 << ", " << $2 <<std::endl;}
+    | TYPE ID '=' value {/*check, add to the symbol tree*/}
     ;
-opr: ASCII_CHAR
-   ;
-value: value opr value
+
+value: value opr1 value
      | term
-     | ASCII_CHAR value ASCII_CHAR
      ;
+opr1: '+'
+    | '-'
+    | '*'
+    | '/'
+    ;
 term: VAL_LITERAL
-    | ID
-    | COMMAND_RANDOM ASCII_CHAR VAL_LITERAL ASCII_CHAR
+    | ID {/*check if id is in symbol tree. if not halt*/}
+    | COMMAND_RANDOM '(' value ')'
+    | '(' term ')'
     ;
 
-expr: ID opr value
+expr: ID opr2 value {/*check if ID is in symbol table*/}
     ;
-
-cmd: COMMAND_PRINT ASCII_CHAR out ASCII_CHAR 
-   ;
-out: VAL_LITERAL 
-   | ID
-   |
+opr2: '='
+    | ASSIGN_ADD
+    | ASSIGN_SUB
+    | ASSIGN_MULT
+    | ASSIGN_DIV
+    ;
+cmd: COMMAND_PRINT '(' value ')' 
    ;
 %%
 
