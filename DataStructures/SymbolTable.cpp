@@ -35,21 +35,37 @@ void SymbolTable::insert
   }
 }
 
-bool SymbolTable::search
+
+bool rec_search
   (string var, Node* inNode)
 {
-  static match = false;
-  if (inNode == nulptr) return;
+  static bool match = false;
+  if (inNode == nullptr) {}
   else if (inNode->name == var) match = true;
-  else search(var, inNode->next);
+  else rec_search(var, inNode->next);
+  return match;
+}
+
+bool SymbolTable::search
+  (string var)
+{
+  bool match = rec_search(var, root);
+  return match;
+}
+
+int rec_print
+  (Node* inNode)
+{
+  if (inNode == nullptr) return 0;
+  cout<< inNode->name << endl;
+  rec_print(inNode->next);
+  return 1;
 }
 
 void SymbolTable::print
-  (Node* inNode)
+  (    )
 {
-  if (inNode == nulptr) return;
-  cout<< inNode->name << endl;
-  print(inNode->next);
+  rec_print(root);
 }
 
 SymbolTable::~SymbolTable()
@@ -57,7 +73,7 @@ SymbolTable::~SymbolTable()
     destroyTree (root);
 }
 
-void BST::destroyTree (Node* inNode)
+void SymbolTable::destroyTree (Node* inNode)
 {
     if (inNode != nullptr)
     {

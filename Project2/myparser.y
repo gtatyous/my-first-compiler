@@ -63,7 +63,7 @@ err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
    ;
 
 statement: something EOL
-         | EOL {std::cout << "empty line" << std::endl;}
+         | EOL
          ;
 
 something: decl {std::cout << "decl"<<std::endl;} 
@@ -72,19 +72,25 @@ something: decl {std::cout << "decl"<<std::endl;}
          ;
 
 decl: TYPE ID
-    | TYPE ID OPR expr
+    | TYPE ID opr value
     ;
-OPR: ASCII_CHAR
+opr: ASCII_CHAR
    ;
-
-expr: ID OPR VAL_LITERAL OPR3 VAL_LITERAL
+value: value opr value
+     | term
+     | ASCII_CHAR value ASCII_CHAR
+     ;
+term: VAL_LITERAL
+    | ID
+    | COMMAND_RANDOM ASCII_CHAR VAL_LITERAL ASCII_CHAR
     ;
-OPR3: ASCII_CHAR
-   ;
 
-cmd: COMMAND_PRINT ASCII_CHAR OUT ASCII_CHAR 
+expr: ID opr value
+    ;
+
+cmd: COMMAND_PRINT ASCII_CHAR out ASCII_CHAR 
    ;
-OUT: VAL_LITERAL 
+out: VAL_LITERAL 
    | ID
    |
    ;

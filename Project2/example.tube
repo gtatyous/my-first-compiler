@@ -1,7 +1,8 @@
 val my_val ;
 \;
 val my_val = 5+1;
-5 + 6;
+my_val = 5 + 6;
+my_val2 = 7 + var2 * random(6);
 print();
 print(2);
 print(my_val);

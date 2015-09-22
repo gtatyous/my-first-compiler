@@ -27,15 +27,15 @@ class Node {
         bool init;
         int mem_position;
         Node(string var): name(var), next(nullptr) {}
-        ~Node();
+        ~Node()=default;
 };
 
 class SymbolTable {
     public:
-      SymbolTable(): root(nullptr) {head=root}
+      SymbolTable(): root(nullptr) {head=root;}
       ~SymbolTable();
       void insert(string);
-      bool search(string, Node* inNode=root);
+      bool search(string);
       void print();
 
     private:
