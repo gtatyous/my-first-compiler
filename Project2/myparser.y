@@ -2,10 +2,15 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
+//#include "DataStructures/bst.h"
 
 extern int yylex();
 extern FILE* yyin; 
+extern char* yytext;
 int line_count =0; 
+//BST* bst_tree = new BST();
+//key_int = stoi (yytext);
+//bst_tree->insert(key_int);
 
 void yyerror
   (char* err_string)
@@ -67,12 +72,10 @@ something: decl {std::cout << "decl"<<std::endl;}
          ;
 
 decl: TYPE ID
-    | TYPE ID OPR value 
+    | TYPE ID OPR expr
     ;
 OPR: ASCII_CHAR
    ;
-value: VAL_LITERAL
-     ;
 
 expr: ID OPR VAL_LITERAL OPR3 VAL_LITERAL
     ;
