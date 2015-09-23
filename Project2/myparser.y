@@ -2,7 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
-#include "SymbolTable.h"
+#include "../DataStructures/SymbolTable.h"
+
 
 extern int yylex();
 extern FILE* yyin; 
@@ -16,7 +17,28 @@ void yyerror
   std::cout << "Error (line " << ++line_count << "): syntax error" << std::endl;
   exit(1);
 }
+
+void check_redecl_error 
+  (string type, string name)
+{ 
+  if (symbol_table.is_declared(name))
+  {
+    std::cout << "ERROR(line " << ++line_count << \
+    "): redeclaration of variable '" << name << "'" << std::endl;
+    exit(1);
+  }
+  else
+  {
+    symbol_table.insert(name);
+    symbol_table.search(name)->type = type;
+    symbol_table.search(name)->line = line_count;
+    symbol_table.search(name)->init = false;
+  }
+  std::cout << "Type, ID: " << type << ", " << name <<std::endl;
+}
+
 %}
+
 %union 
 {
   char* lexeme;
@@ -75,8 +97,8 @@ something: decl {std::cout << "decl"<<std::endl;}
          | cmd  {std::cout << "cmd" << std::endl;} 
          ;
 
-decl: TYPE ID {std::cout << "Typbe, ID: " << $1 << ", " << $2 <<std::endl;}
-    | TYPE ID '=' value {/*check, add to the symbol tree*/}
+decl: TYPE ID {check_redecl_error($1, $2);}
+    | TYPE ID '=' value {check_redecl_error($1, $2);}
     ;
 
 value: value opr1 value
@@ -88,12 +110,29 @@ opr1: '+'
     | '/'
     ;
 term: VAL_LITERAL
-    | ID {/*check if id is in symbol tree. if not halt*/}
+    | ID {
+           if (!symbol_table.is_declared($1))
+           {
+             std::cout << "ERROR(line " << ++line_count \
+             << "): unknown variable '" << $1 << "'" \
+             << std::endl;
+             exit(1);
+           }
+         }
     | COMMAND_RANDOM '(' value ')'
     | '(' term ')'
     ;
 
-expr: ID opr2 value {/*check if ID is in symbol table*/}
+expr: ID opr2 value 
+      {
+        if (!symbol_table.is_declared($1))
+        {
+          std::cout << "ERROR(line " << ++line_count \
+          << "): unknown variable '" << $1 << "'" \
+          << std::endl;
+          exit(1);
+        }
+     }
     ;
 opr2: '='
     | ASSIGN_ADD
