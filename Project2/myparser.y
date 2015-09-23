@@ -2,13 +2,14 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
-//#include "symbol_table.h"
+#include "SymbolTable.h"
 
 extern int yylex();
 extern FILE* yyin; 
-extern char* yytext;
+//extern char* yytext;
 int line_count =0; 
-//use map that maps from string to struct with some preoperties
+SymbolTable symbol_table;
+
 void yyerror
   (char* err_string)
 {

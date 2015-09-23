@@ -1,88 +1,56 @@
-/******************************************************
- ** FILE: SymbolTable.cpp
- **
- ** CLASS:
- ** CSE450
- **
- ** AUTHOR:
- ** Yousef Gtat
- **
- ** CREATION DATE:
- ** 09/21/2015
- **
- ** NOTES:
- *******************************************************/
-
 #include "SymbolTable.h"
 #include <iostream>
-
-using std::cout;
-using std::endl;
-
-//Create initial root Node and then insert to the BST
-void SymbolTable::insert 
-  (string var)
+  
+SymbolTable::~SymbolTable
+  (  )
 {
-  if (root==nullptr)
+  std::map<string, var*>::iterator it;
+  for (it=var_info.begin(); it!=var_info.end(); it++)
   {
-    root = new Node(var);
-    head = root;
+    delete it->second;
+  }
+}
+
+bool SymbolTable::is_declared
+  (string name)
+{
+  if (var_info.count(name))
+  {
+    return true;
+  }
+  return false;
+}
+
+void SymbolTable::insert
+  (string name)
+{
+  if (is_declared(name))
+  {
+    /* Skip without inserting */
   }
   else
   {
-    head->next = new Node(var);
-    head = head->next;
+    var_info[name] = new var(name);
   }
 }
 
-
-bool rec_search
-  (string var, Node* inNode)
+var* SymbolTable::search
+  (string name)
 {
-  static bool match = false;
-  if (inNode == nullptr) {}
-  else if (inNode->name == var) match = true;
-  else rec_search(var, inNode->next);
-  return match;
-}
-
-bool SymbolTable::search
-  (string var)
-{
-  bool match = rec_search(var, root);
-  return match;
-}
-
-int rec_print
-  (Node* inNode)
-{
-  if (inNode == nullptr) return 0;
-  cout<< inNode->name << endl;
-  rec_print(inNode->next);
-  return 1;
+  /* users need to use is_declared member function to check
+   * if the name exist or not
+   */
+  return var_info[name];
 }
 
 void SymbolTable::print
-  (    )
+  (  )
 {
-  rec_print(root);
+  std::map<string, var*>::iterator it;
+  for (it=var_info.begin(); it!=var_info.end(); it++)
+  {
+    std::cout << it->first << ", ";
+  }
+    std::cout << std::endl;
 }
-
-SymbolTable::~SymbolTable()
-{
-    destroyTree (root);
-}
-
-void SymbolTable::destroyTree (Node* inNode)
-{
-    if (inNode != nullptr)
-    {
-        destroyTree(inNode->next);
-        delete inNode;
-    }
-}
-
-
-
-
 

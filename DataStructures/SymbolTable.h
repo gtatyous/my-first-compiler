@@ -1,47 +1,40 @@
-/******************************************************
- ** FILE: SymbolTable.h
- **
- ** CLASS:
- ** CSE450
- **
- ** AUTHOR:
- ** Yousef Gtat
- **
- ** CREATION DATE:
- ** 09/21/2015
- **
- ** NOTES:
- *******************************************************/
-
 #ifndef SYMBOLTABLE_H_
 #define SYMBOLTABLE_H_
 
 #include <string>
+#include <map>
+
 using std::string;
 
-class Node {
-    public:
-        string name;
-        Node *next;
-        bool scope;
-        bool init;
-        int mem_position;
-        Node(string var): name(var), next(nullptr) {}
-        ~Node()=default;
+
+typedef struct var
+{
+  public:
+    var(string name): name(name) {}
+    ~var()=default;
+    string name;
+    int scope;
+    bool init;
+    string type;
+    int line;
+    void* value;
+    int mem_location;
+} var;
+
+
+class SymbolTable
+{
+  public:
+    SymbolTable() {}
+    ~SymbolTable();
+    bool is_declared(string);
+    void insert(string);
+    var* search(string); 
+    void print();
+
+  private:
+    std::map<string, var*> var_info;
 };
 
-class SymbolTable {
-    public:
-      SymbolTable(): root(nullptr) {head=root;}
-      ~SymbolTable();
-      void insert(string);
-      bool search(string);
-      void print();
-
-    private:
-    Node *root;
-    Node *head;
-    void destroyTree(Node*);
-};
 
 #endif
