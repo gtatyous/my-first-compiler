@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string.h>
 
+int line_count =0; 
+
 %}
 
 %option noyywrap
@@ -15,10 +17,25 @@ random                                                    return COMMAND_RANDOM;
 [a-zA-Z_][a-zA-Z_0-9]*   {yylval.lexeme = strdup(yytext); return ID;}
 ([0-9]+(\.[0-9]+)?|(\.[0-9]+)){1}([eE][+\-]?[0-9]+)?      return VAL_LITERAL;
 \'[^'\n]?\'                                               return CHAR_LITERAL;
-\'[^'\n]{2,}\'                                            return MULTI_CHAR;
-\'                                                        return NON_TERM_CHAR;
+\'[^'\n]{2,}\'           { /* report multi char error*/
+                  	   std::cout << "ERROR(line " << \
+                           ++line_count << "): syntax error" \
+                           << std::endl;
+                           exit(1);
+                         }
+\'                       { /* report non term char error*/
+                           std::cout << "ERROR(line " << \
+                           ++line_count << "): syntax error" \
+                           << std::endl;
+                           exit(1);
+                         }
 \"[^"\n]*\"                                               return STRING_LITERAL;
-\"                                                        return NON_TERM_STRING;
+\"                       { /* report not term str error*/
+                           std::cout << "ERROR(line " << \
+                           ++line_count << "): syntax error" \
+                           << std::endl;
+                           exit(1);
+                         }
 [+\-*/()=,{}\[\]\.;]                                      return yytext[0];
 \+=                                                       return ASSIGN_ADD;
 -=                                                        return ASSIGN_SUB;
@@ -33,9 +50,13 @@ random                                                    return COMMAND_RANDOM;
 "&&"                                                      return BOOL_AND;
 "||"                                                      return BOOL_OR;
 [ \t]+                                                    {}
-[\r]?\n                                                   return NEW_LINE;
+[\r]?\n                                                   {++line_count;}
 #.*                                                       {}
 "/*"(.|[\r\n])*"*/"                                       {}
-.                                                         return UNKNOWN;
-
+.                        { /* report unknown char error*/
+               		   std::cout << "ERROR(line " << \
+                           ++line_count << "): syntax error" \
+                           << std::endl;
+                           exit(1);
+                         }
 %%

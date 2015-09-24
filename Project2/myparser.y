@@ -8,7 +8,8 @@
 extern int yylex();
 extern FILE* yyin; 
 //extern char* yytext;
-int line_count =0; 
+extern int line_count; 
+
 SymbolTable symbol_table;
 
 void yyerror
@@ -61,10 +62,7 @@ void check_var
 %token <lexeme> ID
 %token VAL_LITERAL
 %token CHAR_LITERAL
-%token MULTI_CHAR
-%token NON_TERM_CHAR
 %token STRING_LITERAL
-%token NON_TERM_STRING
 %token ASSIGN_ADD
 %token ASSIGN_SUB
 %token ASSIGN_MULT
@@ -77,8 +75,6 @@ void check_var
 %token COMP_GTE
 %token BOOL_AND
 %token BOOL_OR
-%token NEW_LINE
-%token UNKNOWN
 
 %left ','
 %left ASSIGN_ADD ASSIGN_SUB ASSIGN_MULT ASSIGN_DIV
@@ -92,44 +88,15 @@ void check_var
 
 %%
 
-line: line line
-    | NEW_LINE {++line_count;}
-    | err
-    | statement
-    | {std::cout << "epsilon" << std::endl;}
+program: program line
+       |
+       ;
+
+line: statement ';'
+    | ';'
     ;
 
-err: MULTI_CHAR { /* report multi char error*/
-                  std::cout << "ERROR(line " << \
-                  ++line_count << "): syntax error" \
-                  << std::endl;
-                  exit(1);
-                }
-   | NON_TERM_CHAR { /* report non term char error*/
-                     std::cout << "ERROR(line " << \
-                     ++line_count << "): syntax error" \
-                     << std::endl;
-                     exit(1);
-                   }
-   | NON_TERM_STRING { /* report not term str error*/
-                       std::cout << "ERROR(line " << \
-                       ++line_count << "): syntax error" \
-                       << std::endl;
-                       exit(1);
-                     }
-   | UNKNOWN { /* report unknown char error*/
-               std::cout << "ERROR(line " << \
-               ++line_count << "): syntax error" \
-               << std::endl;
-               exit(1);
-             }
-   ;
-
-statement: something ';'
-         | ';'
-         ;
-
-something: decl 
+statement: decl 
          | mexpr  
          | cmd 
          ;
@@ -138,25 +105,21 @@ decl: TYPE ID {check_redecl_error($1, $2);}
     | TYPE ID '=' expr {check_redecl_error($1, $2);}
     ;
 
-expr: expr opr1 expr
-     | '(' expr ')'
-     | '-' expr
-     | term
-     ;
-
-opr1: '+'
-    | '-'
-    | '*'
-    | '/'
-    | COMP_EQU
-    | COMP_NEQU
-    | COMP_LESS
-    | COMP_LTE
-    | COMP_GTR
-    | COMP_GTE
-    ;
-
-term: VAL_LITERAL
+expr: expr '+' expr
+    | expr '-' expr
+    | expr '*' expr
+    | expr '/' expr
+    | expr COMP_EQU expr
+    | expr COMP_NEQU expr
+    | expr COMP_LESS expr
+    | expr COMP_LTE expr
+    | expr COMP_GTR expr
+    | expr COMP_GTE expr
+    | expr BOOL_AND expr
+    | expr BOOL_OR expr
+    | '(' expr ')'
+    | '-' expr
+    | VAL_LITERAL
     | ID {check_var($1);}
     | COMMAND_RANDOM '(' expr ')'
     ;
