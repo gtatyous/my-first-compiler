@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
-#include "../DataStructures/SymbolTable.h"
+#include "SymbolTable.h"
 
 
 extern int yylex();
@@ -87,7 +87,7 @@ void check_var
 %%
 
 line: line line
-    | NEW_LINE {++line_count}
+    | NEW_LINE {++line_count;}
     | err
     | statement
     | {std::cout << "epsilon" << std::endl;}
