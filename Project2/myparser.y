@@ -80,6 +80,12 @@ void check_var
 %token NEW_LINE
 %token UNKNOWN
 
+%left ','
+%left ASSIGN_ADD ASSIGN_SUB ASSIGN_MULT ASSIGN_DIV
+%left BOOL_OR
+%left BOOL_AND
+%left COMP_EQU COMP_NEQU
+%left COMP_LESS COMP_LTE COMP_GTR COMP_GTE 
 %left '-' '+'
 %left '*' '/'
 %nonassoc UMINUS
@@ -134,6 +140,7 @@ decl: TYPE ID {check_redecl_error($1, $2);}
 
 expr: expr opr1 expr
      | '(' expr ')'
+     | '-' expr
      | term
      ;
 
