@@ -14,7 +14,7 @@ SymbolTable symbol_table;
 void yyerror
   (char* err_string)
 {
-  std::cout << "Error (line " << ++line_count << "): syntax error" << std::endl;
+  std::cout << "ERROR (line " << ++line_count << "): syntax error" << std::endl;
   exit(1);
 }
 
@@ -34,7 +34,18 @@ void check_redecl_error
     symbol_table.search(name)->line = line_count;
     symbol_table.search(name)->init = false;
   }
-  std::cout << "Type, ID: " << type << ", " << name <<std::endl;
+}
+
+void check_var
+  (string name)
+{
+  if (!symbol_table.is_declared(name))
+  {
+    std::cout << "ERROR(line " << ++line_count \
+    << "): unknown variable '" << name << "'" \
+    << std::endl;
+    exit(1);
+  }
 }
 
 %}
@@ -76,72 +87,91 @@ void check_redecl_error
 %%
 
 line: line line
-    | NEW_LINE {std::cout<< "Line_count: " << ++line_count <<std::endl;}
+    | NEW_LINE {++line_count}
     | err
     | statement
     | {std::cout << "epsilon" << std::endl;}
     ;
 
-err: MULTI_CHAR {std::cout<< "multi char" <<std::endl;}
-   | NON_TERM_CHAR {std::cout<< "non term char" <<std::endl;}
-   | NON_TERM_STRING {std::cout<< "non term str" <<std::endl;}
-   | UNKNOWN {std::cout << "unknown" << std::endl;}
+err: MULTI_CHAR { /* report multi char error*/
+                  std::cout << "ERROR(line " << \
+                  ++line_count << "): syntax error" \
+                  << std::endl;
+                  exit(1);
+                }
+   | NON_TERM_CHAR { /* report non term char error*/
+                     std::cout << "ERROR(line " << \
+                     ++line_count << "): syntax error" \
+                     << std::endl;
+                     exit(1);
+                   }
+   | NON_TERM_STRING { /* report not term str error*/
+                       std::cout << "ERROR(line " << \
+                       ++line_count << "): syntax error" \
+                       << std::endl;
+                       exit(1);
+                     }
+   | UNKNOWN { /* report unknown char error*/
+               std::cout << "ERROR(line " << \
+               ++line_count << "): syntax error" \
+               << std::endl;
+               exit(1);
+             }
    ;
 
 statement: something ';'
          | ';'
          ;
 
-something: decl {std::cout << "decl"<<std::endl;} 
-         | expr {std::cout << "expr" << std::endl;}  
-         | cmd  {std::cout << "cmd" << std::endl;} 
+something: decl 
+         | mexpr  
+         | cmd 
          ;
 
 decl: TYPE ID {check_redecl_error($1, $2);}
-    | TYPE ID '=' value {check_redecl_error($1, $2);}
+    | TYPE ID '=' expr {check_redecl_error($1, $2);}
     ;
 
-value: value opr1 value
+expr: expr opr1 expr
+     | '(' expr ')'
      | term
      ;
+
 opr1: '+'
     | '-'
     | '*'
     | '/'
-    ;
-term: VAL_LITERAL
-    | ID {
-           if (!symbol_table.is_declared($1))
-           {
-             std::cout << "ERROR(line " << ++line_count \
-             << "): unknown variable '" << $1 << "'" \
-             << std::endl;
-             exit(1);
-           }
-         }
-    | COMMAND_RANDOM '(' value ')'
-    | '(' term ')'
+    | COMP_EQU
+    | COMP_NEQU
+    | COMP_LESS
+    | COMP_LTE
+    | COMP_GTR
+    | COMP_GTE
     ;
 
-expr: ID opr2 value 
-      {
-        if (!symbol_table.is_declared($1))
-        {
-          std::cout << "ERROR(line " << ++line_count \
-          << "): unknown variable '" << $1 << "'" \
-          << std::endl;
-          exit(1);
-        }
-     }
+term: VAL_LITERAL
+    | ID {check_var($1);}
+    | COMMAND_RANDOM '(' expr ')'
     ;
+
+mexpr: ID opr2 expr {check_var($1);}
+    ;
+
 opr2: '='
     | ASSIGN_ADD
     | ASSIGN_SUB
     | ASSIGN_MULT
     | ASSIGN_DIV
     ;
-cmd: COMMAND_PRINT '(' value ')' 
+
+cmd: COMMAND_PRINT '(' list ')' 
    ;
+
+list: expr
+    | list ',' list
+    |
+    ;
+
 %%
 
 
@@ -161,10 +191,10 @@ int main
     fclose(yyin);
     exit(2);
   }
-  std::cout << "#rules: " << YYNRULES << std::endl;
+  //std::cout << "#rules: " << YYNRULES << std::endl;
   yyparse();
 
-  std::cout<< "successfully compiled!" << std::endl;
+  std::cout<< "Parse Successful!" << std::endl;
   //fclose(yyin);
   return 0;
 }
