@@ -124,7 +124,7 @@ expr: expr '+' expr
     | COMMAND_RANDOM '(' expr ')'
     ;
 
-mexpr: ID opr2 expr {check_var($1);}
+mexpr: ID {check_var($1);} opr2 expr
     ;
 
 opr2: '='
