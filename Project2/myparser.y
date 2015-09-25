@@ -15,7 +15,7 @@ SymbolTable symbol_table;
 void yyerror
   (char* err_string)
 {
-  std::cout << "ERROR (line " << ++line_count << "): syntax error" << std::endl;
+  std::cout << "ERROR(line " << ++line_count << "): syntax error" << std::endl;
   exit(1);
 }
 
