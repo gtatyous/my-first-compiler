@@ -104,8 +104,12 @@ statement: decl
 
 decl: TYPE ID {check_redecl_error($1, $2);}
     | TYPE ID {check_redecl_error($1, $2);} '=' expr
+    | decl ',' multidecl 
     ;
 
+multidecl: ID {check_redecl_error("none", $1);}
+         | ID {check_redecl_error("none", $1);} '=' expr
+         ;
 
 expr: expr '+' expr
     | expr '-' expr
