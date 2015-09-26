@@ -2,7 +2,8 @@ val my_val ;
 val my_val2 = 5+1;
 my_val = 5 + 6;
 my_val2 = 7 + my_val * random(6);
-
+print(my_val-1, my_val*2);
+val kk l
 val var2; val var3;
 my_val = (var2) * (random(6)+7) + var3;
 ##aa = 2;
@@ -10,3 +11,5 @@ print();
 print(2);
 print(my_val);
 print(my_val, my_val2, var3);
+
+val my_val = (my_val = 2);

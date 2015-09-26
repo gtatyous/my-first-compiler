@@ -99,10 +99,11 @@ line: statement ';'
 statement: decl 
          | mexpr  
          | cmd 
+         | VAL_LITERAL
          ;
 
 decl: TYPE ID {check_redecl_error($1, $2);}
-    | TYPE ID '=' expr {check_redecl_error($1, $2);}
+    | TYPE ID {check_redecl_error($1, $2);} '=' expr
     ;
 
 expr: expr '+' expr
@@ -139,7 +140,6 @@ cmd: COMMAND_PRINT '(' list ')'
 
 list: expr
     | list ',' list
-    |
     ;
 
 %%
