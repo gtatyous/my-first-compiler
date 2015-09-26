@@ -106,6 +106,7 @@ decl: TYPE ID {check_redecl_error($1, $2);}
     | TYPE ID {check_redecl_error($1, $2);} '=' expr
     ;
 
+
 expr: expr '+' expr
     | expr '-' expr
     | expr '*' expr
@@ -120,6 +121,7 @@ expr: expr '+' expr
     | expr BOOL_OR expr
     | '(' expr ')'
     | '-' expr
+    | mexpr
     | VAL_LITERAL
     | ID {check_var($1);}
     | COMMAND_RANDOM '(' expr ')'
