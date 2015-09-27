@@ -1,5 +1,4 @@
-val x    //; is missing
-
-//program should terminate before scanning the following commands
-
-print("This should not be scanned by flex! if you are seeing this right now, then your program did not halt properly");
+val x   ; 
+val b= x, c = b+x, d = c/x*b; #nothing
+print(x, b ,       c , d );
+val e, , f , g;
