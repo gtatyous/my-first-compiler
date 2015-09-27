@@ -6,6 +6,8 @@ print(my_val-1, my_val*2);
 val var2; val var3;
 my_val = (var2) * (random(6+my_val)+7) + var3;
 ##aa = 2;
+5+5;
+var2 * var3;
 print(2);
 print(my_val);
 print(my_val, my_val2, var3);

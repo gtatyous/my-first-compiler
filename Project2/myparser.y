@@ -97,9 +97,8 @@ line: statement ';'
     ;
 
 statement: decl 
-         | mexpr  
+         | expr  
          | cmd 
-         | VAL_LITERAL
          ;
 
 decl: TYPE ID {check_redecl_error($1, $2);}
