@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include "../DataStructures/SymbolTable.h"
-
+#include "../DataStructures/SyntaxTree.h"
 
 extern int yylex();
 extern FILE* yyin; 
@@ -86,13 +86,13 @@ void check_var
 
 %%
 
-program: {/*$$ = new AST creat new AST node here*/}
-       | program statement
+program: {$$ = new SyntexTree();}
+       | program statement {$1->AddChild($2);}
        ;
 
-statement: decl ';'
-         | expr ';'
-         | cmd  ';'
+statement: decl ';' {$$=$1;}
+         | expr ';' {$$=$1;}
+         | cmd  ';' {$$=$1;}
          |      ';'
          ;
 
@@ -120,8 +120,8 @@ expr: ID {check_var($1);} opr expr
     | expr BOOL_OR expr
     | '(' expr ')'
     | '-' expr
-    | VAL_LITERAL
-    | ID {check_var($1);}
+    | VAL_LITERAL {$$ = new VAL_NODE($1);}
+    | ID {check_var($1); $$ = new ID_NODE($1);}
     | COMMAND_RANDOM '(' expr ')'
     ;
 
