@@ -19,8 +19,8 @@ void yyerror
   exit(1);
 }
 
-void check_redecl_error 
-  (string type, string name)
+void add_var
+  (string name)
 { 
   if (symbol_table.is_declared(name))
   {
@@ -31,9 +31,7 @@ void check_redecl_error
   else
   {
     symbol_table.insert(name);
-    symbol_table.search(name)->type = type;
     symbol_table.search(name)->line = line_count;
-    symbol_table.search(name)->init = false;
   }
 }
 
@@ -88,29 +86,27 @@ void check_var
 
 %%
 
-program: program line
-       |
+program: {/*$$ = new AST creat new AST node here*/}
+       | program statement
        ;
 
-line: statement ';'
-    | ';'
-    ;
-
-statement: decl 
-         | expr  
-         | cmd 
+statement: decl ';'
+         | expr ';'
+         | cmd  ';'
+         |      ';'
          ;
 
-decl: TYPE ID {check_redecl_error($1, $2);}
-    | TYPE ID {check_redecl_error($1, $2);} '=' expr
+decl: TYPE ID {add_var($2);}
+    | TYPE ID {add_var($2);} '=' expr
     | decl ',' multidecl
     ;
 
-multidecl: ID {check_redecl_error("none", $1);}
-         | ID {check_redecl_error("none", $1);} '=' expr
+multidecl: ID {add_var($1);}
+         | ID {add_var($1);} '=' expr
          ;
 
-expr: expr '+' expr
+expr: ID {check_var($1);} opr expr
+    | expr '+' expr
     | expr '-' expr
     | expr '*' expr
     | expr '/' expr
@@ -124,16 +120,12 @@ expr: expr '+' expr
     | expr BOOL_OR expr
     | '(' expr ')'
     | '-' expr
-    | mexpr
     | VAL_LITERAL
     | ID {check_var($1);}
     | COMMAND_RANDOM '(' expr ')'
     ;
 
-mexpr: ID {check_var($1);} opr2 expr
-    ;
-
-opr2: '='
+opr : '='
     | ASSIGN_ADD
     | ASSIGN_SUB
     | ASSIGN_MULT
