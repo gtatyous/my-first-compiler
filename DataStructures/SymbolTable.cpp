@@ -1,6 +1,12 @@
 #include "SymbolTable.h"
 #include <iostream>
   
+SymbolTable::SymbolTable
+  (  )
+{
+  /* do nothing for now*/
+}
+
 SymbolTable::~SymbolTable
   (  )
 {
@@ -30,7 +36,9 @@ void SymbolTable::insert
   }
   else
   {
-    var_info[name] = new var(name);
+    var* varptr = new var();
+    var_info[name] = varptr;
+    var_info[name]->name = name;
   }
 }
 
@@ -42,6 +50,7 @@ var* SymbolTable::search
    */
   return var_info[name];
 }
+
 
 void SymbolTable::print
   (  )

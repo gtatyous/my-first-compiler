@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
-#include "SymbolTable.h"
+#include "../DataStructures/SymbolTable.h"
 
 
 extern int yylex();

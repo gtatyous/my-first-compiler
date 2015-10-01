@@ -7,29 +7,32 @@
 using std::string;
 
 
-typedef struct var
+class var
 {
   public:
-    var(string name): name(name) {}
-    ~var()=default;
+    var() {}
+    ~var() {}
+    
     string name;
-    int scope;
-    bool init;
     string type;
+    bool init;
     int line;
-    void* value;
     int mem_location;
-} var;
+  
+  private:
+    int scope;
+    void* init_value;
+};
 
 
 class SymbolTable
 {
   public:
-    SymbolTable() {}
+    SymbolTable();
     ~SymbolTable();
-    bool is_declared(string);
-    void insert(string);
-    var* search(string); 
+    bool is_declared(string name);
+    void insert(string name);
+    var* search(string name); 
     void print();
 
   private:
