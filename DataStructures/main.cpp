@@ -1,15 +1,13 @@
-#include "SymbolTable.h"
-#include <iostream>
+#include "SyntaxTree.h"
 
 
 int main ()
 {
 
-  SymbolTable st;
-  st.insert("my_var1");
-  st.insert("my_var2");
-  st.print();
-
+  AST* id = new ID_NODE("may_var");
+  AST* val = new VAL_NODE(5.5);
+  AST* opr = new OPR_NODE('+', id, val);
+  opr->process();
   return 0;
 
 
