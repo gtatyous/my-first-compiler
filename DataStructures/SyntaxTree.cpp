@@ -1,23 +1,31 @@
 #include "SyntaxTree.h"
 
-void ID_NODE::print() 
+void AST_ROOT::AddChild 
+  (AST* child)
+{
+  _children.push_back(child);
+}
+void ID_NODE::print
+  (void) 
 {
 
 }
 
-int ID_NODE::process()
+int ID_NODE::process
+  (void)
 {
   int out_id = GetID();
   return out_id;
 }
 
-
-void VAL_NODE::print() 
+void VAL_NODE::print
+  (void) 
 {
 
 }
 
-int VAL_NODE::process()
+int VAL_NODE::process
+  (void)
 {
   int out_id = GetID();
   std::cout << "val_copy " << _val << " s" << out_id << std::endl;
@@ -32,12 +40,14 @@ OPR_NODE::OPR_NODE
   _children.push_back(RHS);
 }
 
-void OPR_NODE::print() 
+void OPR_NODE::print
+  (void) 
 {
 
 }
 
-int OPR_NODE::process()
+int OPR_NODE::process
+  (void)
 {
   int lhs = _children[0]->process();
   int rhs = _children[1]->process();

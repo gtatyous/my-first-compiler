@@ -14,11 +14,28 @@ static int GetID()
 class AST
 {
   public:
+
     std::vector<AST*> _children;
+    virtual void AddChild(AST*) {;}
     virtual int process() = 0;
     virtual void print() = 0;
 };
 
+class AST_ROOT: public AST
+{
+  public:
+    AST_ROOT() {;}
+    ~AST_ROOT() {for (int i=0; i < _children.size(); i++)
+                 {
+                  delete _children[i];
+                 }
+                }
+    
+    void AddChild (AST* child);
+    int process() {;}
+    void print() {;}
+    
+};
 
 class ID_NODE: public AST
 {
