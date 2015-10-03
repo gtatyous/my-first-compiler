@@ -18,7 +18,7 @@ int ID_NODE::process
   int out_id = symbol_table.search(_name)->id;
   if (out_id == -1)
   {
-    int out_id = GetID();
+    out_id = GetID();
     symbol_table.search(_name)->id = out_id;
   }
   return out_id;

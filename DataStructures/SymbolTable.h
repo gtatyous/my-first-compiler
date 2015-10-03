@@ -10,7 +10,7 @@ using std::string;
 class var
 {
   public:
-    var():id (-1) {}
+    var():id(-1) {}
     ~var() {}
     
     string name;
