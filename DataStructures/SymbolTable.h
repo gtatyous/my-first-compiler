@@ -10,7 +10,7 @@ using std::string;
 class var
 {
   public:
-    var() {}
+    var():id (-1) {}
     ~var() {}
     
     string name;
@@ -18,7 +18,8 @@ class var
     bool init;
     int line;
     int mem_location;
-  
+    int id;
+
   private:
     int scope;
     void* init_value;

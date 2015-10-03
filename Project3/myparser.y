@@ -81,10 +81,10 @@ void check_var
 
 %left ','
 %left ASSIGN_ADD ASSIGN_SUB ASSIGN_MULT ASSIGN_DIV
+%right '='
 %left BOOL_OR
 %left BOOL_AND
-%left COMP_EQU COMP_NEQU
-%left COMP_LESS COMP_LTE COMP_GTR COMP_GTE 
+%nonassoc COMP_EQU COMP_NEQU COMP_LESS COMP_LTE COMP_GTR COMP_GTE 
 %left '-' '+'
 %left '*' '/'
 %nonassoc UMINUS
@@ -101,40 +101,41 @@ program: { $$ = new AST_ROOT(); }
        | program statement { $1->AddChild($2);}
        ;
 
-statement: decl ';' {}
+statement: decl ';' {$1->process(); $$ = $1;}
          | expr ';' {$1->process(); $$ = $1;}
          | cmd  ';' {}
          |      ';'
          ;
 
-decl: TYPE ID {add_var($2);}
-    | TYPE ID {add_var($2);} '=' expr
+decl: TYPE ID {add_var($2); $$ = new ID_NODE($2);}
+    | TYPE ID {add_var($2);} '=' expr {AST* id = new ID_NODE($2); 
+                                       $$ = new OPR_NODE("=", id, $5); 
+                                      }
     | decl ',' ID {add_var($3);}
     | decl ',' ID {add_var($3);} '=' expr
     ;
 
-
 expr: ID {check_var($1);} opr expr {
                                     AST* id = new ID_NODE($1); 
-                                    $$ = new OPR_NODE('/', id, $4);
+                                    $$ = new OPR_NODE("=", id, $4);
                                    }
-    | expr '+' expr {$$ = new OPR_NODE('+', $1, $3);}
-    | expr '-' expr {$$ = new OPR_NODE('-', $1, $3);}
-    | expr '*' expr {$$ = new OPR_NODE('*', $1, $3);}
-    | expr '/' expr {$$ = new OPR_NODE('/', $1, $3);}
-    | expr COMP_EQU expr
-    | expr COMP_NEQU expr
-    | expr COMP_LESS expr
-    | expr COMP_LTE expr
-    | expr COMP_GTR expr
-    | expr COMP_GTE expr
-    | expr BOOL_AND expr
-    | expr BOOL_OR expr
+    | expr '+' expr {$$ = new OPR_NODE("+", $1, $3);}
+    | expr '-' expr {$$ = new OPR_NODE("-", $1, $3);}
+    | expr '*' expr {$$ = new OPR_NODE("*", $1, $3);}
+    | expr '/' expr {$$ = new OPR_NODE("/", $1, $3);}
+    | expr COMP_EQU expr { $$ = new OPR_NODE("==", $1, $3);} 
+    | expr COMP_NEQU expr { $$ = new OPR_NODE("!=", $1, $3);}
+    | expr COMP_LESS expr { $$ = new OPR_NODE("<", $1, $3);}
+    | expr COMP_LTE expr { $$ = new OPR_NODE("<=", $1, $3);}
+    | expr COMP_GTR expr  { $$ = new OPR_NODE(">", $1, $3);}
+    | expr COMP_GTE expr  { $$ = new OPR_NODE(">=", $1, $3);}
+    | expr BOOL_AND expr  { $$ = new OPR_NODE("&&", $1, $3);}
+    | expr BOOL_OR expr  { $$ = new OPR_NODE("||", $1, $3);}
     | '(' expr ')' {$$ = $2;}
     | '-' expr 
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
     | ID {check_var($1); $$ = new ID_NODE($1);}
-    | COMMAND_RANDOM '(' expr ')'
+    | COMMAND_RANDOM '(' expr ')'  { $$ = new CMD_NODE($3);}
     ;
 
 opr : '='

@@ -1,10 +1,11 @@
 #ifndef SYNTXTREE_H
 #define SYNTXTREE_H
 
-#include <iostream>
 #include <vector>
 #include <string>
+#include "SymbolTable.h"
 
+extern SymbolTable symbol_table;
 static int GetID()
 {
   static int next_id = 0;
@@ -64,7 +65,7 @@ class VAL_NODE: public AST
 class OPR_NODE: public AST
 {
   public:
-    OPR_NODE(char, AST*, AST*);
+    OPR_NODE(std::string, AST*, AST*);
     ~OPR_NODE()
     { 
       delete _children[0];
@@ -76,8 +77,26 @@ class OPR_NODE: public AST
     void print();
   
   private:
-    char _opr;
+    std::string _opr;
 };
+
+class CMD_NODE: public AST
+{
+  public:
+    CMD_NODE(AST* e){_children.push_back(e);}
+    ~CMD_NODE()
+    { 
+      delete _children[0];
+      delete this;
+    }
+    
+    int process();
+    void print();
+  
+  private:
+  
+};
+
 
 #endif /*SYNTAXTREE_H*/
 

@@ -1,10 +1,12 @@
 *.map
 ss.js
-tube1
-tube1-lexer.cc
-tube1-lexer.o
+Project1/tube1
+Project1/tube1-lexer.cc
+Project1/tube1-lexer.o
 
 Project2/*.tab.*
 Project2/*.o
 Project2/*.cc
 Project2/tube2
+
+Project3/tube3*

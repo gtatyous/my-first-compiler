@@ -59,7 +59,7 @@ random                   return COMMAND_RANDOM;
                           line_count += std::count(com.begin(), com.end(), '\n');}
 .                        { /* report unknown char error*/
                		         std::cout << "ERROR(line " << \
-                           ++line_count << "): syntax error" \
+                           ++line_count << "): unknown token " << yytext[0] \
                            << std::endl;
                            exit(1);}
 %%
