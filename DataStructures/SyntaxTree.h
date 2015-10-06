@@ -33,7 +33,11 @@ class AST_ROOT: public AST
                 }
     
     void AddChild (AST* child);
-    int process() {;}
+    int process() {for (int i=0; i<_children.size(); i++)
+                   {
+                    _children[i]->process();
+                   }
+                  }
     void print() {;}
     
 };

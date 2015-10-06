@@ -1,5 +1,6 @@
 val x = 0;
 
+print (5);
 x = 5 + (3 * 9);
 
 val y;

@@ -79,6 +79,7 @@ void check_var
 %token BOOL_AND
 %token BOOL_OR
 
+
 %left ','
 %left ASSIGN_ADD ASSIGN_SUB ASSIGN_MULT ASSIGN_DIV
 %right '='
@@ -94,6 +95,7 @@ void check_var
 %type <node> decl
 %type <node> expr 
 %type <node> cmd
+%type <node> list
 
 %%
 
@@ -103,7 +105,7 @@ program: { $$ = new AST_ROOT(); }
 
 statement: decl ';' {$1->process(); $$ = $1;}
          | expr ';' {$1->process(); $$ = $1;}
-         | cmd  ';' {}
+         | cmd  ';' {$1->process(); $$ = $1;}
          |      ';'
          ;
 
@@ -123,14 +125,14 @@ expr: ID {check_var($1);} opr expr {
     | expr '-' expr {$$ = new OPR_NODE("-", $1, $3);}
     | expr '*' expr {$$ = new OPR_NODE("*", $1, $3);}
     | expr '/' expr {$$ = new OPR_NODE("/", $1, $3);}
-    | expr COMP_EQU expr { $$ = new OPR_NODE("==", $1, $3);} 
-    | expr COMP_NEQU expr { $$ = new OPR_NODE("!=", $1, $3);}
-    | expr COMP_LESS expr { $$ = new OPR_NODE("<", $1, $3);}
-    | expr COMP_LTE expr { $$ = new OPR_NODE("<=", $1, $3);}
-    | expr COMP_GTR expr  { $$ = new OPR_NODE(">", $1, $3);}
-    | expr COMP_GTE expr  { $$ = new OPR_NODE(">=", $1, $3);}
-    | expr BOOL_AND expr  { $$ = new OPR_NODE("&&", $1, $3);}
-    | expr BOOL_OR expr  { $$ = new OPR_NODE("||", $1, $3);}
+    | '(' expr COMP_EQU expr  ')' { $$ = new OPR_NODE("==", $2, $4);} 
+    | '(' expr COMP_NEQU expr ')' { $$ = new OPR_NODE("!=", $2, $4);}
+    | '(' expr COMP_LESS expr ')' { $$ = new OPR_NODE("<" , $2, $4);}
+    | '(' expr COMP_LTE expr  ')' { $$ = new OPR_NODE("<=", $2, $4);}
+    | '(' expr COMP_GTR expr  ')' { $$ = new OPR_NODE(">" , $2, $4);}
+    | '(' expr COMP_GTE expr  ')' { $$ = new OPR_NODE(">=", $2, $4);}
+    | '(' expr BOOL_AND expr  ')' { $$ = new OPR_NODE("&&", $2, $4);}
+    | '(' expr BOOL_OR expr   ')' { $$ = new OPR_NODE("||", $2, $4);}
     | '(' expr ')' {$$ = $2;}
     | '-' expr 
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
@@ -145,11 +147,11 @@ opr : '='
     | ASSIGN_DIV
     ;
 
-cmd: COMMAND_PRINT '(' list ')' 
+cmd: COMMAND_PRINT '(' list ')'  {$$ = $3;} 
    ;
 
-list: expr
-    | list ',' list
+list: expr {$$ = $1;}
+    | list ',' expr 
     ;
 
 %%
