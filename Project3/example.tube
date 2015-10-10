@@ -1,6 +1,7 @@
 val x = 33;
 
-
+print(x);
+print( 99, 100);
 x = 5 + (3 * 9);
 
 val y = -2;

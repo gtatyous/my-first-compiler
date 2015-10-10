@@ -92,11 +92,16 @@ void PRINT_NODE::AddChild
 int PRINT_NODE::process
   (void)
 {
+  
   for (int i=0; i<_children.size(); i++)
   {
-    _children[i]->process();
+    _outChars.push_back(_children[i]->process());
   }
-  std::cout << "out_val" << " s???" << std::endl;
+
+  for (int j=0; j<_outChars.size(); j++)
+  {
+    std::cout << "out_val s" << _outChars[j] << std::endl;
+  }
   std::cout << "out_char" << '\n' << std::endl;
   return -1;
 }

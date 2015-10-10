@@ -98,8 +98,8 @@ class PRINT_NODE: public AST
     void AddChild (AST* child);
     void print();
   
-  private:
-  
+  private: 
+    std::vector<int> _outChars;
 };
 
 class UMINUS_NODE: public AST

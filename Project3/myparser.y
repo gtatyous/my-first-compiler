@@ -147,11 +147,11 @@ opr : '='
     | ASSIGN_DIV
     ;
 
-cmd: COMMAND_PRINT '(' list ')'  {$3 = new PRINT_NODE(); $$ = $3;} 
+cmd: COMMAND_PRINT '(' list ')'  {$$ = $3;} 
    ;
 
-list: expr {$$->AddChild($1);}
-    | list ',' expr {$$->AddChild($3);}
+list: expr {$$ = new PRINT_NODE(); $$->AddChild($1);}
+    | list ',' expr {$1->AddChild($3); $$ = $1;}
     ;
 
 %%
