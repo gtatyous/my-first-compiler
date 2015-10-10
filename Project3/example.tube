@@ -1,9 +1,9 @@
-val x = 0;
+val x = 33;
 
-print (5);
+
 x = 5 + (3 * 9);
 
-val y;
+val y = -2;
 y = x * 5 + 6;
 
 

@@ -106,7 +106,7 @@ program: { $$ = new AST_ROOT(); }
 statement: decl ';' {$1->process(); $$ = $1;}
          | expr ';' {$1->process(); $$ = $1;}
          | cmd  ';' {$1->process(); $$ = $1;}
-         |      ';'
+         |      ';' {/*do nothing*/ $$ = new EMPTY_NODE();}
          ;
 
 decl: TYPE ID {add_var($2); $$ = new ID_NODE($2);}
@@ -134,10 +134,10 @@ expr: ID {check_var($1);} opr expr {
     | '(' expr BOOL_AND expr  ')' { $$ = new OPR_NODE("&&", $2, $4);}
     | '(' expr BOOL_OR expr   ')' { $$ = new OPR_NODE("||", $2, $4);}
     | '(' expr ')' {$$ = $2;}
-    | '-' expr 
+    | '-' expr {$$ = new UMINUS_NODE($2);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
     | ID {check_var($1); $$ = new ID_NODE($1);}
-    | COMMAND_RANDOM '(' expr ')'  { $$ = new CMD_NODE($3);}
+    | COMMAND_RANDOM '(' expr ')'  {}
     ;
 
 opr : '='
@@ -147,11 +147,11 @@ opr : '='
     | ASSIGN_DIV
     ;
 
-cmd: COMMAND_PRINT '(' list ')'  {$$ = $3;} 
+cmd: COMMAND_PRINT '(' list ')'  {$3 = new PRINT_NODE(); $$ = $3;} 
    ;
 
-list: expr {$$ = $1;}
-    | list ',' expr 
+list: expr {$$->AddChild($1);}
+    | list ',' expr {$$->AddChild($3);}
     ;
 
 %%

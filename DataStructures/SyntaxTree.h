@@ -84,22 +84,48 @@ class OPR_NODE: public AST
     std::string _opr;
 };
 
-class CMD_NODE: public AST
+class PRINT_NODE: public AST
 {
   public:
-    CMD_NODE(AST* e){_children.push_back(e);}
-    ~CMD_NODE()
+    PRINT_NODE(){;}
+    ~PRINT_NODE()
     { 
       delete _children[0];
       delete this;
     }
     
     int process();
+    void AddChild (AST* child);
     void print();
   
   private:
   
 };
+
+class UMINUS_NODE: public AST
+{
+  public:
+    UMINUS_NODE(AST*);
+    ~UMINUS_NODE()
+    { 
+      delete _children[0];
+      delete _children[1];
+      delete this;
+    }
+    
+    int process();
+    void print();
+};
+
+class EMPTY_NODE: public AST
+{
+  public:
+    EMPTY_NODE() { ; }
+    ~EMPTY_NODE() { ; }
+    int process() { ; }
+    void print() { ; }
+};
+
 
 
 #endif /*SYNTAXTREE_H*/

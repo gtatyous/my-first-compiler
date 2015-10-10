@@ -78,13 +78,47 @@ int OPR_NODE::process
   return out_id;
 }
 
-void CMD_NODE::print
+void PRINT_NODE::print
   (void)
 {
 }
 
-int CMD_NODE::process
-  (void) 
+void PRINT_NODE::AddChild 
+  (AST* child)
 {
-
+  _children.push_back(child);
 }
+
+int PRINT_NODE::process
+  (void)
+{
+  for (int i=0; i<_children.size(); i++)
+  {
+    _children[i]->process();
+  }
+  std::cout << "out_val" << " s???" << std::endl;
+  std::cout << "out_char" << '\n' << std::endl;
+  return -1;
+}
+
+UMINUS_NODE::UMINUS_NODE
+  (AST* expr)
+{
+  _children.push_back(expr);
+}
+
+int UMINUS_NODE::process
+  (void)
+{
+  int expr = _children[0]->process();
+  int out_id = GetID();
+  std::cout << "mult -1 s"<< expr <<" s"<< out_id << std::endl;
+  return out_id;
+}
+
+void UMINUS_NODE::print
+  (void)
+{
+  
+}
+
