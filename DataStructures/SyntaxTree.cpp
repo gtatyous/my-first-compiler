@@ -122,18 +122,18 @@ int BOOL_NODE::process
 }
 
 ////////////////////////////
-void PRINT_NODE::print
+void PRINT_CMD_NODE::print
   (void)
 {
 }
 
-void PRINT_NODE::AddChild 
+void PRINT_CMD_NODE::AddChild 
   (AST* child)
 {
   _children.push_back(child);
 }
 
-int PRINT_NODE::process
+int PRINT_CMD_NODE::process
   (void)
 {
   
@@ -145,6 +145,26 @@ int PRINT_NODE::process
   TubeIC_out << "out_char " << "'\\n'" << std::endl;
   return -1;
 }
+
+RAND_CMD_NODE::RAND_CMD_NODE
+  (AST* expr)
+{
+  _children[0] = expr;
+}
+
+void RAND_CMD_NODE::print
+  (void)
+{}
+
+int RAND_CMD_NODE::process
+  (void)
+{
+  int expr_id  = _children[0]->process();
+  int out_id = GetID();
+  TubeIC_out << "random s" << expr_id << " s" << out_id << std::endl;
+  return out_id;
+}
+
 
 UMINUS_NODE::UMINUS_NODE
   (AST* expr)

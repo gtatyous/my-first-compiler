@@ -111,11 +111,11 @@ class BOOL_NODE: public AST
     std::string _opr;
 };
 
-class PRINT_NODE: public AST
+class PRINT_CMD_NODE: public AST
 {
   public:
-    PRINT_NODE(){;}
-    ~PRINT_NODE()
+    PRINT_CMD_NODE(){;}
+    ~PRINT_CMD_NODE()
     { 
       for (int i=0; i<_children.size(); i++)
       {
@@ -129,8 +129,27 @@ class PRINT_NODE: public AST
     void print();
   
   private: 
-    std::vector<int> _outChars;
 };
+
+class RAND_CMD_NODE: public AST
+{
+  public:
+    RAND_CMD_NODE(AST*);
+    ~RAND_CMD_NODE()
+    { 
+      for (int i=0; i<_children.size(); i++)
+      {
+        delete _children[i];
+      }
+      delete this;
+    }
+    
+    int process();
+    void print();
+
+  private: 
+};
+
 
 class UMINUS_NODE: public AST
 {

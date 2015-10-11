@@ -167,13 +167,13 @@ expr: ID {check_var($1);} '=' expr {
     | '-' expr {$$ = new UMINUS_NODE($2);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
     | ID {check_var($1); $$ = new ID_NODE($1);}
-    | COMMAND_RANDOM '(' expr ')'  {}
+    | COMMAND_RANDOM '(' expr ')'  {$$ = new RAND_CMD_NODE($3);}
     ;
 
 cmd: COMMAND_PRINT '(' list ')'  {$$ = $3;} 
    ;
 
-list: expr {$$ = new PRINT_NODE(); $$->AddChild($1);}
+list: expr {$$ = new PRINT_CMD_NODE(); $$->AddChild($1);}
     | list ',' expr {$1->AddChild($3); $$ = $1;}
     ;
 
