@@ -62,7 +62,6 @@ int OPR_NODE::process
   else if (_opr == "-")   {TubeIC_out << "sub s";}
   else if (_opr == "*")   {TubeIC_out << "mult s";}
   else if (_opr == "/")   {TubeIC_out << "div s";}
-  else if (_opr == "=")   {TubeIC_out << "val_copy s" << rhs << " s" << lhs << std::endl; return lhs;}
   else if (_opr == "==")  {TubeIC_out << "test_equ s";}
   else if (_opr == "!=")  {TubeIC_out << "test_nequ s";} 
   else if (_opr == "<")   {TubeIC_out << "test_less s";}
@@ -71,6 +70,16 @@ int OPR_NODE::process
   else if (_opr == ">=")  {TubeIC_out << "test_gte s";}
   else if (_opr == "&&")  {TubeIC_out << "test_and s";}
   else if (_opr == "||")  {TubeIC_out << "test_or s";}
+  else if (_opr == "=")   {TubeIC_out << "val_copy s" << rhs       \
+                           << " s" << lhs << std::endl; return lhs;}
+  else if (_opr == "+=")  {TubeIC_out << "add s"<<lhs << " s"<<rhs \
+                           <<" s"<<lhs <<std::endl;     return lhs;}
+  else if (_opr == "-=")  {TubeIC_out << "sub s"<<lhs << " s"<<rhs \
+                           <<" s"<<lhs <<std::endl;     return lhs;}
+  else if (_opr == "*=")  {TubeIC_out << "mult s"<<lhs << " s"<<rhs \
+                           <<" s"<<lhs <<std::endl;     return lhs;}
+  else if (_opr == "/=")  {TubeIC_out << "div s"<<lhs << " s"<<rhs \
+                           <<" s"<<lhs <<std::endl;     return lhs;}
   else {std::cout << "Internal Compiler ERROR!!" << std::endl;}
 
   int out_id = GetID();
@@ -126,4 +135,27 @@ void UMINUS_NODE::print
 {
   
 }
+
+void DECL_NODE::print
+  (void)
+{
+}
+
+void DECL_NODE::AddChild 
+  (AST* child)
+{
+  _children.push_back(child);
+}
+
+int DECL_NODE::process
+  (void)
+{
+  
+  for (int i=0; i<_children.size(); i++)
+  {
+    _children[i]->process();
+  }
+  return -1;
+}
+
 

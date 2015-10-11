@@ -92,7 +92,10 @@ class PRINT_NODE: public AST
     PRINT_NODE(){;}
     ~PRINT_NODE()
     { 
-      delete _children[0];
+      for (int i=0; i<_children.size(); i++)
+      {
+        delete _children[i];
+      }
       delete this;
     }
     
@@ -126,6 +129,26 @@ class EMPTY_NODE: public AST
     ~EMPTY_NODE() { ; }
     int process() { ; }
     void print() { ; }
+};
+
+class DECL_NODE: public AST
+{
+  public:
+    DECL_NODE(){;}
+    ~DECL_NODE()
+    { 
+      for (int i=0; i<_children.size(); i++)
+      {
+        delete _children[i];
+      }
+      delete this;
+    }
+    
+    int process();
+    void AddChild (AST* child);
+    void print();
+  
+  private: 
 };
 
 

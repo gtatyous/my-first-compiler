@@ -109,18 +109,48 @@ statement: decl ';' {$1->process(); $$ = $1;}
          |      ';' {/*do nothing*/ $$ = new EMPTY_NODE();}
          ;
 
-decl: TYPE ID {add_var($2); $$ = new ID_NODE($2);}
-    | TYPE ID {add_var($2);} '=' expr {AST* id = new ID_NODE($2); 
-                                       $$ = new OPR_NODE("=", id, $5); 
+decl: TYPE ID { add_var($2); 
+                AST* id = new ID_NODE($2); 
+                $$ = new DECL_NODE();
+                $$->AddChild(id);
+               }
+    | TYPE ID {add_var($2);} '=' expr { AST* id  = new ID_NODE($2); 
+                                        AST* opr_node = new OPR_NODE("=", id, $5);
+                                        $$ = new DECL_NODE(); 
+                                        $$->AddChild(opr_node);
                                       }
-    | decl ',' ID {add_var($3);}
-    | decl ',' ID {add_var($3);} '=' expr
+    | decl ',' ID {add_var($3);}  { AST* id  = new ID_NODE($3); 
+                                    $1->AddChild(id); 
+                                    $$ = $1;
+                                  }
+    | decl ',' ID {add_var($3);} '=' expr   { AST* id  = new ID_NODE($3); 
+                                              AST* opr_node = new OPR_NODE("=", id, $6);
+                                              $1->AddChild(opr_node); 
+                                              $$ = $1;
+                                            }
     ;
 
-expr: ID {check_var($1);} opr expr {
+expr: ID {check_var($1);} '=' expr {
                                     AST* id = new ID_NODE($1); 
                                     $$ = new OPR_NODE("=", id, $4);
                                    }
+    | ID {check_var($1);} ASSIGN_ADD expr {
+                                    AST* id = new ID_NODE($1); 
+                                    $$ = new OPR_NODE("+=", id, $4);
+                                   }
+    | ID {check_var($1);} ASSIGN_SUB expr {
+                                    AST* id = new ID_NODE($1); 
+                                    $$ = new OPR_NODE("-=", id, $4);
+                                   }
+   | ID {check_var($1);} ASSIGN_MULT expr {
+                                    AST* id = new ID_NODE($1); 
+                                    $$ = new OPR_NODE("*=", id, $4);
+                                   }
+    | ID {check_var($1);} ASSIGN_DIV expr {
+                                    AST* id = new ID_NODE($1); 
+                                    $$ = new OPR_NODE("/=", id, $4);
+                                   }
+
     | expr '+' expr {$$ = new OPR_NODE("+", $1, $3);}
     | expr '-' expr {$$ = new OPR_NODE("-", $1, $3);}
     | expr '*' expr {$$ = new OPR_NODE("*", $1, $3);}
@@ -138,13 +168,6 @@ expr: ID {check_var($1);} opr expr {
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
     | ID {check_var($1); $$ = new ID_NODE($1);}
     | COMMAND_RANDOM '(' expr ')'  {}
-    ;
-
-opr : '='
-    | ASSIGN_ADD
-    | ASSIGN_SUB
-    | ASSIGN_MULT
-    | ASSIGN_DIV
     ;
 
 cmd: COMMAND_PRINT '(' list ')'  {$$ = $3;} 
