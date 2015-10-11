@@ -149,7 +149,7 @@ int PRINT_CMD_NODE::process
 RAND_CMD_NODE::RAND_CMD_NODE
   (AST* expr)
 {
-  _children[0] = expr;
+  _children.push_back(expr);
 }
 
 void RAND_CMD_NODE::print
@@ -164,7 +164,6 @@ int RAND_CMD_NODE::process
   TubeIC_out << "random s" << expr_id << " s" << out_id << std::endl;
   return out_id;
 }
-
 
 UMINUS_NODE::UMINUS_NODE
   (AST* expr)

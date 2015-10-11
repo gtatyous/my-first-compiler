@@ -137,10 +137,7 @@ class RAND_CMD_NODE: public AST
     RAND_CMD_NODE(AST*);
     ~RAND_CMD_NODE()
     { 
-      for (int i=0; i<_children.size(); i++)
-      {
-        delete _children[i];
-      }
+      delete _children[0];
       delete this;
     }
     

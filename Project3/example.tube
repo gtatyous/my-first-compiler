@@ -1,5 +1,5 @@
 val x = 33;
-
+random (101);
 print(x);
 print( 99, 100);
 x = 5 + (3 * 9);
