@@ -8,10 +8,17 @@
 
 extern std::stringstream TubeIC_out;
 extern SymbolTable symbol_table;
+
 static int GetID()
 {
   static int next_id = 0;
   return next_id++;
+}
+
+static int GetLabelID()
+{
+  static int next_label_id = 0;
+  return next_label_id++;
 }
 
 class AST
@@ -73,6 +80,24 @@ class OPR_NODE: public AST
   public:
     OPR_NODE(std::string, AST*, AST*);
     ~OPR_NODE()
+    { 
+      delete _children[0];
+      delete _children[1];
+      delete this;
+    }
+    
+    int process();
+    void print();
+  
+  private:
+    std::string _opr;
+};
+
+class BOOL_NODE: public AST
+{
+  public:
+    BOOL_NODE(std::string, AST*, AST*);
+    ~BOOL_NODE()
     { 
       delete _children[0];
       delete _children[1];

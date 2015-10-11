@@ -151,18 +151,18 @@ expr: ID {check_var($1);} '=' expr {
                                     $$ = new OPR_NODE("/=", id, $4);
                                    }
 
-    | expr '+' expr {$$ = new OPR_NODE("+", $1, $3);}
-    | expr '-' expr {$$ = new OPR_NODE("-", $1, $3);}
-    | expr '*' expr {$$ = new OPR_NODE("*", $1, $3);}
-    | expr '/' expr {$$ = new OPR_NODE("/", $1, $3);}
-    | '(' expr COMP_EQU expr  ')' { $$ = new OPR_NODE("==", $2, $4);} 
-    | '(' expr COMP_NEQU expr ')' { $$ = new OPR_NODE("!=", $2, $4);}
-    | '(' expr COMP_LESS expr ')' { $$ = new OPR_NODE("<" , $2, $4);}
-    | '(' expr COMP_LTE expr  ')' { $$ = new OPR_NODE("<=", $2, $4);}
-    | '(' expr COMP_GTR expr  ')' { $$ = new OPR_NODE(">" , $2, $4);}
-    | '(' expr COMP_GTE expr  ')' { $$ = new OPR_NODE(">=", $2, $4);}
-    | '(' expr BOOL_AND expr  ')' { $$ = new OPR_NODE("&&", $2, $4);}
-    | '(' expr BOOL_OR expr   ')' { $$ = new OPR_NODE("||", $2, $4);}
+    | expr    '+'    expr   {$$  = new OPR_NODE("+",  $1, $3);}
+    | expr    '-'    expr   {$$  = new OPR_NODE("-",  $1, $3);}
+    | expr    '*'    expr   {$$  = new OPR_NODE("*",  $1, $3);}
+    | expr    '/'    expr   {$$  = new OPR_NODE("/",  $1, $3);}
+    | expr COMP_EQU  expr   { $$ = new OPR_NODE("==", $1, $3);} 
+    | expr COMP_NEQU expr   { $$ = new OPR_NODE("!=", $1, $3);}
+    | expr COMP_LESS expr   { $$ = new OPR_NODE("<" , $1, $3);}
+    | expr COMP_LTE  expr   { $$ = new OPR_NODE("<=", $1, $3);}
+    | expr COMP_GTR  expr   { $$ = new OPR_NODE(">" , $1, $3);}
+    | expr COMP_GTE  expr   { $$ = new OPR_NODE(">=", $1, $3);}
+    | expr BOOL_AND  expr   { $$ = new BOOL_NODE("&&", $1, $3);}
+    | expr BOOL_OR   expr   { $$ = new BOOL_NODE("||", $1, $3);}
     | '(' expr ')' {$$ = $2;}
     | '-' expr {$$ = new UMINUS_NODE($2);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}

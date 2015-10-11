@@ -1,23 +1,90 @@
-val_copy 33 s1
-val_copy s1 s0
-out_val s0
-out_char '\n'
-val_copy 99 s2
-val_copy 100 s3
-out_val s2
+val_copy 1 s0
+val_copy 2 s1
+test_less s0 s1 s2
+test_nequ s2 0 s3
+jump_if_0 s3 end_bool_0
+val_copy 3 s4
+val_copy 4 s5
+test_less s4 s5 s6
+test_nequ s6 0 s3
+end_bool_0:
 out_val s3
+val_copy 1 s7
+val_copy 2 s8
+test_gtr s7 s8 s9
+test_nequ s9 0 s10
+jump_if_0 s10 end_bool_1
+val_copy 3 s11
+val_copy 4 s12
+test_less s11 s12 s13
+test_nequ s13 0 s10
+end_bool_1:
+out_val s10
+val_copy 1 s14
+val_copy 2 s15
+test_less s14 s15 s16
+test_nequ s16 0 s17
+jump_if_0 s17 end_bool_2
+val_copy 3 s18
+val_copy 4 s19
+test_gtr s18 s19 s20
+test_nequ s20 0 s17
+end_bool_2:
+out_val s17
+val_copy 1 s21
+val_copy 2 s22
+test_gtr s21 s22 s23
+test_nequ s23 0 s24
+jump_if_0 s24 end_bool_3
+val_copy 3 s25
+val_copy 4 s26
+test_gtr s25 s26 s27
+test_nequ s27 0 s24
+end_bool_3:
+out_val s24
 out_char '\n'
-val_copy 5 s4
-val_copy 3 s5
-val_copy 9 s6
-mult s5 s6 s7
-add s4 s7 s8
-val_copy s8 s0
-val_copy 2 s10
-mult -1 s10 s11
-val_copy s11 s9
-val_copy 5 s12
-mult s0 s12 s13
-val_copy 6 s14
-add s13 s14 s15
-val_copy s15 s9
+val_copy 5 s28
+val_copy 6 s29
+test_less s28 s29 s30
+test_nequ s30 0 s31
+jump_if_n0 s31 end_bool_4
+val_copy 7 s32
+val_copy 8 s33
+test_less s32 s33 s34
+test_nequ s34 0 s31
+end_bool_4:
+out_val s31
+val_copy 5 s35
+val_copy 6 s36
+test_gtr s35 s36 s37
+test_nequ s37 0 s38
+jump_if_n0 s38 end_bool_5
+val_copy 7 s39
+val_copy 8 s40
+test_less s39 s40 s41
+test_nequ s41 0 s38
+end_bool_5:
+out_val s38
+val_copy 5 s42
+val_copy 6 s43
+test_less s42 s43 s44
+test_nequ s44 0 s45
+jump_if_n0 s45 end_bool_6
+val_copy 7 s46
+val_copy 8 s47
+test_gtr s46 s47 s48
+test_nequ s48 0 s45
+end_bool_6:
+out_val s45
+val_copy 5 s49
+val_copy 6 s50
+test_gtr s49 s50 s51
+test_nequ s51 0 s52
+jump_if_n0 s52 end_bool_7
+val_copy 7 s53
+val_copy 8 s54
+test_gtr s53 s54 s55
+test_nequ s55 0 s52
+end_bool_7:
+out_val s52
+out_char '\n'

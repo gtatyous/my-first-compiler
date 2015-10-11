@@ -68,8 +68,6 @@ int OPR_NODE::process
   else if (_opr == "<=")  {TubeIC_out << "test_lte s";}
   else if (_opr == ">")   {TubeIC_out << "test_gtr s";}
   else if (_opr == ">=")  {TubeIC_out << "test_gte s";}
-  else if (_opr == "&&")  {TubeIC_out << "test_and s";}
-  else if (_opr == "||")  {TubeIC_out << "test_or s";}
   else if (_opr == "=")   {TubeIC_out << "val_copy s" << rhs       \
                            << " s" << lhs << std::endl; return lhs;}
   else if (_opr == "+=")  {TubeIC_out << "add s"<<lhs << " s"<<rhs \
@@ -87,6 +85,43 @@ int OPR_NODE::process
   return out_id;
 }
 
+BOOL_NODE::BOOL_NODE
+  (std::string opr, AST* LHS, AST* RHS)
+  : _opr (opr)
+{
+  _children.push_back(LHS);
+  _children.push_back(RHS);
+}
+
+void BOOL_NODE::print
+  (void) 
+{
+
+}
+
+int BOOL_NODE::process
+  (void)
+{
+  int lhs = _children[0]->process();
+  int out_id = GetID(); 
+  int label_id = GetLabelID();
+  if      (_opr == "&&")  
+  {
+    TubeIC_out << "test_nequ s"<< lhs << " 0 s" << out_id<< std::endl;
+    TubeIC_out << "jump_if_0 s" << out_id<< " end_bool_" << label_id<< std::endl;
+  }
+  else if (_opr == "||")   
+  {
+    TubeIC_out << "test_nequ s"<< lhs << " 0 s" << out_id<< std::endl;
+    TubeIC_out << "jump_if_n0 s" << out_id<< " end_bool_" << label_id<< std::endl;
+  }
+  int rhs = _children[1]->process();
+  TubeIC_out << "test_nequ s"<< rhs << " 0 s" << out_id<< std::endl;
+  TubeIC_out << "end_bool_" << label_id << ":" << std::endl;
+  return out_id;
+}
+
+////////////////////////////
 void PRINT_NODE::print
   (void)
 {
@@ -104,12 +139,8 @@ int PRINT_NODE::process
   
   for (int i=0; i<_children.size(); i++)
   {
-    _outChars.push_back(_children[i]->process());
-  }
-
-  for (int j=0; j<_outChars.size(); j++)
-  {
-    TubeIC_out << "out_val s" << _outChars[j] << std::endl;
+    int out_id = _children[i]->process();
+    TubeIC_out << "out_val s" << out_id << std::endl;
   }
   TubeIC_out << "out_char " << "'\\n'" << std::endl;
   return -1;
