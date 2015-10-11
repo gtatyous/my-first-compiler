@@ -1,0 +1,23 @@
+val_copy 33 s1
+val_copy s1 s0
+out_val s0
+out_char '\n'
+val_copy 99 s2
+val_copy 100 s3
+out_val s2
+out_val s3
+out_char '\n'
+val_copy 5 s4
+val_copy 3 s5
+val_copy 9 s6
+mult s5 s6 s7
+add s4 s7 s8
+val_copy s8 s0
+val_copy 2 s10
+mult -1 s10 s11
+val_copy s11 s9
+val_copy 5 s12
+mult s0 s12 s13
+val_copy 6 s14
+add s13 s14 s15
+val_copy s15 s9

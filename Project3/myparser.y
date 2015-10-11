@@ -12,7 +12,7 @@ extern FILE* yyin;
 extern int line_count; 
 
 std::ofstream outfile;
-std::stringstream out;
+std::stringstream TubeIC_out;
 SymbolTable symbol_table;
 
 void yyerror
@@ -176,7 +176,7 @@ int main
   yyparse();
 
   outfile.open(argv[2]);
-  outfile << out.str();
+  outfile << TubeIC_out.str();
   outfile.close();
   std::cout<< "Parse Successful!" << std::endl;
   return 0;

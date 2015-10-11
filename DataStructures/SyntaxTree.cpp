@@ -34,7 +34,7 @@ int VAL_NODE::process
   (void)
 {
   int out_id = GetID();
-  std::cout << "val_copy " << _val << " s" << out_id << std::endl;
+  TubeIC_out << "val_copy " << _val << " s" << out_id << std::endl;
   return out_id;
 }
 
@@ -58,23 +58,23 @@ int OPR_NODE::process
   int lhs = _children[0]->process();
   int rhs = _children[1]->process();
 
-  if      (_opr == "+")   {std::cout << "add s";}
-  else if (_opr == "-")   {std::cout << "sub s";}
-  else if (_opr == "*")   {std::cout << "mult s";}
-  else if (_opr == "/")   {std::cout << "div s";}
-  else if (_opr == "=")   {std::cout << "val_copy s" << rhs << " s" << lhs << std::endl; return lhs;}
-  else if (_opr == "==")  {std::cout << "test_equ s";}
-  else if (_opr == "!=")  {std::cout << "test_nequ s";} 
-  else if (_opr == "<")   {std::cout << "test_less s";}
-  else if (_opr == "<=")  {std::cout << "test_lte s";}
-  else if (_opr == ">")   {std::cout << "test_gtr s";}
-  else if (_opr == ">=")  {std::cout << "test_gte s";}
-  else if (_opr == "&&")  {std::cout << "test_and s";}
-  else if (_opr == "||")  {std::cout << "test_or s";}
+  if      (_opr == "+")   {TubeIC_out << "add s";}
+  else if (_opr == "-")   {TubeIC_out << "sub s";}
+  else if (_opr == "*")   {TubeIC_out << "mult s";}
+  else if (_opr == "/")   {TubeIC_out << "div s";}
+  else if (_opr == "=")   {TubeIC_out << "val_copy s" << rhs << " s" << lhs << std::endl; return lhs;}
+  else if (_opr == "==")  {TubeIC_out << "test_equ s";}
+  else if (_opr == "!=")  {TubeIC_out << "test_nequ s";} 
+  else if (_opr == "<")   {TubeIC_out << "test_less s";}
+  else if (_opr == "<=")  {TubeIC_out << "test_lte s";}
+  else if (_opr == ">")   {TubeIC_out << "test_gtr s";}
+  else if (_opr == ">=")  {TubeIC_out << "test_gte s";}
+  else if (_opr == "&&")  {TubeIC_out << "test_and s";}
+  else if (_opr == "||")  {TubeIC_out << "test_or s";}
   else {std::cout << "Internal Compiler ERROR!!" << std::endl;}
 
   int out_id = GetID();
-  std::cout << lhs << " s"<<rhs << " s"<<out_id << std::endl;
+  TubeIC_out << lhs << " s"<<rhs << " s"<<out_id << std::endl;
   return out_id;
 }
 
@@ -100,9 +100,9 @@ int PRINT_NODE::process
 
   for (int j=0; j<_outChars.size(); j++)
   {
-    std::cout << "out_val s" << _outChars[j] << std::endl;
+    TubeIC_out << "out_val s" << _outChars[j] << std::endl;
   }
-  std::cout << "out_char" << '\n' << std::endl;
+  TubeIC_out << "out_char " << "'\\n'" << std::endl;
   return -1;
 }
 
@@ -117,7 +117,7 @@ int UMINUS_NODE::process
 {
   int expr = _children[0]->process();
   int out_id = GetID();
-  std::cout << "mult -1 s"<< expr <<" s"<< out_id << std::endl;
+  TubeIC_out << "mult -1 s"<< expr <<" s"<< out_id << std::endl;
   return out_id;
 }
 

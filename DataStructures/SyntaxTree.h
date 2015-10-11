@@ -4,7 +4,9 @@
 #include <vector>
 #include <string>
 #include "SymbolTable.h"
+#include <sstream>
 
+extern std::stringstream TubeIC_out;
 extern SymbolTable symbol_table;
 static int GetID()
 {
