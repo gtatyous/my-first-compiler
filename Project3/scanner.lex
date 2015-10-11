@@ -57,6 +57,8 @@ random                   return COMMAND_RANDOM;
 #.*                      { /*ignore comments*/}
 "/*"(.|[\r\n])*"*/"      {std::string com(yytext);
                           line_count += std::count(com.begin(), com.end(), '\n');}
+"?"                      return TERNARY;
+":"                      return COLON;
 .                        { /* report unknown char error*/
                		         std::cout << "ERROR(line " << \
                            ++line_count << "): unknown token " << yytext[0] \

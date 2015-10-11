@@ -78,7 +78,8 @@ void check_var
 %token COP_GTE
 %token BOOL_AND
 %token BOOL_OR
-
+%token TERNARY
+%token COLON
 
 %left ','
 %left ASSIGN_ADD ASSIGN_SUB ASSIGN_MULT ASSIGN_DIV
@@ -163,6 +164,7 @@ expr: ID {check_var($1);} '=' expr {
     | expr COMP_GTE  expr   { $$ = new OPR_NODE(">=", $1, $3);}
     | expr BOOL_AND  expr   { $$ = new BOOL_NODE("&&", $1, $3);}
     | expr BOOL_OR   expr   { $$ = new BOOL_NODE("||", $1, $3);}
+    | expr TERNARY expr COLON expr  {$$ = new TERNARY_OPR_NODE($1, $3, $5);}
     | '(' expr ')' {$$ = $2;}
     | '-' expr {$$ = new UMINUS_NODE($2);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}

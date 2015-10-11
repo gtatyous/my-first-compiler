@@ -5,6 +5,7 @@
 #include <string>
 #include "SymbolTable.h"
 #include <sstream>
+#include <iostream>
 
 extern std::stringstream TubeIC_out;
 extern SymbolTable symbol_table;
@@ -24,7 +25,6 @@ static int GetLabelID()
 class AST
 {
   public:
-
     std::vector<AST*> _children;
     virtual void AddChild(AST*) {;}
     virtual int process() = 0;
@@ -48,7 +48,6 @@ class AST_ROOT: public AST
                    }
                   }
     void print() {;}
-    
 };
 
 class ID_NODE: public AST
@@ -92,6 +91,30 @@ class OPR_NODE: public AST
   private:
     std::string _opr;
 };
+
+class TERNARY_OPR_NODE: public AST
+{
+  public:
+    TERNARY_OPR_NODE(AST* con, AST* if_true, AST* if_false)
+    {
+      _children.push_back(con);
+      _children.push_back(if_true);
+      _children.push_back(if_false);
+    }
+    ~TERNARY_OPR_NODE()
+    { 
+      delete _children[0];
+      delete _children[1];
+      delete _children[2];
+      delete this;
+    }
+    
+    int process();
+    void print();
+  
+  private:
+};
+
 
 class BOOL_NODE: public AST
 {

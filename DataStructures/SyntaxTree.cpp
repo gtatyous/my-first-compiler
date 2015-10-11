@@ -85,6 +85,38 @@ int OPR_NODE::process
   return out_id;
 }
 
+void TERNARY_OPR_NODE::print
+  (void) 
+{
+
+}
+
+int TERNARY_OPR_NODE::process
+  (void)
+{
+  int con = _children[0]->process();
+  int ternary_false_id = GetLabelID();
+  int ternary_end_id   = GetLabelID();
+  
+
+  TubeIC_out << "jump_if_0 s" << con<< " ternary_false_" << ternary_false_id << std::endl;
+  int out_id = GetID(); 
+
+  //executed when ternary is ture
+  int if_true = _children[1]->process();
+  TubeIC_out << "val_copy s" << if_true << " s" << out_id <<std::endl;
+  TubeIC_out << "jump ternary_end_" << ternary_end_id << std::endl; //don't execute false ternary
+
+  //executed when ternary is false
+  TubeIC_out << "ternary_false_" << ternary_false_id << ":" << std::endl;
+  int if_false = _children[2]->process();
+  TubeIC_out << "val_copy s" << if_false << " s" <<out_id << std::endl; 
+  
+  TubeIC_out << "ternary_end_" << ternary_end_id << ":" << std::endl;
+  return out_id;
+}
+
+
 BOOL_NODE::BOOL_NODE
   (std::string opr, AST* LHS, AST* RHS)
   : _opr (opr)
