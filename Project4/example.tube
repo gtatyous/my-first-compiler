@@ -1,0 +1,15 @@
+val x = 33;
+random (101);
+print(x);
+print( 99, 100);
+x = 5 + (3 * 9);
+
+{
+  val x = 1000;
+  val y;
+  x = y +77;
+}
+val y = -2;
+y = x * 5 + 6;
+
+print(random(y) && y);

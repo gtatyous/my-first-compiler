@@ -8,7 +8,8 @@
 #include <iostream>
 
 extern std::stringstream TubeIC_out;
-extern SymbolTable symbol_table;
+extern SymbolTable* symbol_table;
+extern int check_var(std::string name); //used in ID_NODE processing 
 
 static int GetID()
 {

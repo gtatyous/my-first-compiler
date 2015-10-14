@@ -19,8 +19,6 @@ class var
     int line;
     int mem_location;
     int id;
-
-  private:
     int scope;
     void* init_value;
 };
@@ -32,7 +30,7 @@ class SymbolTable
     SymbolTable();
     ~SymbolTable();
     bool is_declared(string name);
-    void insert(string name);
+    void insert(string name, int line, int scope);
     var* search(string name); 
     void print();
 

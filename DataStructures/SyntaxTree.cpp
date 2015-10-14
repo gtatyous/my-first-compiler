@@ -15,11 +15,12 @@ void ID_NODE::print
 int ID_NODE::process
   (void)
 {
-  int out_id = symbol_table.search(_name)->id;
+  int out_id  = check_var(_name);
+  //int out_id = symbol_table->search(_name)->id;
   if (out_id == -1)
   {
     out_id = GetID();
-    symbol_table.search(_name)->id = out_id;
+    symbol_table->search(_name)->id = out_id;
   }
   return out_id;
 }

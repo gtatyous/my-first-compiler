@@ -1,0 +1,37 @@
+val_copy 33 s1
+val_copy s1 s0
+val_copy 101 s2
+random s2 s3
+out_val s0
+out_char '\n'
+val_copy 99 s4
+out_val s4
+val_copy 100 s5
+out_val s5
+out_char '\n'
+val_copy 5 s6
+val_copy 3 s7
+val_copy 9 s8
+mult s7 s8 s9
+add s6 s9 s10
+val_copy s10 s0
+val_copy 1000 s12
+val_copy s12 s11
+val_copy 77 s14
+add s13 s14 s15
+val_copy s15 s11
+val_copy 2 s17
+mult -1 s17 s18
+val_copy s18 s16
+val_copy 5 s19
+mult s0 s19 s20
+val_copy 6 s21
+add s20 s21 s22
+val_copy s22 s16
+random s16 s23
+test_nequ s23 0 s24
+jump_if_0 s24 end_bool_0
+test_nequ s16 0 s24
+end_bool_0:
+out_val s24
+out_char '\n'
