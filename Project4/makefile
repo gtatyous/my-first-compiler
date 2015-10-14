@@ -3,22 +3,22 @@
 
 default: all
 
-all: tube3
+all: tube4
 
-tube3.tab.cc: myparser.y
-	bison -o tube3.tab.cc -b tube3 -d myparser.y
+tube4.tab.cc: myparser.y
+	bison -o tube4.tab.cc -b tube4 -d myparser.y
 
-tube3.yy.cc: scanner.lex
-	flex -o tube3.yy.cc scanner.lex
+tube4.yy.cc: scanner.lex
+	flex -o tube4.yy.cc scanner.lex
 
-tube3.SymbolTree: ../DataStructures/SymbolTable.cpp
-	g++ -c ../DataStructures/SymbolTable.cpp -o tube3.SymbolTree.o
+tube4.SymbolTree: ../DataStructures/SymbolTable.cpp
+	g++ -c ../DataStructures/SymbolTable.cpp -o tube4.SymbolTree.o
 
-tube3.SyntaxTree: ../DataStructures/SyntaxTree.cpp
-	g++ -c ../DataStructures/SyntaxTree.cpp -o tube3.SyntaxTree.o
+tube4.SyntaxTree: ../DataStructures/SyntaxTree.cpp
+	g++ -c ../DataStructures/SyntaxTree.cpp -o tube4.SyntaxTree.o
 
-tube3: tube3.tab.o tube3.yy.o tube3.SymbolTree tube3.SyntaxTree
-	g++ -o tube3 tube3.SyntaxTree.o tube3.SymbolTree.o tube3.tab.o tube3.yy.o -ll -ly
+tube4: tube4.tab.o tube4.yy.o tube4.SymbolTree tube4.SyntaxTree
+	g++ -o tube4 tube4.SyntaxTree.o tube4.SymbolTree.o tube4.tab.o tube4.yy.o -ll -ly
 
 clean:
-	rm -f tube3 tube3.tab.cc tube3.tab.hh tube3.yy.cc tube3.tab.o *~ *.o
+	rm -f tube4 tube4.tab.cc tube4.tab.hh tube4.yy.cc tube4.tab.o *~ *.o
