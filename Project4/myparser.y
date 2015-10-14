@@ -122,8 +122,7 @@ program: { $$ = new AST_ROOT();
 
 statement: decl ';' {$1->process(); $$ = $1;}
          | expr ';' {$1->process(); $$ = $1;}
-         | cmd  ';' {$1->process(); $$ = $1;}
-         | 
+         | cmd  ';' {$1->process(); $$ = $1;} 
          |      ';' {/*do nothing*/ $$ = new EMPTY_NODE();}
          ;
 
