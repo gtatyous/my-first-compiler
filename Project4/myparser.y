@@ -93,6 +93,8 @@ int check_var
 %token BOOL_NOT
 %token TERNARY
 %token COLON
+%token OPEN_BRACE
+%token CLOSE_BRACE
 
 %left ','
 %left ASSIGN_ADD ASSIGN_SUB ASSIGN_MULT ASSIGN_DIV
@@ -114,8 +116,8 @@ int check_var
 %%
 
 program: { $$ = new AST_ROOT();
-           SymbolTable* global_scope_symbol_table = new SymbolTable();
-           my_stack.push_back(global_scope_symbol_table);
+           SymbolTable* new_scope = new SymbolTable();
+           my_stack.push_back(new_scope);
            symbol_table = my_stack.back();
          }
        | program statement { $1->AddChild($2);} 
@@ -124,6 +126,7 @@ program: { $$ = new AST_ROOT();
 statement: decl ';' {$1->process(); $$ = $1;}
          | expr ';' {$1->process(); $$ = $1;}
          | cmd  ';' {$1->process(); $$ = $1;} 
+         | OPEN_BRACE program CLOSE_BRACE {$$ = $2;} 
          |      ';' {/*do nothing*/ $$ = new EMPTY_NODE();}
          ;
 
@@ -217,7 +220,7 @@ int main
     exit(2);
   }
   yyparse();
-
+  
   outfile.open(argv[2]);
   outfile << TubeIC_out.str();
   outfile.close();

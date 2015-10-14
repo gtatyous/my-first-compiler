@@ -67,16 +67,11 @@ random                   return COMMAND_RANDOM;
 ":"                      return COLON;
 "{"                      {
                            scope++;
-                           SymbolTable* new_scope_symbol_table = new SymbolTable();
-                           my_stack.push_back(new_scope_symbol_table);
-                           symbol_table = my_stack.back();
+                           return OPEN_BRACE;
                          }
 "}"                      {
                            scope--;
-                           SymbolTable* local_scope = my_stack.back();
-                           my_stack.pop_back();
-                           delete local_scope;
-                           symbol_table = my_stack.back();
+                           return CLOSE_BRACE;
                          }
 .                        { /* report unknown char error*/
                		         std::cout << "ERROR(line " << \
