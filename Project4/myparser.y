@@ -90,6 +90,7 @@ int check_var
 %token COP_GTE
 %token BOOL_AND
 %token BOOL_OR
+%token BOOL_NOT
 %token TERNARY
 %token COLON
 
@@ -101,7 +102,7 @@ int check_var
 %nonassoc COMP_EQU COMP_NEQU COMP_LESS COMP_LTE COMP_GTR COMP_GTE 
 %left '-' '+'
 %left '*' '/'
-%nonassoc UMINUS
+%nonassoc UMINUS BOOL_NOT
 
 %type <node> program
 %type <node> statement
@@ -168,18 +169,19 @@ expr: ID {check_var($1);} '=' expr {
                                     $$ = new OPR_NODE("/=", id, $4);
                                    }
 
-    | expr    '+'    expr   {$$  = new OPR_NODE("+",  $1, $3);}
-    | expr    '-'    expr   {$$  = new OPR_NODE("-",  $1, $3);}
-    | expr    '*'    expr   {$$  = new OPR_NODE("*",  $1, $3);}
-    | expr    '/'    expr   {$$  = new OPR_NODE("/",  $1, $3);}
-    | expr COMP_EQU  expr   { $$ = new OPR_NODE("==", $1, $3);} 
-    | expr COMP_NEQU expr   { $$ = new OPR_NODE("!=", $1, $3);}
-    | expr COMP_LESS expr   { $$ = new OPR_NODE("<" , $1, $3);}
-    | expr COMP_LTE  expr   { $$ = new OPR_NODE("<=", $1, $3);}
-    | expr COMP_GTR  expr   { $$ = new OPR_NODE(">" , $1, $3);}
-    | expr COMP_GTE  expr   { $$ = new OPR_NODE(">=", $1, $3);}
-    | expr BOOL_AND  expr   { $$ = new BOOL_NODE("&&", $1, $3);}
-    | expr BOOL_OR   expr   { $$ = new BOOL_NODE("||", $1, $3);}
+    | expr    '+'    expr   { $$  = new OPR_NODE ("+",   $1 , $3);}
+    | expr    '-'    expr   { $$  = new OPR_NODE ("-",   $1 , $3);}
+    | expr    '*'    expr   { $$  = new OPR_NODE ("*",   $1 , $3);}
+    | expr    '/'    expr   { $$  = new OPR_NODE ("/",   $1 , $3);}
+    | expr COMP_EQU  expr   { $$ = new OPR_NODE  ("==",  $1 , $3);} 
+    | expr COMP_NEQU expr   { $$ = new OPR_NODE  ("!=",  $1 , $3);}
+    | expr COMP_LESS expr   { $$ = new OPR_NODE  ("<" ,  $1 , $3);}
+    | expr COMP_LTE  expr   { $$ = new OPR_NODE  ("<=",  $1 , $3);}
+    | expr COMP_GTR  expr   { $$ = new OPR_NODE  (">" ,  $1 , $3);}
+    | expr COMP_GTE  expr   { $$ = new OPR_NODE  (">=",  $1 , $3);}
+    | expr BOOL_AND  expr   { $$ = new BOOL_NODE ("&&",  $1 , $3);}
+    | expr BOOL_OR   expr   { $$ = new BOOL_NODE ("||",  $1 , $3);}
+    | BOOL_NOT expr         { $$ = new BOOL_NODE ("!" , NULL, $2);}
     | expr TERNARY expr COLON expr  {$$ = new TERNARY_OPR_NODE($1, $3, $5);}
     | '(' expr ')' {$$ = $2;}
     | '-' expr {$$ = new UMINUS_NODE($2);}

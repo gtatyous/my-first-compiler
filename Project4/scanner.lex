@@ -57,6 +57,7 @@ random                   return COMMAND_RANDOM;
 ">="                     return COMP_GTE;
 "&&"                     return BOOL_AND;
 "||"                     return BOOL_OR;
+"!"                      return BOOL_NOT;
 [ \t\r]+                 { /*ignore whitespaces*/}
 \n                       {++line_count;}
 #.*                      { /*ignore comments*/}

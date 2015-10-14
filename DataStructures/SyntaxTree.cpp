@@ -134,7 +134,14 @@ void BOOL_NODE::print
 
 int BOOL_NODE::process
   (void)
-{
+{ 
+  if (_opr == "!")
+  {
+    int rhs = _children[1]->process();
+    int out_id = GetID();
+    TubeIC_out << "test_equ s"<< rhs << " 0 s"<< out_id << std::endl;
+    return out_id;
+  }
   int lhs = _children[0]->process();
   int out_id = GetID(); 
   int label_id = GetLabelID();

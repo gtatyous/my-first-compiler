@@ -1,37 +1,40 @@
-val_copy 33 s1
+val_copy 2 s1
 val_copy s1 s0
 val_copy 101 s2
 random s2 s3
 out_val s0
 out_char '\n'
-val_copy 99 s4
-out_val s4
-val_copy 100 s5
-out_val s5
+test_equ s0 0 s4
+val_copy 0 s5
+test_equ s4 s5 s6
+val_copy 99 s7
+out_val s7
+val_copy 100 s8
+out_val s8
 out_char '\n'
-val_copy 5 s6
-val_copy 3 s7
-val_copy 9 s8
-mult s7 s8 s9
-add s6 s9 s10
-val_copy s10 s0
-val_copy 1000 s12
-val_copy s12 s11
-val_copy 77 s14
-add s13 s14 s15
-val_copy s15 s11
-val_copy 2 s17
-mult -1 s17 s18
-val_copy s18 s16
-val_copy 5 s19
-mult s0 s19 s20
-val_copy 6 s21
-add s20 s21 s22
-val_copy s22 s16
-random s16 s23
-test_nequ s23 0 s24
-jump_if_0 s24 end_bool_0
-test_nequ s16 0 s24
+val_copy 5 s9
+val_copy 3 s10
+val_copy 9 s11
+mult s10 s11 s12
+add s9 s12 s13
+val_copy s13 s0
+val_copy 1000 s15
+val_copy s15 s14
+val_copy 77 s16
+add s14 s16 s17
+val_copy s17 s0
+val_copy 2 s19
+mult -1 s19 s20
+val_copy s20 s18
+val_copy 5 s21
+mult s0 s21 s22
+val_copy 6 s23
+add s22 s23 s24
+val_copy s24 s18
+random s18 s25
+test_nequ s25 0 s26
+jump_if_0 s26 end_bool_0
+test_nequ s18 0 s26
 end_bool_0:
-out_val s24
+out_val s26
 out_char '\n'
