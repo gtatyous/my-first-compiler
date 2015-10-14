@@ -1,44 +1,13 @@
-val_copy 2 s1
-val_copy s1 s0
-val_copy 101 s2
-random s2 s3
+val_copy 1000 s3
+val_copy s3 s2
+val_copy 77 s4
+add s2 s4 s5
+val_copy s5 s0
+val_copy 9999 s7
+val_copy s7 s6
 out_val s0
 out_char '\n'
-test_equ s0 0 s4
-val_copy 0 s5
-test_equ s4 s5 s6
-out_val s6
-out_char '\n'
-val_copy 99 s7
-out_val s7
-val_copy 100 s8
-out_val s8
-out_char '\n'
-val_copy 5 s9
-val_copy 3 s10
-val_copy 9 s11
-mult s10 s11 s12
-add s9 s12 s13
-val_copy s13 s0
-val_copy 1000 s15
-val_copy s15 s14
-val_copy 77 s16
-add s14 s16 s17
-val_copy s17 s0
-val_copy 9999 s19
-val_copy s19 s18
-val_copy 2 s21
-mult -1 s21 s22
-val_copy s22 s20
-val_copy 5 s23
-mult s0 s23 s24
-val_copy 6 s25
-add s24 s25 s26
-val_copy s26 s20
-random s20 s27
-test_nequ s27 0 s28
-jump_if_0 s28 end_bool_0
-test_nequ s20 0 s28
-end_bool_0:
-out_val s28
+val_copy 2 s8
+val_copy s8 s0
+out_val s1
 out_char '\n'

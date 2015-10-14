@@ -6,6 +6,7 @@ void AST_ROOT::AddChild
 {
   _children.push_back(child);
 }
+
 void ID_NODE::print
   (void) 
 {
@@ -20,6 +21,7 @@ int ID_NODE::process
   if (out_id == -1)
   {
     out_id = GetID();
+    
     symbol_table->search(_name)->id = out_id;
   }
   return out_id;

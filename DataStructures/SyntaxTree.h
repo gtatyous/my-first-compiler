@@ -35,7 +35,7 @@ class AST
 class AST_ROOT: public AST
 {
   public:
-    AST_ROOT() {;}
+    AST_ROOT() {did_process = false;}
     ~AST_ROOT() {for (int i=0; i < _children.size(); i++)
                  {
                   delete _children[i];
@@ -43,12 +43,17 @@ class AST_ROOT: public AST
                 }
     
     void AddChild (AST* child);
-    int process() {for (int i=0; i<_children.size(); i++)
-                   {
-                    _children[i]->process();
-                   }
+    int process() { if (did_process) return -1;
+                    for (int i=0; i<_children.size(); i++)
+                    {
+                      _children[i]->process();
+                    }
+                    did_process = true;
+                    return -1;
                   }
     void print() {;}
+  private:
+    bool did_process;
 };
 
 class ID_NODE: public AST

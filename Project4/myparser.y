@@ -17,6 +17,7 @@ extern int scope;
 std::ofstream outfile; //move this to main
 std::stringstream TubeIC_out;
 std::vector<SymbolTable*> my_stack;
+std::vector<SymbolTable*> trash_stack;
 SymbolTable* symbol_table;
 int scope =0;
 
@@ -50,7 +51,7 @@ int check_var
     symbol_table = my_stack[i];
     if ((symbol_table->is_declared(name)))
     {
-      //std::cout << "checking scope " << scope << std::endl;
+      //std::cout << "checking scope " << scope-- <<"for id "<< name << std::endl;
       int id = symbol_table->search(name)->id;
       symbol_table = my_stack.back();
       return id;
@@ -72,6 +73,8 @@ int check_var
   AST* node;
 }
 
+%token IF
+%token ELSE
 %token <lexeme> TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
@@ -97,6 +100,9 @@ int check_var
 %token OPEN_BRACE
 %token CLOSE_BRACE
 
+%nonassoc IFX
+%nonassoc ELSE
+
 %left ','
 %left ASSIGN_ADD ASSIGN_SUB ASSIGN_MULT ASSIGN_DIV
 %right '='
@@ -107,35 +113,46 @@ int check_var
 %left '*' '/'
 %nonassoc UMINUS BOOL_NOT
 
-%type <node> program
+
+%type <node> statement_list
 %type <node> statement
 %type <node> decl
 %type <node> expr 
 %type <node> cmd
 %type <node> list
+%type <node> block
 
 %%
 
-program: { $$ = new AST_ROOT();
-           SymbolTable* new_scope = new SymbolTable();
-           my_stack.push_back(new_scope);
-           symbol_table = my_stack.back();
-         }
-       | program statement { $1->AddChild($2);} 
-       ;
+program: statement_list {$1->process();};
 
-statement: decl ';' {$1->process(); $$ = $1;}
-         | expr ';' {$1->process(); $$ = $1;}
-         | cmd  ';' {$1->process(); $$ = $1;} 
-         | OPEN_BRACE {scope++;} program CLOSE_BRACE {
+statement_list: { //global scope is = 0 (don't change it)
+                  $$ = new AST_ROOT();
+                  SymbolTable* new_scope = new SymbolTable();
+                  my_stack.push_back(new_scope);
+                  symbol_table = my_stack.back();
+                }
+              | statement_list statement {$1->AddChild($2); $$ = $1;} 
+              ;
+
+statement: block    {$$ = $1;}
+         | decl ';' {$$ = $1;}
+         | expr ';' {$$ = $1;}
+         | cmd  ';' {$$ = $1;} 
+         |      ';' {$$ = new EMPTY_NODE();}
+         | IF '(' expr ')' statement  %prec IFX {std::cout << "just if"<<std::endl;
+                                                 $$ = new EMPTY_NODE();}
+         | IF '(' expr ')' statement ELSE statement {std::cout<< "if-else"<<std::endl;
+                                                     $$ = new EMPTY_NODE();}
+         ;
+
+block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE    {
                                            scope--;
                                            SymbolTable* scope_out = my_stack.back(); 
                                            my_stack.pop_back();
                                            symbol_table = my_stack.back();
                                            delete scope_out;
-                                           $$ = $3;  } 
-         |      ';' {/*do nothing*/ $$ = new EMPTY_NODE();}
-         ;
+                                           $$ = $3;         };
 
 decl: TYPE ID { add_var($2); 
                 AST* id = new ID_NODE($2); 

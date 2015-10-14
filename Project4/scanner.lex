@@ -14,6 +14,8 @@ int line_count = 0;
 %option yylineno
 
 %%
+if                       {return IF;}
+else                     {return ELSE;}
 val|char|string          {yylval.lexeme = strdup(yytext); return TYPE;}
 print                    return COMMAND_PRINT;
 random                   return COMMAND_RANDOM;

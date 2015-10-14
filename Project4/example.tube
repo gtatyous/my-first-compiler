@@ -1,18 +1,14 @@
-
-
-
-val x = 2;
-random (101);
-print(x);
-print(!x == 0); 
-print( 99, 100);
-x = 5 + (3 * 9);
-
+val x;
+val z;
 {
   val y = 1000;
-  x = y +77;
-  {val y = 9999;}
 }
-val y = -2;
-y = x * 5 + 6;
-print(random(y) && y);
+
+if (x) print(x);
+
+if (5<6) 
+{
+  x = 2;
+  print(z);
+}
+
