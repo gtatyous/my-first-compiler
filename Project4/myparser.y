@@ -18,6 +18,7 @@ std::ofstream outfile; //move this to main
 std::stringstream TubeIC_out;
 std::vector<SymbolTable*> my_stack;
 SymbolTable* symbol_table;
+int scope =0;
 
 void yyerror
   (char* err_string)
@@ -126,7 +127,13 @@ program: { $$ = new AST_ROOT();
 statement: decl ';' {$1->process(); $$ = $1;}
          | expr ';' {$1->process(); $$ = $1;}
          | cmd  ';' {$1->process(); $$ = $1;} 
-         | OPEN_BRACE program CLOSE_BRACE {$$ = $2;} 
+         | OPEN_BRACE {scope++;} program CLOSE_BRACE {
+                                           scope--;
+                                           SymbolTable* scope_out = my_stack.back(); 
+                                           my_stack.pop_back();
+                                           symbol_table = my_stack.back();
+                                           delete scope_out;
+                                           $$ = $3;  } 
          |      ';' {/*do nothing*/ $$ = new EMPTY_NODE();}
          ;
 

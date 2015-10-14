@@ -1,6 +1,5 @@
 %{
 #include "../DataStructures/SyntaxTree.h"
-#include "../DataStructures/SymbolTable.h"
 #include "tube4.tab.hh"
 #include <iostream>
 #include <string.h>
@@ -8,10 +7,7 @@
 #include <vector>
 
 int line_count = 0; 
-int scope = 0;
 
-extern std::vector<SymbolTable*> my_stack;
-extern SymbolTable* symbol_table;
 %}
 
 %option noyywrap
@@ -65,14 +61,8 @@ random                   return COMMAND_RANDOM;
                           line_count += std::count(com.begin(), com.end(), '\n');}
 "?"                      return TERNARY;
 ":"                      return COLON;
-"{"                      {
-                           scope++;
-                           return OPEN_BRACE;
-                         }
-"}"                      {
-                           scope--;
-                           return CLOSE_BRACE;
-                         }
+"{"                      return OPEN_BRACE;
+"}"                      return CLOSE_BRACE;            
 .                        { /* report unknown char error*/
                		         std::cout << "ERROR(line " << \
                            ++line_count << "): unknown token " << yytext[0] \

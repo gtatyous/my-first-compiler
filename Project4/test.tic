@@ -25,18 +25,20 @@ val_copy s15 s14
 val_copy 77 s16
 add s14 s16 s17
 val_copy s17 s0
-val_copy 2 s20
-mult -1 s20 s21
-val_copy s21 s19
-val_copy 5 s22
-mult s18 s22 s23
-val_copy 6 s24
-add s23 s24 s25
-val_copy s25 s19
-random s19 s26
-test_nequ s26 0 s27
-jump_if_0 s27 end_bool_0
-test_nequ s19 0 s27
+val_copy 9999 s19
+val_copy s19 s18
+val_copy 2 s21
+mult -1 s21 s22
+val_copy s22 s20
+val_copy 5 s23
+mult s0 s23 s24
+val_copy 6 s25
+add s24 s25 s26
+val_copy s26 s20
+random s20 s27
+test_nequ s27 0 s28
+jump_if_0 s28 end_bool_0
+test_nequ s20 0 s28
 end_bool_0:
-out_val s27
+out_val s28
 out_char '\n'
