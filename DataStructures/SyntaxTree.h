@@ -6,8 +6,10 @@
 #include "SymbolTable.h"
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 extern std::stringstream TubeIC_out;
+extern std::vector<SymbolTable*> my_stack;
 extern SymbolTable* symbol_table;
 extern int check_var(std::string name); //used in ID_NODE processing 
 
@@ -35,24 +37,33 @@ class AST
 class AST_ROOT: public AST
 {
   public:
-    AST_ROOT() {did_process = false;}
+    AST_ROOT
+      (SymbolTable* scope) { local_scope = scope;
+                             did_process = false;
+                           } 
     ~AST_ROOT() {for (int i=0; i < _children.size(); i++)
                  {
                   delete _children[i];
                  }
+                 delete local_scope;
                 }
     
     void AddChild (AST* child);
     int process() { if (did_process) return -1;
+                    my_stack.push_back(local_scope);
+                    symbol_table = my_stack.back();
                     for (int i=0; i<_children.size(); i++)
                     {
                       _children[i]->process();
                     }
+                    my_stack.pop_back();
+                    symbol_table = my_stack.back();
                     did_process = true;
                     return -1;
                   }
     void print() {;}
   private:
+    SymbolTable* local_scope;
     bool did_process;
 };
 

@@ -1,13 +1,2 @@
 val_copy 1000 s3
 val_copy s3 s2
-val_copy 77 s4
-add s2 s4 s5
-val_copy s5 s0
-val_copy 9999 s7
-val_copy s7 s6
-out_val s0
-out_char '\n'
-val_copy 2 s8
-val_copy s8 s0
-out_val s1
-out_char '\n'

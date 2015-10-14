@@ -17,7 +17,6 @@ extern int scope;
 std::ofstream outfile; //move this to main
 std::stringstream TubeIC_out;
 std::vector<SymbolTable*> my_stack;
-std::vector<SymbolTable*> trash_stack;
 SymbolTable* symbol_table;
 int scope =0;
 
@@ -124,21 +123,23 @@ int check_var
 
 %%
 
-program: statement_list {$1->process();};
+program: statement_list {//my_stack.pop_back(); 
+                         $1->process();};
 
 statement_list: { //global scope is = 0 (don't change it)
-                  $$ = new AST_ROOT();
+                  scope++;
                   SymbolTable* new_scope = new SymbolTable();
                   my_stack.push_back(new_scope);
                   symbol_table = my_stack.back();
+                  $$ = new AST_ROOT(new_scope);
                 }
               | statement_list statement {$1->AddChild($2); $$ = $1;} 
               ;
 
-statement: block    {$$ = $1;}
-         | decl ';' {$$ = $1;}
-         | expr ';' {$$ = $1;}
-         | cmd  ';' {$$ = $1;} 
+statement: block    {$$ = $1; std::cout<<"block\n";}
+         | decl ';' {$$ = $1;  std::cout<<"decl\n";}
+         | expr ';' {$$ = $1; std::cout<<"expr\n";}
+         | cmd  ';' {$$ = $1; std::cout<<"cmd\n";} 
          |      ';' {$$ = new EMPTY_NODE();}
          | IF '(' expr ')' statement  %prec IFX {std::cout << "just if"<<std::endl;
                                                  $$ = new EMPTY_NODE();}
@@ -148,10 +149,8 @@ statement: block    {$$ = $1;}
 
 block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE    {
                                            scope--;
-                                           SymbolTable* scope_out = my_stack.back(); 
                                            my_stack.pop_back();
                                            symbol_table = my_stack.back();
-                                           delete scope_out;
                                            $$ = $3;         };
 
 decl: TYPE ID { add_var($2); 
