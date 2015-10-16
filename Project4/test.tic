@@ -1,10 +1,25 @@
 val_copy 77 s1
 val_copy s1 s0
-val_copy 0 s3
-val_copy s3 s2
-val_copy 5 s5
-val_copy s5 s2
-val_copy 1000 s7
-val_copy s7 s6
-val_copy 9999 s9
-val_copy s9 s8
+val_copy 0 s4
+val_copy s4 s3
+val_copy 5 s6
+val_copy s6 s3
+val_copy 1000 s8
+val_copy s8 s7
+val_copy 9999 s10
+val_copy s10 s9
+test_nequ s3 0 s11
+jump_if_0 s11 end_bool_0
+out_val s3
+out_char '\n'
+end_bool_0:
+val_copy 5 s12
+val_copy 6 s13
+test_less s12 s13 s14
+test_nequ s14 0 s15
+jump_if_0 s15 end_bool_1
+val_copy 2 s16
+val_copy s16 s3
+out_val s5
+out_char '\n'
+end_bool_1:

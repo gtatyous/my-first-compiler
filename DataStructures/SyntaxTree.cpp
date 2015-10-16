@@ -163,6 +163,26 @@ int BOOL_NODE::process
   return out_id;
 }
 
+void IF_NODE::print
+  (void) 
+{
+
+}
+
+int IF_NODE::process
+  (void)
+{ 
+  int con = _children[0]->process();
+  int out_id = GetID(); 
+  int label_id = GetLabelID();
+  TubeIC_out << "test_nequ s"<< con << " 0 s" << out_id<< std::endl;
+  TubeIC_out << "jump_if_0 s" << out_id<< " end_bool_" << label_id<< std::endl;
+  int stmt = _children[1]->process();
+  TubeIC_out << "end_bool_" << label_id << ":" << std::endl;
+  return out_id; //out_id is not used any place else
+}
+
+
 ////////////////////////////
 void PRINT_CMD_NODE::print
   (void)

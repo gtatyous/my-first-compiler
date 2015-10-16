@@ -4,7 +4,6 @@
   val seg_fault;  
 }
 
-seg_fault = 2;
 val x=0;
 val z;
 

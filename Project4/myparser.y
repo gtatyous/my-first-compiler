@@ -47,10 +47,8 @@ int check_var
 {
   for (int i = my_stack.size()-1; i>=0; i--)
   {
-    std::cout << i<< " is_decl: " << name << std::endl;
     if (my_stack[i]->is_declared(name))
     {
-      std::cout << i<< " search: " << name << std::endl;
       int id = my_stack[i]->search(name)->id;
       return id;
     }
@@ -140,8 +138,7 @@ statement: decl ';' {$$ = $1;  std::cout<<"decl\n";}
          | cmd  ';' {$$ = $1; std::cout<<"cmd\n";} 
          |      ';' {$$ = new EMPTY_NODE();}
          | block    {$$ = $1; std::cout<<"block\n";}
-         | IF '(' expr ')' statement  %prec IFX {std::cout << "just if"<<std::endl;
-                                                 $$ = new EMPTY_NODE();}
+         | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5);}
         ;
 
 block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE {scope--;

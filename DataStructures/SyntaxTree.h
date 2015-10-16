@@ -151,6 +151,24 @@ class BOOL_NODE: public AST
     std::string _opr;
 };
 
+class IF_NODE: public AST
+{
+  public:
+    IF_NODE(AST* con, AST* stmt) { _children.push_back(con);
+                                   _children.push_back(stmt);
+                                 }
+    IF_NODE ()
+    { 
+      delete _children[0];
+      delete _children[1];
+      delete this;
+    }
+    
+    int process();
+    void print();
+};
+
+
 class PRINT_CMD_NODE: public AST
 {
   public:
