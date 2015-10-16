@@ -45,14 +45,13 @@ void add_var
 int check_var
   (string name)
 {
-  for (unsigned int i = my_stack.size()-1; i>=0; i--)
+  for (int i = my_stack.size()-1; i>=0; i--)
   {
-    symbol_table = my_stack[i];
-    if ((symbol_table->is_declared(name)))
+    std::cout << i<< " is_decl: " << name << std::endl;
+    if (my_stack[i]->is_declared(name))
     {
-      //std::cout << "checking scope " << scope-- <<"for id "<< name << std::endl;
-      int id = symbol_table->search(name)->id;
-      symbol_table = my_stack.back();
+      std::cout << i<< " search: " << name << std::endl;
+      int id = my_stack[i]->search(name)->id;
       return id;
     }
   }
@@ -123,11 +122,11 @@ int check_var
 
 %%
 
-program: statement_list {//my_stack.pop_back(); 
+program: statement_list {my_stack.pop_back(); 
+                         std::cout<< "processing"<<std::endl;
                          $1->process();};
 
 statement_list: { //global scope is = 0 (don't change it)
-                  scope++;
                   SymbolTable* new_scope = new SymbolTable();
                   my_stack.push_back(new_scope);
                   symbol_table = my_stack.back();
@@ -136,19 +135,16 @@ statement_list: { //global scope is = 0 (don't change it)
               | statement_list statement {$1->AddChild($2); $$ = $1;} 
               ;
 
-statement: block    {$$ = $1; std::cout<<"block\n";}
-         | decl ';' {$$ = $1;  std::cout<<"decl\n";}
+statement: decl ';' {$$ = $1;  std::cout<<"decl\n";}
          | expr ';' {$$ = $1; std::cout<<"expr\n";}
          | cmd  ';' {$$ = $1; std::cout<<"cmd\n";} 
          |      ';' {$$ = new EMPTY_NODE();}
+         | block    {$$ = $1; std::cout<<"block\n";}
          | IF '(' expr ')' statement  %prec IFX {std::cout << "just if"<<std::endl;
                                                  $$ = new EMPTY_NODE();}
-         | IF '(' expr ')' statement ELSE statement {std::cout<< "if-else"<<std::endl;
-                                                     $$ = new EMPTY_NODE();}
-         ;
+        ;
 
-block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE    {
-                                           scope--;
+block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE {scope--;
                                            my_stack.pop_back();
                                            symbol_table = my_stack.back();
                                            $$ = $3;         };

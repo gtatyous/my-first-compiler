@@ -50,6 +50,7 @@ var* SymbolTable::search
   /* users need to use is_declared member function to check
    * if the name exist or not
    */
+  std::cout << "var_info[" << name << "]" << std::endl;
   return var_info[name];
 }
 

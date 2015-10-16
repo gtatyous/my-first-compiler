@@ -1,7 +1,19 @@
-val x;
+
+{
+  val x =77;
+  val seg_fault;  
+}
+
+seg_fault = 2;
+val x=0;
 val z;
+
+{x = 5;}
+
+
 {
   val y = 1000;
+  {val y = 9999;}
 }
 
 if (x) print(x);
