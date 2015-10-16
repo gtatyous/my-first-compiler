@@ -21,7 +21,7 @@ if [ ! -f example.tube ]; then
 fi;
 
 function run_error_test {
-    $project $1 $project.tic > $project.cout;
+    ./$project $1 $project.tic > $project.cout;
     Test_Suite/reference_$project $1 ref.tic > ref.cout;
     grep -qi "ERROR" $project.cout 
     student=$?
@@ -66,11 +66,11 @@ for F in Test_Suite/fail*.tube; do
 done
 
 
-echo Extra Credit Results:
+#echo Extra Credit Results:
 
-for F in Test_Suite/extra.*.tube; do 
-	run_error_test $F
-done
+#for F in Test_Suite/extra.*.tube; do 
+#	run_error_test $F
+#done
 
 
 
