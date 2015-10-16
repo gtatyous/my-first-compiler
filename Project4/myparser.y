@@ -138,7 +138,8 @@ statement: decl ';' {$$ = $1;  std::cout<<"decl\n";}
          | cmd  ';' {$$ = $1; std::cout<<"cmd\n";} 
          |      ';' {$$ = new EMPTY_NODE();}
          | block    {$$ = $1; std::cout<<"block\n";}
-         | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5);}
+         | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5, NULL);}
+         | IF '(' expr ')' statement ELSE statement {$$ = new IF_NODE($3, $5, $7);}
         ;
 
 block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE {scope--;

@@ -154,13 +154,17 @@ class BOOL_NODE: public AST
 class IF_NODE: public AST
 {
   public:
-    IF_NODE(AST* con, AST* stmt) { _children.push_back(con);
-                                   _children.push_back(stmt);
+    IF_NODE
+      (AST* con, AST* con_true, AST* con_false) 
+                                 { _children.push_back(con);
+                                   _children.push_back(con_true);
+                                   _children.push_back(con_false);
                                  }
     IF_NODE ()
     { 
       delete _children[0];
       delete _children[1];
+      delete _children[2];
       delete this;
     }
     
