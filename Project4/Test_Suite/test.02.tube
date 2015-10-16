@@ -1,3 +1,0 @@
-# Test printing a variable.
-val a = 2;
-print(a);
