@@ -11,7 +11,7 @@
 extern std::stringstream TubeIC_out;
 extern std::vector<SymbolTable*> my_stack;
 extern SymbolTable* symbol_table;
-extern int check_var(std::string name); //used in ID_NODE processing 
+extern var* check_var(std::string name); //used in ID_NODE processing 
 
 static int GetID()
 {
@@ -29,7 +29,8 @@ class AST
 {
   public:
     std::vector<AST*> _children;
-    virtual void AddChild(AST*) {;}
+    virtual void AddChild(AST*) {std::cout << "This node does not have children" << std::endl;}
+    virtual std::string GetType() {std::cout << "This node does not have a type" << std::endl;}
     virtual int process() = 0;
     virtual void print() = 0;
 };
@@ -70,13 +71,14 @@ class AST_ROOT: public AST
 class ID_NODE: public AST
 {
   public:
-    ID_NODE(std::string name):_name (name) { ; }
+    ID_NODE(std::string type, std::string name):_name (name), _type(type) { ; }
     ~ID_NODE() { ; }
 
     void print();
     int process();
   private:
     std::string _name;
+    std::string _type;
 };
 
 class VAL_NODE: public AST
@@ -237,7 +239,7 @@ class EMPTY_NODE: public AST
 class DECL_NODE: public AST
 {
   public:
-    DECL_NODE(){;}
+    DECL_NODE(std::string t){_type = t;}
     ~DECL_NODE()
     { 
       for (int i=0; i<_children.size(); i++)
@@ -250,8 +252,9 @@ class DECL_NODE: public AST
     int process();
     void AddChild (AST* child);
     void print();
-  
+    std::string GetType() {return _type;}
   private: 
+    std::string _type;
 };
 
 

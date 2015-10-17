@@ -22,13 +22,14 @@ bool SymbolTable::is_declared
 {
   if (var_info.count(name))
   {
+    //can check for the type here
     return true;
   }
   return false;
 }
 
 void SymbolTable::insert
-  (string name, int line_count, int scope_level)
+  (string name, string type, int line_count, int scope_level)
 {
   if (is_declared(name))
   {
@@ -39,6 +40,7 @@ void SymbolTable::insert
     var* varptr = new var();
     var_info[name] = varptr;
     var_info[name]->name = name;
+    var_info[name]->type = type;
     var_info[name]->line = line_count;
     var_info[name]->scope = scope_level;
   }

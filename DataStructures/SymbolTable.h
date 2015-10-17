@@ -30,7 +30,7 @@ class SymbolTable
     SymbolTable();
     ~SymbolTable();
     bool is_declared(string name);
-    void insert(string name, int line, int scope);
+    void insert(string name, string type, int line, int scope);
     var* search(string name); 
     void print();
 

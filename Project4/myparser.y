@@ -28,7 +28,7 @@ void yyerror
 }
 
 void add_var
-  (string name)
+  (string type, string name)
 { 
   if (symbol_table->is_declared(name))  //only check in local scope
   {
@@ -38,19 +38,18 @@ void add_var
   }
   else
   {
-    symbol_table->insert(name, line_count, scope);
+    symbol_table->insert(name, type, line_count, scope);
   }
 }
 
-int check_var
+var* check_var
   (string name)
 {
   for (int i = my_stack.size()-1; i>=0; i--)
   {
     if (my_stack[i]->is_declared(name))
     {
-      int id = my_stack[i]->search(name)->id;
-      return id;
+      return  my_stack[i]->search(name);
     }
   }
   std::cout << "ERROR(line " << ++line_count \
@@ -133,11 +132,11 @@ statement_list: { //global scope is = 0 (don't change it)
               | statement_list statement {$1->AddChild($2); $$ = $1;} 
               ;
 
-statement: decl ';' {$$ = $1;  std::cout<<"decl\n";}
-         | expr ';' {$$ = $1; std::cout<<"expr\n";}
-         | cmd  ';' {$$ = $1; std::cout<<"cmd\n";} 
+statement: decl ';' {$$ = $1;}
+         | expr ';' {$$ = $1;}
+         | cmd  ';' {$$ = $1;} 
          |      ';' {$$ = new EMPTY_NODE();}
-         | block    {$$ = $1; std::cout<<"block\n";}
+         | block    {$$ = $1;}
          | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5, NULL);}
          | IF '(' expr ')' statement ELSE statement {$$ = new IF_NODE($3, $5, $7);}
         ;
@@ -147,45 +146,51 @@ block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE {scope--;
                                            symbol_table = my_stack.back();
                                            $$ = $3;         };
 
-decl: TYPE ID { add_var($2); 
-                AST* id = new ID_NODE($2); 
-                $$ = new DECL_NODE();
+decl: TYPE ID { add_var($1, $2); 
+                AST* id = new ID_NODE($1, $2); 
+                $$ = new DECL_NODE($1);
                 $$->AddChild(id);
                }
-    | TYPE ID {add_var($2);} '=' expr { AST* id  = new ID_NODE($2); 
-                                        AST* opr_node = new OPR_NODE("=", id, $5);
-                                        $$ = new DECL_NODE(); 
-                                        $$->AddChild(opr_node);
+    | TYPE ID {add_var($1, $2);} '=' expr { AST* id  = new ID_NODE($1, $2); 
+                                            AST* opr_node = new OPR_NODE("=", id, $5);
+                                            $$ = new DECL_NODE($1); 
+                                            $$->AddChild(opr_node);
                                       }
-    | decl ',' ID {add_var($3);}  { AST* id  = new ID_NODE($3); 
-                                    $1->AddChild(id); 
-                                    $$ = $1;
-                                  }
-    | decl ',' ID {add_var($3);} '=' expr   { AST* id  = new ID_NODE($3); 
-                                              AST* opr_node = new OPR_NODE("=", id, $6);
-                                              $1->AddChild(opr_node); 
-                                              $$ = $1;
-                                            }
-    ;
+    | decl ',' ID {add_var($1->GetType(), $3);}  { std::string t = $1->GetType();
+                                                   AST* id  = new ID_NODE(t, $3); 
+                                                   $1->AddChild(id); 
+                                                   $$ = $1;
+                                                 }
+    | decl ',' ID {add_var($1->GetType(), $3);} '=' expr   { std::string t = $1->GetType();
+                                                             AST* id  = new ID_NODE(t, $3); 
+                                                             AST* opr_node = new OPR_NODE("=", id, $6);
+                                                             $1->AddChild(opr_node); 
+                                                             $$ = $1;
+                                                           };
 
-expr: ID {check_var($1);} '=' expr {
-                                    AST* id = new ID_NODE($1); 
+expr: ID {check_var($1);}    '='     expr {
+                                    std::string t = check_var($1)->type ;
+                                    AST* id = new ID_NODE(t, $1); 
                                     $$ = new OPR_NODE("=", id, $4);
-                                   }
-    | ID {check_var($1);} ASSIGN_ADD expr {
-                                    AST* id = new ID_NODE($1); 
+                                          }
+    | ID {check_var($1);} ASSIGN_ADD expr { 
+                                    std::string t = check_var($1)->type ;
+                                    AST* id = new ID_NODE(t, $1); 
                                     $$ = new OPR_NODE("+=", id, $4);
                                    }
     | ID {check_var($1);} ASSIGN_SUB expr {
-                                    AST* id = new ID_NODE($1); 
+                                    std::string t = check_var($1)->type ;
+                                    AST* id = new ID_NODE(t, $1);
                                     $$ = new OPR_NODE("-=", id, $4);
                                    }
    | ID {check_var($1);} ASSIGN_MULT expr {
-                                    AST* id = new ID_NODE($1); 
+                                    std::string t = check_var($1)->type ;
+                                    AST* id = new ID_NODE(t, $1);
                                     $$ = new OPR_NODE("*=", id, $4);
                                    }
     | ID {check_var($1);} ASSIGN_DIV expr {
-                                    AST* id = new ID_NODE($1); 
+                                    std::string t = check_var($1)->type ;
+                                    AST* id = new ID_NODE(t, $1);
                                     $$ = new OPR_NODE("/=", id, $4);
                                    }
 
@@ -206,7 +211,7 @@ expr: ID {check_var($1);} '=' expr {
     | '(' expr ')' {$$ = $2;}
     | '-' expr {$$ = new UMINUS_NODE($2);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
-    | ID {check_var($1); $$ = new ID_NODE($1);}
+    | ID {std::string t = check_var($1)->type ; $$ = new ID_NODE(t, $1);}
     | COMMAND_RANDOM '(' expr ')'  {$$ = new RAND_CMD_NODE($3);}
     ;
 
