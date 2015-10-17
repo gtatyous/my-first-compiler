@@ -66,6 +66,7 @@ var* check_var
   char* lexeme;
   float value;
   AST* node;
+  char c;
 }
 
 %token IF
@@ -75,7 +76,7 @@ var* check_var
 %token COMMAND_RANDOM
 %token <lexeme> ID
 %token <value> VAL_LITERAL
-%token CHAR_LITERAL
+%token <c>CHAR_LITERAL
 %token STRING_LITERAL
 %token ASSIGN_ADD
 %token ASSIGN_SUB
@@ -120,7 +121,6 @@ var* check_var
 %%
 
 program: statement_list {my_stack.pop_back(); 
-                         std::cout<< "processing"<<std::endl;
                          $1->process();};
 
 statement_list: { //global scope is = 0 (don't change it)
@@ -211,6 +211,7 @@ expr: ID {check_var($1);}    '='     expr {
     | '(' expr ')' {$$ = $2;}
     | '-' expr {$$ = new UMINUS_NODE($2);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
+    | CHAR_LITERAL {$$ = new CHAR_NODE($1);}
     | ID {std::string t = check_var($1)->type ; $$ = new ID_NODE(t, $1);}
     | COMMAND_RANDOM '(' expr ')'  {$$ = new RAND_CMD_NODE($3);}
     ;

@@ -40,6 +40,22 @@ int VAL_NODE::process
   return out_id;
 }
 
+void CHAR_NODE::print
+  (void) 
+{
+
+}
+
+int CHAR_NODE::process
+  (void)
+{
+  int out_id = GetID();
+  TubeIC_out << "val '" << _char << "' s" << out_id << std::endl;
+  return out_id;
+}
+
+
+
 OPR_NODE::OPR_NODE
   (std::string opr, AST* LHS, AST* RHS)
   : _opr (opr)

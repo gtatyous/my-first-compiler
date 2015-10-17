@@ -1,4 +1,5 @@
 
+char cc = 'a';
 {
   val x =77;
   val seg_fault;  

@@ -93,6 +93,20 @@ class VAL_NODE: public AST
     float _val;
 };
 
+class CHAR_NODE: public AST
+{
+  public:
+    CHAR_NODE(char c):_char(c) { ; }
+    ~CHAR_NODE() { ; }
+
+    void print();
+    int process();
+  private:
+    char _char ;
+};
+
+
+
 class OPR_NODE: public AST
 {
   public:
