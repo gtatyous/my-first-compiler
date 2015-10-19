@@ -71,6 +71,7 @@ var* check_var
 
 %token IF
 %token ELSE
+%token WHILE
 %token <lexeme> TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
@@ -139,7 +140,8 @@ statement: decl ';' {$$ = $1;}
          | block    {$$ = $1;}
          | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5, NULL);}
          | IF '(' expr ')' statement ELSE statement {$$ = new IF_NODE($3, $5, $7);}
-        ;
+         | WHILE '(' expr ')' statement {$$ = new WHILE_NODE($3, $5);} 
+         ;
 
 block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE {scope--;
                                            my_stack.pop_back();

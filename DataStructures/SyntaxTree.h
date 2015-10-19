@@ -185,6 +185,12 @@ class IF_NODE: public AST
     { _children.push_back(con);
       _children.push_back(con_true);
       _children.push_back(con_false);
+      if (con->GetType() != "val")
+      {
+        std::cout << "ERROR(line " << line_count << "): condition for if statements " \
+                  << "must evaluate to type val" << std::endl;
+        exit(1);
+      }
     }
     IF_NODE ()
     { 
@@ -197,6 +203,32 @@ class IF_NODE: public AST
     int process();
     void print() { ; }
 };
+
+class WHILE_NODE: public AST
+{
+  public:
+    WHILE_NODE (AST* con, AST* stmt) 
+    { 
+      _children.push_back(con);
+      _children.push_back(stmt);
+      if (con->GetType() != "val")
+      {
+        std::cout << "ERROR(line " << line_count << "): condition for while statements " \
+                  << "must evaluate to type val" << std::endl;
+        exit(1);
+      }
+    }
+    WHILE_NODE ()
+    { 
+      delete _children[0];
+      delete _children[1];
+      delete this;
+    }
+    std::string GetType() {std::cout << "WHILE_NODE: has no type" <<std::endl;}
+    int process();
+    void print() { ; }
+};
+
 
 class PRINT_CMD_NODE: public AST
 {

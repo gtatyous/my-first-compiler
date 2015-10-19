@@ -238,6 +238,21 @@ int IF_NODE::process
   return out_id; //out_id is not used any place else
 }
 
+int WHILE_NODE::process
+  (void)
+{ 
+  int while_start_id = GetLabelID();
+  TubeIC_out << "while_start_" << while_start_id << ":" << std::endl;
+  int con = _children[0]->process();
+  int while_end_id = GetLabelID();
+  TubeIC_out << "jump_if_0 s" << con << " while_end_" << while_end_id << std::endl;
+  int stmt = _children[1]->process();
+  TubeIC_out << "jump while_start_" << while_start_id << std::endl;
+  TubeIC_out << "while_end_" << while_end_id << ":" << std::endl;
+  return GetID(); //out_id is not used
+}
+
+
 ////////////////////////////////////commands
 void PRINT_CMD_NODE::AddChild 
   (AST* child)

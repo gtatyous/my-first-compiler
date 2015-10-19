@@ -1,38 +1,12 @@
-val_copy '\n' s1
+val_copy 10 s1
 val_copy s1 s0
-val_copy 77 s3
-test_equ s3 0 s4
-val_copy s4 s2
-val_copy 'a' s6
-val_copy s6 s5
-val_copy 77 s8
-val_copy s8 s7
-val_copy 0 s11
-val_copy s11 s10
-val_copy 5 s13
-val_copy s13 s10
-val_copy 1000 s15
-val_copy s15 s14
-val_copy 9999 s17
-val_copy s17 s16
-test_nequ s10 0 s18
-jump_if_0 s18 else_0
-out_val s10
+while_start_0
+val_copy 0 s2
+test_gte s0 s2 s3
+jump_if_0 s3 while_end_1
+out_val s0
 out_char '\n'
-jump end_if_1
-else_0:
-end_if_1:
-val_copy 5 s19
-val_copy 6 s20
-test_less s19 s20 s21
-test_nequ s21 0 s22
-jump_if_0 s22 else_2
-val_copy 2 s23
-val_copy s23 s10
-out_val s12
-out_char '\n'
-jump end_if_3
-else_2:
-val_copy 111 s25
-val_copy s25 s24
-end_if_3:
+val_copy 1 s4
+sub s0 s4 s0
+jump while_start_0
+while_end_1
