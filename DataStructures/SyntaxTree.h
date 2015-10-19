@@ -102,14 +102,14 @@ class VAL_NODE: public AST
 class CHAR_NODE: public AST
 {
   public:
-    CHAR_NODE(char c):_char(c) { _type = "char";}
+    CHAR_NODE(std::string c):_char(c) { _type = "char";}
     ~CHAR_NODE() { ; }
 
     std::string GetType() {return _type;}
     void print() { ; }
     int process();
   private:
-    char _char ;
+    std::string _char ;
 };
 
 class OPR_NODE: public AST

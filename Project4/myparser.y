@@ -67,7 +67,6 @@ var* check_var
   char* lexeme;
   float value;
   AST* node;
-  char c;
 }
 
 %token IF
@@ -77,7 +76,7 @@ var* check_var
 %token COMMAND_RANDOM
 %token <lexeme> ID
 %token <value> VAL_LITERAL
-%token <c>CHAR_LITERAL
+%token <lexeme>CHAR_LITERAL
 %token STRING_LITERAL
 %token ASSIGN_ADD
 %token ASSIGN_SUB

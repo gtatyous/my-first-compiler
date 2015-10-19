@@ -22,8 +22,8 @@ random                   return COMMAND_RANDOM;
 [a-zA-Z_][a-zA-Z_0-9]*   {yylval.lexeme = strdup(yytext); return ID;}
 ([0-9]+(\.[0-9]+)?|(\.[0-9]+)){1}([eE][+\-]?[0-9]+)? { yylval.value = atof(yytext);
                                                        return VAL_LITERAL;}
-\'[^'\n]?\'              {yylval.c = yytext[1];
-                          ; return CHAR_LITERAL;}
+\'[^'\\]?\'|\'\\n\'|\'\\t\'|\'\\\'\'|\'\\\\\'  {yylval.lexeme = strdup(yytext);
+                                                return CHAR_LITERAL;}
 \'[^'\n]{2,}\'           { /* report multi char error*/
                   	       std::cout << "ERROR(line " << \
                            ++line_count << "): syntax error" \

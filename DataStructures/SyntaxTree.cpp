@@ -35,7 +35,7 @@ int CHAR_NODE::process
   (void)
 {
   int out_id = GetID();
-  TubeIC_out << "val_copy '" << _char << "' s" << out_id << std::endl;
+  TubeIC_out << "val_copy " << _char << " s" << out_id << std::endl;
   return out_id;
 }
 

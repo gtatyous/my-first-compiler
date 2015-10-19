@@ -1,3 +1,5 @@
+char bb = '\n';
+val xxx = !77; 
 
 char cc = 'a';
 {
