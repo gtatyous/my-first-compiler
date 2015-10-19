@@ -1,31 +1,12 @@
-val_copy 1 s1
+val_copy 'Q' s1
 val_copy s1 s0
-val_copy 1 s3
-val_copy s3 s2
-val_copy 1 s5
-val_copy s5 s4
-val_copy 7 s6
-test_nequ s6 0 s7
-jump_if_n0 s7 end_bool_0
-val_copy 2 s8
-val_copy s8 s0
-test_nequ s0 0 s7
-end_bool_0:
-val_copy 0 s9
-test_nequ s9 0 s10
-jump_if_0 s10 end_bool_1
-val_copy 2 s11
-val_copy s11 s2
-test_nequ s2 0 s10
-end_bool_1:
-val_copy 7 s12
-test_nequ s12 0 s13
-jump_if_0 s13 end_bool_2
-val_copy 2 s14
-val_copy s14 s4
-test_nequ s4 0 s13
-end_bool_2:
-out_val s0
-out_val s2
-out_val s4
+val_copy 'A' s2
+test_less s0 s2 s3
+out_val s3
+val_copy 'Z' s4
+test_less s0 s4 s5
+out_val s5
+val_copy 'Q' s6
+test_lte s0 s6 s7
+out_val s7
 out_char '\n'

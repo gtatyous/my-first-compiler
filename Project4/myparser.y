@@ -1,5 +1,6 @@
 %{
 
+//#include <cstdlib> 
 #include "../DataStructures/SyntaxTree.h"
 #include "../DataStructures/SymbolTable.h"
 #include <iostream>
@@ -7,7 +8,7 @@
 #include <fstream>
 #include <sstream> 
 #include <vector>
-
+#include <typeinfo>
 
 extern int yylex();
 extern FILE* yyin; 
@@ -183,7 +184,7 @@ expr: ID {check_var($1);}    '='     expr {
                                     AST* id = new ID_NODE(t, $1);
                                     $$ = new OPR_NODE("-=", id, $4);
                                    }
-   | ID {check_var($1);} ASSIGN_MULT expr {
+    | ID {check_var($1);} ASSIGN_MULT expr {
                                     std::string t = check_var($1)->type ;
                                     AST* id = new ID_NODE(t, $1);
                                     $$ = new OPR_NODE("*=", id, $4);
@@ -239,7 +240,7 @@ int main
   if (yyin == NULL)
   {
     std::cout<< "Error: input file not found!\nprograme halted...\n";
-    fclose(yyin);
+    //fclose(yyin);
     exit(2);
   }
   yyparse();

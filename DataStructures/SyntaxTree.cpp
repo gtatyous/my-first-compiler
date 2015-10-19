@@ -1,18 +1,13 @@
 #include "SyntaxTree.h"
-#include <iostream>
 
+///////////////////////////////////root
 void AST_ROOT::AddChild 
   (AST* child)
 {
   _children.push_back(child);
 }
 
-void ID_NODE::print
-  (void) 
-{
-
-}
-
+//////////////////////////////////ID
 int ID_NODE::process
   (void)
 {
@@ -26,12 +21,7 @@ int ID_NODE::process
   return out_id;
 }
 
-void VAL_NODE::print
-  (void) 
-{
-
-}
-
+/////////////////////////////////val literal
 int VAL_NODE::process
   (void)
 {
@@ -40,34 +30,72 @@ int VAL_NODE::process
   return out_id;
 }
 
-void CHAR_NODE::print
-  (void) 
-{
-
-}
-
+/////////////////////////////////char literal
 int CHAR_NODE::process
   (void)
 {
   int out_id = GetID();
-  TubeIC_out << "val '" << _char << "' s" << out_id << std::endl;
+  TubeIC_out << "val_copy '" << _char << "' s" << out_id << std::endl;
   return out_id;
 }
 
-
-
+///////////////////////////////operators and bool
 OPR_NODE::OPR_NODE
   (std::string opr, AST* LHS, AST* RHS)
   : _opr (opr)
 {
   _children.push_back(LHS);
   _children.push_back(RHS);
-}
+  std::string lhs_type = LHS->GetType();
+  std::string rhs_type = RHS->GetType();
 
-void OPR_NODE::print
-  (void) 
-{
-
+  if (lhs_type != rhs_type)
+  {
+    if (  _opr == "+="       or
+          _opr == "-="       or
+          _opr == "/="       or
+          _opr == "*="        )
+    {
+      std::cout << "ERROR(line " << line_count << "): types do not match for assignment"\
+                << "(lhs='" << lhs_type << "', rhs='"<< rhs_type << "')" << std::endl;
+      exit(1);
+    }
+    else if ( _opr == "=="   or
+              _opr == "!="   or
+              _opr == "<"    or
+              _opr == "<="   or
+              _opr == ">"    or
+              _opr == ">="   )
+    {
+      std::cout << "ERROR(line " << line_count << "): types do not match for" \
+                << "relationship operator (lhs='" << lhs_type << "', rhs='"   \
+                << rhs_type << "')" << std::endl;
+      exit(1);
+    } 
+  }
+  
+  else if ( (lhs_type == "char" or
+             rhs_type == "char" )     and
+            (_opr == "+"        or
+             _opr == "-"        or
+             _opr == "/"        or
+             _opr == "*"        or
+             _opr == "+="       or
+             _opr == "-="       or
+             _opr == "/="       or
+             _opr == "*="       ))
+  {
+    std::cout << "ERROR(line "<< line_count << "): cannot use type '"  \
+              << "char" << "' mathematical expressions" << std::endl;
+    exit(1);
+  }
+  
+  if (rhs_type != lhs_type) 
+  {
+    std::cout << "OPR_NODE: types don't match" <<std::endl;
+    exit(1);
+  }
+  _type = "val"; //returns either 0 or 1
 }
 
 int OPR_NODE::process
@@ -80,12 +108,14 @@ int OPR_NODE::process
   else if (_opr == "-")   {TubeIC_out << "sub s";}
   else if (_opr == "*")   {TubeIC_out << "mult s";}
   else if (_opr == "/")   {TubeIC_out << "div s";}
+  
   else if (_opr == "==")  {TubeIC_out << "test_equ s";}
   else if (_opr == "!=")  {TubeIC_out << "test_nequ s";} 
   else if (_opr == "<")   {TubeIC_out << "test_less s";}
   else if (_opr == "<=")  {TubeIC_out << "test_lte s";}
   else if (_opr == ">")   {TubeIC_out << "test_gtr s";}
   else if (_opr == ">=")  {TubeIC_out << "test_gte s";}
+  
   else if (_opr == "=")   {TubeIC_out << "val_copy s" << rhs       \
                            << " s" << lhs << std::endl; return lhs;}
   else if (_opr == "+=")  {TubeIC_out << "add s"<<lhs << " s"<<rhs \
@@ -103,12 +133,7 @@ int OPR_NODE::process
   return out_id;
 }
 
-void TERNARY_OPR_NODE::print
-  (void) 
-{
-
-}
-
+//...
 int TERNARY_OPR_NODE::process
   (void)
 {
@@ -134,19 +159,31 @@ int TERNARY_OPR_NODE::process
   return out_id;
 }
 
-
+//...
 BOOL_NODE::BOOL_NODE
   (std::string opr, AST* LHS, AST* RHS)
   : _opr (opr)
 {
   _children.push_back(LHS);
   _children.push_back(RHS);
-}
-
-void BOOL_NODE::print
-  (void) 
-{
-
+  
+  //check if lhs and rhs can be eval as true or false
+  if (_opr == "!")
+  {
+    if ( RHS->GetType() != "val" ) 
+    {  
+      std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+                   RHS->GetType() << "' in mathematical expressions" << std::endl;
+      exit(1);
+    }
+  }
+  else if (RHS->GetType() != "val" or LHS->GetType() != "val")
+  {
+    std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+                 RHS->GetType() << "' in mathematical expressions" << std::endl;
+    exit(1);
+  }
+  _type = "val";
 }
 
 int BOOL_NODE::process
@@ -178,12 +215,7 @@ int BOOL_NODE::process
   return out_id;
 }
 
-void IF_NODE::print
-  (void) 
-{
-
-}
-
+//////////////////////////////////////flow control
 int IF_NODE::process
   (void)
 { 
@@ -206,13 +238,7 @@ int IF_NODE::process
   return out_id; //out_id is not used any place else
 }
 
-
-////////////////////////////
-void PRINT_CMD_NODE::print
-  (void)
-{
-}
-
+////////////////////////////////////commands
 void PRINT_CMD_NODE::AddChild 
   (AST* child)
 {
@@ -221,26 +247,41 @@ void PRINT_CMD_NODE::AddChild
 
 int PRINT_CMD_NODE::process
   (void)
-{
-  
+{ 
   for (int i=0; i<_children.size(); i++)
   {
+    _type = _children[i]->GetType();
     int out_id = _children[i]->process();
-    TubeIC_out << "out_val s" << out_id << std::endl;
+    if (_type == "char")
+    {
+      TubeIC_out << "out_char s" << out_id << std::endl;
+    }
+    else if (_type == "val")
+    {
+      TubeIC_out << "out_val s" << out_id << std::endl;
+    }
+    else
+    {
+      std::cout << "Print: running error, unknow type" << std::endl;
+    }
   }
   TubeIC_out << "out_char " << "'\\n'" << std::endl;
   return -1;
 }
 
+//...
 RAND_CMD_NODE::RAND_CMD_NODE
   (AST* expr)
 {
   _children.push_back(expr);
+  if (expr->GetType() != "val")
+  { 
+    std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+    expr->GetType() << "' as an argument to random" <<std::endl; 
+    exit(1);
+  }
+  _type = expr->GetType();
 }
-
-void RAND_CMD_NODE::print
-  (void)
-{}
 
 int RAND_CMD_NODE::process
   (void)
@@ -251,10 +292,18 @@ int RAND_CMD_NODE::process
   return out_id;
 }
 
+//////////////////////////////////////extra
 UMINUS_NODE::UMINUS_NODE
   (AST* expr)
 {
   _children.push_back(expr);
+  if (expr->GetType() != "val")
+  { 
+    std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+    expr->GetType() << "' as an argument to random" <<std::endl; 
+    exit(1);
+  }
+  _type = expr->GetType();
 }
 
 int UMINUS_NODE::process
@@ -266,17 +315,7 @@ int UMINUS_NODE::process
   return out_id;
 }
 
-void UMINUS_NODE::print
-  (void)
-{
-  
-}
-
-void DECL_NODE::print
-  (void)
-{
-}
-
+//...
 void DECL_NODE::AddChild 
   (AST* child)
 {
@@ -285,8 +324,7 @@ void DECL_NODE::AddChild
 
 int DECL_NODE::process
   (void)
-{
-  
+{ 
   for (int i=0; i<_children.size(); i++)
   {
     _children[i]->process();
