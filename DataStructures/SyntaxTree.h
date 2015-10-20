@@ -249,6 +249,24 @@ class BREAK_NODE: public AST
     void print() { ; }
 };
 
+class CONTINUE_NODE: public AST
+{
+  public:
+    CONTINUE_NODE () { if (while_counter == 0) 
+                    {
+                      std::cout << "ERROR(line " << ++line_count   \
+                                << "): 'continue' command used outside of any loop" \
+                                << std::endl; 
+                      exit(1);
+                    }
+                  } 
+    ~CONTINUE_NODE () { ; }
+    std::string GetType() {std::cout << "CONTINUE_NODE: has no type" <<std::endl;}
+    int process();
+    void print() { ; }
+};
+
+
 class PRINT_CMD_NODE: public AST
 {
   public:

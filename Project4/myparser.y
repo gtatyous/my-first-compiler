@@ -74,6 +74,7 @@ var* check_var
 %token ELSE
 %token WHILE
 %token BREAK
+%token CONTINUE
 %token <lexeme> TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
@@ -139,6 +140,7 @@ statement: decl ';' {$$ = $1;}
          | expr ';' {$$ = $1;}
          | cmd  ';' {$$ = $1;}
          | BREAK ';' {$$ = new BREAK_NODE();}
+         | CONTINUE ';' {$$ = new CONTINUE_NODE();}
          |      ';' {$$ = new EMPTY_NODE();}
          | block    {$$ = $1;}
          | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5, NULL);}

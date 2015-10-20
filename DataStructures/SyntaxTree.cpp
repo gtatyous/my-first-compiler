@@ -260,6 +260,12 @@ int BREAK_NODE::process
   TubeIC_out << "jump while_end_" << loop_id << std::endl;
 }
 
+int CONTINUE_NODE::process
+  (void)
+{
+  TubeIC_out << "jump while_start_" << loop_id << std::endl;
+}
+
 ////////////////////////////////////commands
 void PRINT_CMD_NODE::AddChild 
   (AST* child)

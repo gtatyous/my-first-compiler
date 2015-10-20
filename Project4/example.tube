@@ -1,33 +1,9 @@
-val xxx = !77; 
 
-break; 
-
-char cc = 'a';
+val x = 0;
+while (x<10)
 {
-  val x =77;
-  val seg_fault;  
+  x += 1;
+  continue;
+  print('h');
 }
-
-val x=0;
-val z;
-
-{x = 5;}
-
-
-{
-  val y = 1000;
-  {val y = 9999;}
-}
-
-if (x) print(x);
-
-if (5<6) 
-{
-  x = 2;
-  print(z);
-}
-else 
-{
-  val nothing = 111;  
-}
-
+print(x);

@@ -18,6 +18,7 @@ if                       {return IF;}
 else                     {return ELSE;}
 while                    {return WHILE;}
 break                    {return BREAK;}
+continue                 {return CONTINUE;}
 val|char|string          {yylval.lexeme = strdup(yytext); return TYPE;}
 print                    return COMMAND_PRINT;
 random                   return COMMAND_RANDOM;
