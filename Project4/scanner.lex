@@ -17,6 +17,7 @@ int line_count = 0;
 if                       {return IF;}
 else                     {return ELSE;}
 while                    {return WHILE;}
+break                    {return BREAK;}
 val|char|string          {yylval.lexeme = strdup(yytext); return TYPE;}
 print                    return COMMAND_PRINT;
 random                   return COMMAND_RANDOM;

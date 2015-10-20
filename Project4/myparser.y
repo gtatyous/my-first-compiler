@@ -13,13 +13,14 @@
 extern int yylex();
 extern FILE* yyin; 
 extern int line_count; 
-extern int scope;
 
 std::ofstream outfile; //move this to main
 std::stringstream TubeIC_out;
 std::vector<SymbolTable*> my_stack;
 SymbolTable* symbol_table;
 int scope =0;
+int loop_id; 
+int while_counter = 0;
 
 void yyerror
   (char* err_string)
@@ -72,6 +73,7 @@ var* check_var
 %token IF
 %token ELSE
 %token WHILE
+%token BREAK
 %token <lexeme> TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
@@ -135,12 +137,14 @@ statement_list: { //global scope is = 0 (don't change it)
 
 statement: decl ';' {$$ = $1;}
          | expr ';' {$$ = $1;}
-         | cmd  ';' {$$ = $1;} 
+         | cmd  ';' {$$ = $1;}
+         | BREAK ';' {$$ = new BREAK_NODE();}
          |      ';' {$$ = new EMPTY_NODE();}
          | block    {$$ = $1;}
          | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5, NULL);}
          | IF '(' expr ')' statement ELSE statement {$$ = new IF_NODE($3, $5, $7);}
-         | WHILE '(' expr ')' statement {$$ = new WHILE_NODE($3, $5);} 
+         | WHILE {while_counter++;} '(' expr ')' statement {$$ = new WHILE_NODE($4, $6);
+                                                            while_counter--;}  
          ;
 
 block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE {scope--;

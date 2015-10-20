@@ -1,5 +1,7 @@
 val xxx = !77; 
 
+break; 
+
 char cc = 'a';
 {
   val x =77;

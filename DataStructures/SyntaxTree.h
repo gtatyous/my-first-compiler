@@ -10,6 +10,8 @@
 #include <cstdlib> 
 
 extern int line_count;
+extern int loop_id;
+extern int while_counter;
 extern std::stringstream TubeIC_out;
 extern std::vector<SymbolTable*> my_stack;
 extern SymbolTable* symbol_table;
@@ -187,7 +189,7 @@ class IF_NODE: public AST
       _children.push_back(con_false);
       if (con->GetType() != "val")
       {
-        std::cout << "ERROR(line " << line_count << "): condition for if statements " \
+        std::cout << "ERROR(line " << ++line_count << "): condition for if statements " \
                   << "must evaluate to type val" << std::endl;
         exit(1);
       }
@@ -213,7 +215,8 @@ class WHILE_NODE: public AST
       _children.push_back(stmt);
       if (con->GetType() != "val")
       {
-        std::cout << "ERROR(line " << line_count << "): condition for while statements " \
+        std::cout << "ERROR(line " << ++line_count        \ 
+                  << "): condition for while statements " \
                   << "must evaluate to type val" << std::endl;
         exit(1);
       }
@@ -229,6 +232,22 @@ class WHILE_NODE: public AST
     void print() { ; }
 };
 
+class BREAK_NODE: public AST
+{
+  public:
+    BREAK_NODE () { if (while_counter == 0) 
+                    {
+                      std::cout << "ERROR(line " << ++line_count   \
+                                << "): 'break' command used outside of any loop" \
+                                << std::endl; 
+                      exit(1);
+                    }
+                  } 
+    ~BREAK_NODE () { ; }
+    std::string GetType() {std::cout << "BREAK_NODE: has no type" <<std::endl;}
+    int process();
+    void print() { ; }
+};
 
 class PRINT_CMD_NODE: public AST
 {

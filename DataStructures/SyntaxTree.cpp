@@ -48,16 +48,35 @@ OPR_NODE::OPR_NODE
   _children.push_back(RHS);
   std::string lhs_type = LHS->GetType();
   std::string rhs_type = RHS->GetType();
+  
+  if ( (lhs_type == "char" or
+        rhs_type == "char"  )     and
+            (_opr == "+"   or
+             _opr == "-"   or
+             _opr == "/"   or
+             _opr == "*"   or
+             _opr == "+="  or
+             _opr == "-="  or
+             _opr == "/="  or
+             _opr == "*="   )       )
+  {
+    std::cout << "ERROR(line "<< ++line_count << "): cannot use type '"  \
+              << "char" << "' mathematical expressions" << std::endl;
+    exit(1);
+  }
 
-  if (lhs_type != rhs_type)
+  else if (lhs_type != rhs_type)
   {
     if (  _opr == "+="       or
           _opr == "-="       or
           _opr == "/="       or
-          _opr == "*="        )
+          _opr == "*="       or 
+          _opr == "="        )
     {
-      std::cout << "ERROR(line " << line_count << "): types do not match for assignment"\
-                << "(lhs='" << lhs_type << "', rhs='"<< rhs_type << "')" << std::endl;
+      std::cout << "ERROR(line " << ++line_count          \ 
+                << "): types do not match for assignment" \
+                << "(lhs='" << lhs_type << "', rhs='"<< rhs_type << "')" \ 
+                << std::endl;
       exit(1);
     }
     else if ( _opr == "=="   or
@@ -67,32 +86,16 @@ OPR_NODE::OPR_NODE
               _opr == ">"    or
               _opr == ">="   )
     {
-      std::cout << "ERROR(line " << line_count << "): types do not match for" \
-                << "relationship operator (lhs='" << lhs_type << "', rhs='"   \
+      std::cout << "ERROR(line " << ++line_count << "): types do not match for" \
+                << "relationship operator (lhs='" << lhs_type << "', rhs='"     \
                 << rhs_type << "')" << std::endl;
       exit(1);
     } 
   }
   
-  else if ( (lhs_type == "char" or
-             rhs_type == "char" )     and
-            (_opr == "+"        or
-             _opr == "-"        or
-             _opr == "/"        or
-             _opr == "*"        or
-             _opr == "+="       or
-             _opr == "-="       or
-             _opr == "/="       or
-             _opr == "*="       ))
-  {
-    std::cout << "ERROR(line "<< line_count << "): cannot use type '"  \
-              << "char" << "' mathematical expressions" << std::endl;
-    exit(1);
-  }
-  
   if (rhs_type != lhs_type) 
   {
-    std::cout << "OPR_NODE: types don't match" <<std::endl;
+    std::cout << "OPR_NODE: can't assign _type" <<std::endl;
     exit(1);
   }
   _type = "val"; //returns either 0 or 1
@@ -172,14 +175,14 @@ BOOL_NODE::BOOL_NODE
   {
     if ( RHS->GetType() != "val" ) 
     {  
-      std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+      std::cout << "ERROR(line " << ++line_count << "): cannot use type '" << \
                    RHS->GetType() << "' in mathematical expressions" << std::endl;
       exit(1);
     }
   }
   else if (RHS->GetType() != "val" or LHS->GetType() != "val")
   {
-    std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+    std::cout << "ERROR(line " << ++line_count << "): cannot use type '" << \
                  RHS->GetType() << "' in mathematical expressions" << std::endl;
     exit(1);
   }
@@ -241,17 +244,21 @@ int IF_NODE::process
 int WHILE_NODE::process
   (void)
 { 
-  int while_start_id = GetLabelID();
-  TubeIC_out << "while_start_" << while_start_id << ":" << std::endl;
+  loop_id = GetLabelID();
+  TubeIC_out << "while_start_" << loop_id << ":" << std::endl;
   int con = _children[0]->process();
-  int while_end_id = GetLabelID();
-  TubeIC_out << "jump_if_0 s" << con << " while_end_" << while_end_id << std::endl;
+  TubeIC_out << "jump_if_0 s" << con << " while_end_" << loop_id << std::endl;
   int stmt = _children[1]->process();
-  TubeIC_out << "jump while_start_" << while_start_id << std::endl;
-  TubeIC_out << "while_end_" << while_end_id << ":" << std::endl;
+  TubeIC_out << "jump while_start_" << loop_id << std::endl;
+  TubeIC_out << "while_end_" << loop_id << ":" << std::endl;
   return GetID(); //out_id is not used
 }
 
+int BREAK_NODE::process
+  (void)
+{
+  TubeIC_out << "jump while_end_" << loop_id << std::endl;
+}
 
 ////////////////////////////////////commands
 void PRINT_CMD_NODE::AddChild 
@@ -291,7 +298,7 @@ RAND_CMD_NODE::RAND_CMD_NODE
   _children.push_back(expr);
   if (expr->GetType() != "val")
   { 
-    std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+    std::cout << "ERROR(line " << ++line_count << "): cannot use type '" << \
     expr->GetType() << "' as an argument to random" <<std::endl; 
     exit(1);
   }
@@ -314,7 +321,7 @@ UMINUS_NODE::UMINUS_NODE
   _children.push_back(expr);
   if (expr->GetType() != "val")
   { 
-    std::cout << "ERROR(line " << line_count << "): cannot use type '" << \
+    std::cout << "ERROR(line " << ++line_count << "): cannot use type '" << \
     expr->GetType() << "' as an argument to random" <<std::endl; 
     exit(1);
   }
