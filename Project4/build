@@ -1,0 +1,8 @@
+make clean
+
+make
+
+./tube4 example.tube test.tic
+
+../TubeCode/TubeIC test.tic
+

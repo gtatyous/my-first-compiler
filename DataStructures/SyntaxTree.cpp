@@ -73,9 +73,9 @@ OPR_NODE::OPR_NODE
           _opr == "*="       or 
           _opr == "="        )
     {
-      std::cout << "ERROR(line " << ++line_count          \ 
+      std::cout << "ERROR(line " << ++line_count          \
                 << "): types do not match for assignment" \
-                << "(lhs='" << lhs_type << "', rhs='"<< rhs_type << "')" \ 
+                << "(lhs='" << lhs_type << "', rhs='"<< rhs_type << "')" \
                 << std::endl;
       exit(1);
     }
@@ -244,14 +244,16 @@ int IF_NODE::process
 int WHILE_NODE::process
   (void)
 { 
-  loop_id = GetLabelID();
-  TubeIC_out << "while_start_" << loop_id << ":" << std::endl;
+  int while_id = GetLabelID();
+  loop_id = while_id; // this is for break and continue statement
+  TubeIC_out << "while_start_" << while_id << ":" << std::endl;
   int con = _children[0]->process();
-  TubeIC_out << "jump_if_0 s" << con << " while_end_" << loop_id << std::endl;
+  TubeIC_out << "jump_if_0 s" << con << " while_end_" << while_id << std::endl;
   int stmt = _children[1]->process();
-  TubeIC_out << "jump while_start_" << loop_id << std::endl;
-  TubeIC_out << "while_end_" << loop_id << ":" << std::endl;
-  return GetID(); //out_id is not used
+  loop_id = while_id;
+  TubeIC_out << "jump while_start_" << while_id << std::endl;
+  TubeIC_out << "while_end_" << while_id << ":" << std::endl;
+  return -1; //out_id is not used
 }
 
 int BREAK_NODE::process

@@ -1,16 +1,88 @@
-val_copy 0 s1
-val_copy s1 s0
-while_start_0:
-val_copy 10 s2
-test_less s0 s2 s3
-jump_if_0 s3 while_end_0
-val_copy 1 s4
-add s0 s4 s0
-jump while_start_0
-val_copy 'h' s5
-out_char s5
+val_copy '\n' s0
+out_char s0
 out_char '\n'
+val_copy 'r' s1
+out_char s1
+val_copy 'u' s2
+out_char s2
+val_copy 'n' s3
+out_char s3
+val_copy 'n' s4
+out_char s4
+val_copy 'i' s5
+out_char s5
+val_copy 'n' s6
+out_char s6
+val_copy 'g' s7
+out_char s7
+val_copy '.' s8
+out_char s8
+val_copy '.' s9
+out_char s9
+val_copy '.' s10
+out_char s10
+out_char '\n'
+val_copy 1 s12
+val_copy s12 s11
+val_copy 0 s14
+val_copy s14 s13
+while_start_0:
+val_copy 11 s15
+test_less s11 s15 s16
+jump_if_0 s16 while_end_0
+val_copy 'T' s17
+out_char s17
+val_copy 'a' s18
+out_char s18
+val_copy 'b' s19
+out_char s19
+val_copy 'l' s20
+out_char s20
+val_copy 'e' s21
+out_char s21
+val_copy ' ' s22
+out_char s22
+out_val s11
+out_char '\n'
+while_start_1:
+val_copy 11 s23
+test_less s13 s23 s24
+jump_if_0 s24 while_end_1
+mult s11 s13 s25
+out_val s25
+out_char '\n'
+val_copy 1 s26
+add s13 s26 s13
+jump while_start_1
+while_end_1:
+val_copy 1 s27
+add s11 s27 s11
+val_copy 0 s28
+val_copy s28 s13
 jump while_start_0
 while_end_0:
-out_val s0
+val_copy '\n' s29
+out_char s29
+val_copy '*' s30
+out_char s30
+val_copy '*' s31
+out_char s31
+val_copy '*' s32
+out_char s32
+val_copy '\t' s33
+out_char s33
+val_copy 'E' s34
+out_char s34
+val_copy 'n' s35
+out_char s35
+val_copy 'd' s36
+out_char s36
+val_copy '\t' s37
+out_char s37
+val_copy '*' s38
+out_char s38
+val_copy '*' s39
+out_char s39
+val_copy '*' s40
+out_char s40
 out_char '\n'

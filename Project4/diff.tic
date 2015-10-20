@@ -1,0 +1,44 @@
+# Ouput from Dr. Charles Ofria's sample compiler.
+  val_copy 10 s2  
+  val_copy s2 s1  
+while_start_0: 
+  val_copy 10 s3  
+  mult s3 -1 s4 
+  test_gtr s1 s4 s5 
+  jump_if_0 s5 while_end_1  
+  out_val s1   
+  out_char '\n'                         # End print statements with a newline.
+  val_copy 1 s6  
+  sub s1 s6 s7 
+  val_copy s7 s1  
+  val_copy 0 s8  
+  test_equ s1 s8 s9 
+  jump_if_0 s9 if_else_2  
+  val_copy 0 s10  
+  out_val s10   
+  val_copy 0 s11  
+  out_val s11   
+  val_copy 0 s12  
+  out_val s12   
+  val_copy 0 s13  
+  out_val s13   
+  val_copy 0 s14  
+  out_val s14   
+  out_char '\n'                         # End print statements with a newline.
+  jump while_end_1   
+  val_copy 1 s15  
+  out_val s15   
+  val_copy 1 s16  
+  out_val s16   
+  val_copy 1 s17  
+  out_val s17   
+  val_copy 1 s18  
+  out_val s18   
+  val_copy 1 s19  
+  out_val s19   
+  out_char '\n'                         # End print statements with a newline.
+  jump if_end_3   
+if_else_2: 
+if_end_3: 
+  jump while_start_0   
+while_end_1: 

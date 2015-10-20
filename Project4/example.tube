@@ -1,9 +1,16 @@
 
-val x = 0;
-while (x<10)
+print('\n');
+print('r', 'u', 'n', 'n', 'i', 'n', 'g', '.', '.', '.');
+val x = 1;
+val y = 0;
+
+while (x<11)
 {
+  print('T', 'a', 'b', 'l', 'e', ' ', x);
+  while (y<11) {print(x*y); y+=1;}
   x += 1;
-  continue;
-  print('h');
+  y = 0;
 }
-print(x);
+
+print ('\n', '*', '*', '*', '\t', 'E', 'n', 'd', '\t', '*', '*', '*');
+

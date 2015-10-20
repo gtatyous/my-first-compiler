@@ -215,7 +215,7 @@ class WHILE_NODE: public AST
       _children.push_back(stmt);
       if (con->GetType() != "val")
       {
-        std::cout << "ERROR(line " << ++line_count        \ 
+        std::cout << "ERROR(line " << ++line_count        \
                   << "): condition for while statements " \
                   << "must evaluate to type val" << std::endl;
         exit(1);
