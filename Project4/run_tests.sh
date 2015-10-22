@@ -36,7 +36,7 @@ function run_error_test {
     if [ $ref -eq 0 ]; then
 	echo $1 " passed";
 	rm $project.tic ref.tic 2> /dev/null;
-	return
+	return 1;
     fi;
 
 
@@ -51,9 +51,8 @@ function run_error_test {
 	exit 1;
     else
 	echo $1 "passed";
+	return 0;
     fi;
-
-
 }
 
 
@@ -66,11 +65,11 @@ for F in Test_Suite/fail*.tube; do
 done
 
 
-#echo Extra Credit Results:
+echo Extra Credit Results:
 
-#for F in Test_Suite/extra.*.tube; do 
-#	run_error_test $F
-#done
+for F in Test_Suite/extra*.tube; do 
+	run_error_test $F
+done
 
 
 
