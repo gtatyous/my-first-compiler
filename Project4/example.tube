@@ -1,26 +1,24 @@
 print('\n');
 print('r', 'u', 'n', 'n', 'i', 'n', 'g', '.', '.', '.');
 
-/*
-val y =11;
-
-if (y==11) print('h', 'i', '!');
-*/
-
 val x = 1;
-val y = 0;
+val counter = 1024;
 
 while (1)
 {
   print('T', 'a', 'b', 'l', 'e', ' ', x);
+  val counter = 0;
   while (1) {
-             print(x*y); 
-             y+=1;
-             if (y==11) break;
+             print(x*counter); 
+             counter += 1;
+             if (counter==11) break;
+             continue;
+print('c','o','n','t','i','n','u','e',' ','i','s','n','\'','t',' ','i','m','p','l','e','m','e','n','t','e','d',' ','c','o','r','r','e','c','t','l','y');
             }
+  counter +=1;
   x += 1;
-  y = 0;
   if (x==11) break;
 }
 
+print ('c','o','u','n','t','e','r',':',' ',counter);
 print ('\n', '*', '*', '*', '\t', 'E', 'n', 'd', '\t', '*', '*', '*');

@@ -1,6 +1,6 @@
 
 Class  : CSE450
-Project: 03
+Project: 04
 author : Yousef Gtat
 
 Summary: 100% of the code was developed by the author, Yousef Gtat
@@ -11,6 +11,8 @@ Implementation:
          Lex regex expressions are listed inside scanner.lex
          The syntax tree is defined by sets of rules provided inside myparser.y
          SymbolTable and SyntaxTree code is under DataStructures directory
+         Scoping and type checking are added to the TubeIC language
+         flow control commands are added to the TubeIC language
 
 
 External Resources (if any):
