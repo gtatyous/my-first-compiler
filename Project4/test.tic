@@ -27,62 +27,76 @@ val_copy s12 s11
 val_copy 0 s14
 val_copy s14 s13
 while_start_0:
-val_copy 11 s15
-test_less s11 s15 s16
-jump_if_0 s16 while_end_0
-val_copy 'T' s17
+val_copy 1 s15
+jump_if_0 s15 while_end_0
+val_copy 'T' s16
+out_char s16
+val_copy 'a' s17
 out_char s17
-val_copy 'a' s18
+val_copy 'b' s18
 out_char s18
-val_copy 'b' s19
+val_copy 'l' s19
 out_char s19
-val_copy 'l' s20
+val_copy 'e' s20
 out_char s20
-val_copy 'e' s21
+val_copy ' ' s21
 out_char s21
-val_copy ' ' s22
-out_char s22
 out_val s11
 out_char '\n'
 while_start_1:
-val_copy 11 s23
-test_less s13 s23 s24
-jump_if_0 s24 while_end_1
-mult s11 s13 s25
-out_val s25
+val_copy 1 s22
+jump_if_0 s22 while_end_1
+mult s11 s13 s23
+out_val s23
 out_char '\n'
-val_copy 1 s26
-add s13 s26 s13
+val_copy 1 s24
+add s13 s24 s13
+val_copy 11 s25
+test_equ s13 s25 s26
+test_nequ s26 0 s27
+jump_if_0 s27 else_2
+jump while_end_1
+jump end_if_3
+else_2:
+end_if_3:
 jump while_start_1
 while_end_1:
-val_copy 1 s27
-add s11 s27 s11
-val_copy 0 s28
-val_copy s28 s13
+val_copy 1 s28
+add s11 s28 s11
+val_copy 0 s29
+val_copy s29 s13
+val_copy 11 s30
+test_equ s11 s30 s31
+test_nequ s31 0 s32
+jump_if_0 s32 else_4
+jump while_end_0
+jump end_if_5
+else_4:
+end_if_5:
 jump while_start_0
 while_end_0:
-val_copy '\n' s29
-out_char s29
-val_copy '*' s30
-out_char s30
-val_copy '*' s31
-out_char s31
-val_copy '*' s32
-out_char s32
-val_copy '\t' s33
+val_copy '\n' s33
 out_char s33
-val_copy 'E' s34
+val_copy '*' s34
 out_char s34
-val_copy 'n' s35
+val_copy '*' s35
 out_char s35
-val_copy 'd' s36
+val_copy '*' s36
 out_char s36
 val_copy '\t' s37
 out_char s37
-val_copy '*' s38
+val_copy 'E' s38
 out_char s38
-val_copy '*' s39
+val_copy 'n' s39
 out_char s39
-val_copy '*' s40
+val_copy 'd' s40
 out_char s40
+val_copy '\t' s41
+out_char s41
+val_copy '*' s42
+out_char s42
+val_copy '*' s43
+out_char s43
+val_copy '*' s44
+out_char s44
 out_char '\n'

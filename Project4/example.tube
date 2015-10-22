@@ -1,16 +1,26 @@
-
 print('\n');
 print('r', 'u', 'n', 'n', 'i', 'n', 'g', '.', '.', '.');
+
+/*
+val y =11;
+
+if (y==11) print('h', 'i', '!');
+*/
+
 val x = 1;
 val y = 0;
 
-while (x<11)
+while (1)
 {
   print('T', 'a', 'b', 'l', 'e', ' ', x);
-  while (y<11) {print(x*y); y+=1;}
+  while (1) {
+             print(x*y); 
+             y+=1;
+             if (y==11) break;
+            }
   x += 1;
   y = 0;
+  if (x==11) break;
 }
 
 print ('\n', '*', '*', '*', '\t', 'E', 'n', 'd', '\t', '*', '*', '*');
-

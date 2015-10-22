@@ -250,9 +250,9 @@ int WHILE_NODE::process
   int con = _children[0]->process();
   TubeIC_out << "jump_if_0 s" << con << " while_end_" << while_id << std::endl;
   int stmt = _children[1]->process();
-  loop_id = while_id;
   TubeIC_out << "jump while_start_" << while_id << std::endl;
   TubeIC_out << "while_end_" << while_id << ":" << std::endl;
+  loop_id--;
   return -1; //out_id is not used
 }
 
