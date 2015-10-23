@@ -43,7 +43,7 @@ int CHAR_NODE::process
 int STRING_NODE::process
   (void)
 {
-  TubeIC << "string_literal" << std::endl;
+  TubeIC_out << "string_literal" << std::endl;
 }
 
 ///////////////////////////////operators and bool
