@@ -39,6 +39,13 @@ int CHAR_NODE::process
   return out_id;
 }
 
+/////////////////////////////////string literal
+int STRING_NODE::process
+  (void)
+{
+  TubeIC << "string_literal" << std::endl;
+}
+
 ///////////////////////////////operators and bool
 OPR_NODE::OPR_NODE
   (std::string opr, AST* LHS, AST* RHS)
@@ -252,7 +259,7 @@ int WHILE_NODE::process
   int stmt = _children[1]->process();
   TubeIC_out << "jump while_start_" << while_id << std::endl;
   TubeIC_out << "while_end_" << while_id << ":" << std::endl;
-  loop_id--;
+  loop_id--;  //this is for break and continue statement
   return -1; //out_id is not used
 }
 

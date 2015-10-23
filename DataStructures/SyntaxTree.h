@@ -114,6 +114,20 @@ class CHAR_NODE: public AST
     std::string _char ;
 };
 
+class STRING_NODE: public AST
+{
+  public:
+    STRING_NODE(std::string s):_str(s) { _type = "string";}
+    ~STRING_NODE() { ; }
+
+    std::string GetType() {return _type;}
+    void print() { ; }
+    int process();
+  private:
+    std::string _str ;
+};
+
+
 class OPR_NODE: public AST
 {
   public:
@@ -347,8 +361,6 @@ class DECL_NODE: public AST
     void AddChild (AST* child);
     void print() { ; }
 };
-
-
 
 #endif /*SYNTAXTREE_H*/
 
