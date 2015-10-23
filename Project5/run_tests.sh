@@ -3,7 +3,7 @@
 # This file can be executed by calling "bash run_tests.sh"
 # It will then test tube1 against the reference_implementation for
 # each tube file in the test-suite
-project=tube4
+project=tube5
 make clean
 if [ -f $project ]; then
     rm $project;
@@ -67,7 +67,7 @@ done
 
 echo Extra Credit Results:
 
-for F in Test_Suite/extra*.tube; do 
+for F in Test_Suite/extra.*.tube; do 
 	run_error_test $F
 done
 
