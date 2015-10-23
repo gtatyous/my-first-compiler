@@ -137,13 +137,13 @@ statement_list: { //global scope is = 0 (don't change it)
               | statement_list statement {$1->AddChild($2); $$ = $1;} 
               ;
 
-statement: decl ';' {$$ = $1;}
-         | expr ';' {$$ = $1;}
-         | cmd  ';' {$$ = $1;}
-         | BREAK ';' {$$ = new BREAK_NODE();}
+statement: decl     ';' {$$ = $1;}
+         | expr     ';' {$$ = $1;}
+         | cmd      ';' {$$ = $1;}
+         | BREAK    ';' {$$ = new BREAK_NODE();}
          | CONTINUE ';' {$$ = new CONTINUE_NODE();}
-         |      ';' {$$ = new EMPTY_NODE();}
-         | block    {$$ = $1;}
+         |          ';' {$$ = new EMPTY_NODE();}
+         | block        {$$ = $1;}
          | IF '(' expr ')' statement  %prec IFX {$$ = new IF_NODE($3, $5, NULL);}
          | IF '(' expr ')' statement ELSE statement {$$ = new IF_NODE($3, $5, $7);}
          | WHILE {while_counter++;} '(' expr ')' statement {$$ = new WHILE_NODE($4, $6);
@@ -153,7 +153,7 @@ statement: decl ';' {$$ = $1;}
 block: OPEN_BRACE {scope++;} statement_list CLOSE_BRACE {scope--;
                                            my_stack.pop_back();
                                            symbol_table = my_stack.back();
-                                           $$ = $3;         };
+                                           $$ = $3;     };
 
 decl: TYPE ID { add_var($1, $2); 
                 AST* id = new ID_NODE($1, $2); 
@@ -164,19 +164,33 @@ decl: TYPE ID { add_var($1, $2);
                                             AST* opr_node = new OPR_NODE("=", id, $5);
                                             $$ = new DECL_NODE($1); 
                                             $$->AddChild(opr_node);
+                                          }
+    | ARRAY '(' TYPE ')' ID { 
+                            std::string array_t = std::string("array") + "(" + $3 + ")";
+                            add_var(array_t, $5); 
+                            AST* id = new ID_NODE(array_t, $5); //ID for array
+                            $$ = new DECL_NODE(array_t);
+                            $$->AddChild(id);
+                            }
+    | ARRAY '(' TYPE ')' ID  '=' expr { 
+                            std::string array_t = std::string("array") + "(" + $3 + ")";
+                            add_var(array_t, $5); 
+                            AST* id = new ID_NODE(array_t, $5); //ID for array
+                            AST* opr_node = new OPR_NODE("=", id, $7);
+                            $$ = new DECL_NODE(array_t); 
+                            $$->AddChild(opr_node);
                                       }
-    | ARRAY '(' TYPE ')' ID {}
-    | ARRAY '(' TYPE ')' ID  = expr {}
     | decl ',' ID {add_var($1->GetType(), $3);}  { std::string t = $1->GetType();
                                                    AST* id  = new ID_NODE(t, $3); 
                                                    $1->AddChild(id); 
                                                    $$ = $1;
                                                  }
-    | decl ',' ID {add_var($1->GetType(), $3);} '=' expr   { std::string t = $1->GetType();
-                                                             AST* id  = new ID_NODE(t, $3); 
-                                                             AST* opr_node = new OPR_NODE("=", id, $6);
-                                                             $1->AddChild(opr_node); 
-                                                             $$ = $1;
+    | decl ',' ID {add_var($1->GetType(), $3);} '=' expr   { 
+                                                   std::string t = $1->GetType();
+                                                   AST* id  = new ID_NODE(t, $3); 
+                                                   AST* opr_node = new OPR_NODE("=", id, $6);
+                                                   $1->AddChild(opr_node); 
+                                                   $$ = $1;
                                                            };
 
 expr: ID {check_var($1);}    '='     expr {

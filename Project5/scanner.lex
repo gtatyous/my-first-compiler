@@ -1,6 +1,6 @@
 %{
 #include "../DataStructures/SyntaxTree.h"
-#include "tube4.tab.hh"
+#include "tube5.tab.hh"
 #include <iostream>
 #include <string.h>
 #include <algorithm>
@@ -40,7 +40,7 @@ random                   return COMMAND_RANDOM;
                            << std::endl;
                            exit(1);
                          }
-\"[^"\\]*\"|\"\\n\"|\"\\t\"|\"\\\"\"|\"\\\\\" { yylval.lexem = strdup(yytext);
+\"[^"\\]*\"|\"\\n\"|\"\\t\"|\"\\\"\"|\"\\\\\" { yylval.lexeme = strdup(yytext);
                                                 return STRING_LITERAL;}
 \"                       { /* report not term str error*/
                            std::cout << "ERROR(line " << \

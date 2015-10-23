@@ -15,7 +15,6 @@ int ID_NODE::process
   if (out_id == -1)
   {
     out_id = GetID();
-    
     symbol_table->search(_name)->id = out_id;
   }
   return out_id;
@@ -56,6 +55,13 @@ OPR_NODE::OPR_NODE
   std::string lhs_type = LHS->GetType();
   std::string rhs_type = RHS->GetType();
   
+  //if lhs or rhs == type of array(char) or array(val)
+    //if _opr == "="
+      //check if rhs is a type of string for  array(char)
+      //check if rhs is a type of ?????? for  array(val)
+    //else
+      //ERROR(line #): cannot use type 'type' in mathematical expressions
+
   if ( (lhs_type == "char" or
         rhs_type == "char"  )     and
             (_opr == "+"   or
@@ -297,6 +303,7 @@ int PRINT_CMD_NODE::process
     {
       TubeIC_out << "out_val s" << out_id << std::endl;
     }
+    //check if _type == string. use array tubeic commands to print them
     else
     {
       std::cout << "Print: running error, unknow type" << std::endl;
