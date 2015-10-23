@@ -40,8 +40,8 @@ random                   return COMMAND_RANDOM;
                            << std::endl;
                            exit(1);
                          }
-\"[^"\\]*\"|\"\\n\"|\"\\t\"|\"\\\"\"|\"\\\\\" { yylval.lexeme = strdup(yytext);
-                                                return STRING_LITERAL;}
+\"([^"\\]|\\n|\\t|\\\"|\\\\)*\"                 { yylval.lexeme = strdup(yytext);
+                                                  return STRING_LITERAL;}
 \"                       { /* report not term str error*/
                            std::cout << "ERROR(line " << \
                            ++line_count << "): syntax error" \

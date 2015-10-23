@@ -237,7 +237,7 @@ expr: ID {check_var($1);}    '='     expr {
     | '-' expr {$$ = new UMINUS_NODE($2);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
     | CHAR_LITERAL {$$ = new CHAR_NODE($1);}
-    | STRING_LITERAL {$$ = new STRING_NODE($1);}
+    | STRING_LITERAL {$$ = new ARRAY_CHAR_NODE($1);}
     | ID {std::string t = check_var($1)->type ; $$ = new ID_NODE(t, $1);}
     | COMMAND_RANDOM '(' expr ')'  {$$ = new RAND_CMD_NODE($3);}
     ;

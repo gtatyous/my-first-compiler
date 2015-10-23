@@ -114,11 +114,11 @@ class CHAR_NODE: public AST
     std::string _char ;
 };
 
-class STRING_NODE: public AST
+class ARRAY_CHAR_NODE: public AST
 {
   public:
-    STRING_NODE(std::string s):_str(s) { _type = "string";}
-    ~STRING_NODE() { ; }
+    ARRAY_CHAR_NODE(std::string s):_str(s) { _type = "array(char)";}
+    ~ARRAY_CHAR_NODE() { ; }
 
     std::string GetType() {return _type;}
     void print() { ; }

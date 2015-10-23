@@ -1,10 +1,13 @@
 print('\n');
 print('r', 'u', 'n', 'n', 'i', 'n', 'g', '.', '.', '.');
 
-string xx;
+char c;
 
-string z = "hi###" ;
-array ( char ) x;
+print(c='a');
 
+char b = 'b';
+
+
+array (char) arr = "hi";
 
 

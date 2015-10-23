@@ -39,10 +39,18 @@ int CHAR_NODE::process
 }
 
 /////////////////////////////////string literal
-int STRING_NODE::process
+int ARRAY_CHAR_NODE::process
   (void)
 {
-  TubeIC_out << "string_literal" << std::endl;
+  int len = _str.length() - 2 ; // ignore the first " and the last "
+  int out_id = GetID();
+  TubeIC_out << "ar_set_siz a" <<out_id << " " << len << std::endl;
+  for (int i=1; i<_str.length()-1; i++)
+  {
+    TubeIC_out << "ar_set_idx a" << out_id << " " << i-1 << " "   \
+               << "'" << _str[i] << "'" << std::endl;
+  }
+  return out_id;
 }
 
 ///////////////////////////////operators and bool
@@ -54,7 +62,7 @@ OPR_NODE::OPR_NODE
   _children.push_back(RHS);
   std::string lhs_type = LHS->GetType();
   std::string rhs_type = RHS->GetType();
-  
+
   //if lhs or rhs == type of array(char) or array(val)
     //if _opr == "="
       //check if rhs is a type of string for  array(char)
@@ -76,6 +84,11 @@ OPR_NODE::OPR_NODE
     std::cout << "ERROR(line "<< ++line_count << "): cannot use type '"  \
               << "char" << "' mathematical expressions" << std::endl;
     exit(1);
+  }
+
+  else if (lhs_type == "string" and rhs_type == "array(char)")
+  {
+    /* skip type checking */
   }
 
   else if (lhs_type != rhs_type)
@@ -105,13 +118,9 @@ OPR_NODE::OPR_NODE
       exit(1);
     } 
   }
-  
-  if (rhs_type != lhs_type) 
-  {
-    std::cout << "OPR_NODE: can't assign _type" <<std::endl;
-    exit(1);
-  }
-  _type = "val"; //returns either 0 or 1
+  _type = rhs_type; //double check this  
+  //std::cout << "opr type : " << _type << std::endl;
+
 }
 
 int OPR_NODE::process
@@ -132,8 +141,19 @@ int OPR_NODE::process
   else if (_opr == ">")   {TubeIC_out << "test_gtr s";}
   else if (_opr == ">=")  {TubeIC_out << "test_gte s";}
   
-  else if (_opr == "=")   {TubeIC_out << "val_copy s" << rhs       \
-                           << " s" << lhs << std::endl; return lhs;}
+  else if (_opr == "=")   
+  {
+    if (_type == "val")
+    {
+      TubeIC_out << "val_copy s" << rhs       \
+               << " s" << lhs << std::endl; return lhs;
+    }
+    else if (_type == "array(char)" or _type == "array(val)")
+    {
+      TubeIC_out << "ar_copy a" << rhs        \
+                 << " a" << lhs << std::endl; return lhs; 
+    }
+  }
   else if (_opr == "+=")  {TubeIC_out << "add s"<<lhs << " s"<<rhs \
                            <<" s"<<lhs <<std::endl;     return lhs;}
   else if (_opr == "-=")  {TubeIC_out << "sub s"<<lhs << " s"<<rhs \
@@ -294,6 +314,8 @@ int PRINT_CMD_NODE::process
   for (int i=0; i<_children.size(); i++)
   {
     _type = _children[i]->GetType();
+    //std::cout << "print child type : "<< _type << std::endl; 
+
     int out_id = _children[i]->process();
     if (_type == "char")
     {
@@ -304,6 +326,26 @@ int PRINT_CMD_NODE::process
       TubeIC_out << "out_val s" << out_id << std::endl;
     }
     //check if _type == string. use array tubeic commands to print them
+    else if (_type == "array(char)" or _type == "string")
+    {
+      int len        = GetID();
+      int index      = GetID();
+      int pr_loop_id = GetLabelID();
+      int con_id     = GetID();
+      int pr_end_id  = GetLabelID();
+      
+      TubeIC_out << "val_copy 0 s" << index << std::endl; 
+      TubeIC_out << "ar_get_siz a" << out_id << " s" << len << std::endl;
+      TubeIC_out << "print_array_start_" << pr_loop_id << ":" << std::endl;
+      TubeIC_out << "test_gte s" << index << " s" << len << " s" << con_id << std::endl;
+      TubeIC_out << "jump_if_n0 s" << con_id << " print_array_end_" << pr_end_id << std::endl;
+      TubeIC_out << "ar_get_idx a" << out_id << " s" << index << " s"  \
+                 << con_id << std::endl; //con_id is used as temp scalar
+      TubeIC_out << "out_char s" << con_id << std::endl; 
+      TubeIC_out << "add s" << index << " 1 s" << index << std::endl;
+      TubeIC_out << "jump print_array_start_" << pr_loop_id << std::endl;
+      TubeIC_out << "print_array_end_" << pr_end_id << ":" << std::endl;
+    }
     else
     {
       std::cout << "Print: running error, unknow type" << std::endl;
