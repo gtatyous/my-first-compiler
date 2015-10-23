@@ -36,7 +36,7 @@ function run_error_test {
     if [ $ref -eq 0 ]; then
 	echo $1 " passed";
 	rm $project.tic ref.tic 2> /dev/null;
-	return 1;
+	return 0;
     fi;
 
 
