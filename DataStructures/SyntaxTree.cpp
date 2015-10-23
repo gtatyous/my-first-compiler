@@ -42,13 +42,31 @@ int CHAR_NODE::process
 int ARRAY_CHAR_NODE::process
   (void)
 {
-  int len = _str.length() - 2 ; // ignore the first " and the last "
+  std::size_t count = std::count(_str.begin(), _str.end(), '\\');
+  int len = _str.length() - 2 - count ; /* ignore the first " and the last " as well as \ */ 
   int out_id = GetID();
   TubeIC_out << "ar_set_siz a" <<out_id << " " << len << std::endl;
-  for (int i=1; i<_str.length()-1; i++)
+  int i = 1; 
+  int index = 0;
+  while(i<_str.length()-1)
   {
-    TubeIC_out << "ar_set_idx a" << out_id << " " << i-1 << " "   \
-               << "'" << _str[i] << "'" << std::endl;
+    TubeIC_out << "ar_set_idx a" << out_id << " " << index++  << " "   \
+               << "'";
+    if (_str[i] == '\\')
+    {
+      //std::cout << "i: " << i << "  str[i]: " << _str[i] << std::endl;
+      //std::cout << "str[++i]: " << _str[++i] << std::endl;
+      //std::cout << "now i: " << i << " str[i]: " << _str[i] <<std::endl <<std::endl;
+      TubeIC_out << _str[i];
+      i++;
+      TubeIC_out << _str[i];
+    }
+    else 
+    {
+      TubeIC_out << _str[i];
+    }
+    TubeIC_out << "'" <<  std::endl;
+    i++;
   }
   return out_id;
 }

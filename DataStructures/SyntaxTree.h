@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib> 
+#include <algorithm>
 
 extern int line_count;
 extern int loop_id;
