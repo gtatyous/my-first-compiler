@@ -76,8 +76,6 @@ var* check_var
 %token BREAK
 %token CONTINUE
 %token ARRAY
-%token SIZE
-%token RESIZE
 %token <lexeme> TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
@@ -295,12 +293,30 @@ expr: ID {check_var($1);}    '='     expr {
 
                                           }
 
-    | ID '.' SIZE '(' ')' {  std::string id_type = check_var($1)->type;
+    | ID '.' ID '(' ')' {  std::string id_type = check_var($1)->type;
                              if( id_type == "array(char)" or 
                                  id_type == "string"      or
                                  id_type == "array(val)"  )
                              {
-                               $$ = new SIZE_NODE($1); 
+                               if (std::string($3) == "size")
+                               {
+                                 $$ = new SIZE_NODE($1); 
+                               }
+                               else if (std::string($3) == "resize")
+                               {
+                                 std::cout << "ERROR(line " << ++line_count    \
+                                           << "): array resize() method takes" \
+                                           << " exactly one (val) argument."   \
+                                           << std::endl;
+                                 exit(1);
+                               }
+                               else
+                               {
+                                 std::cout << "ERROR(line " << ++line_count \
+                                           << "): invalid method '" << $3   \
+                                           << "'" << std::endl;
+                                 exit(1);
+                               }
                              }
                              else
                              {
@@ -311,13 +327,30 @@ expr: ID {check_var($1);}    '='     expr {
                              }
                               
                           }
-    | ID '.' RESIZE '(' expr ')' { std::string id_type = check_var($1)->type;
+    | ID '.' ID '(' expr ')' { std::string id_type = check_var($1)->type;
                                    if ( id_type == "array(char)" or 
                                         id_type == "string"      or
                                         id_type == "array(val)"   )
                                    {
-                                     //chage size of array node here?
-                                     $$ = new RESIZE_NODE($1, $5); 
+                                     if (std::string($3) == "resize")
+                                     {
+                                       $$ = new RESIZE_NODE($1, $5); 
+                                     }
+                                     else if (std::string($3) == "size")
+                                     {
+                                       std::cout << "ERROR(line " << ++line_count  \
+                                                 << "): array size() method does"  \
+                                                 << " not take any arguments"      \
+                                                 << std::endl;
+                                       exit(1);
+                                     }
+                                     else
+                                     {
+                                       std::cout << "ERROR(line " << ++line_count \
+                                                 << "): invalid method '" << $3   \
+                                                 << "'" << std::endl;
+                                       exit(1);
+                                     }
                                    }
                                    else
                                    {
