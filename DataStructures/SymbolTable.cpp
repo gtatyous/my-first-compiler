@@ -1,4 +1,5 @@
 #include "SymbolTable.h"
+#include "SyntaxTree.h" 
 #include <iostream>
   
 SymbolTable::SymbolTable
@@ -42,7 +43,8 @@ void SymbolTable::insert
     var_info[name]->name = name;
     var_info[name]->type = type;
     var_info[name]->line = line_count;
-    var_info[name]->scope = scope_level;
+    var_info[name]->scope = scope_level; 
+    var_info[name]->id = GetID();
   }
 }
 

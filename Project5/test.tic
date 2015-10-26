@@ -1,73 +1,31 @@
-ar_set_siz a1 60
-ar_set_idx a1 0 'T'
-ar_set_idx a1 1 'h'
-ar_set_idx a1 2 'i'
-ar_set_idx a1 3 's'
-ar_set_idx a1 4 ' '
-ar_set_idx a1 5 's'
-ar_set_idx a1 6 't'
-ar_set_idx a1 7 'r'
-ar_set_idx a1 8 'i'
-ar_set_idx a1 9 'n'
-ar_set_idx a1 10 'g'
-ar_set_idx a1 11 ' '
-ar_set_idx a1 12 'h'
-ar_set_idx a1 13 'a'
-ar_set_idx a1 14 's'
-ar_set_idx a1 15 '\'
-ar_set_idx a1 16 'n'
-ar_set_idx a1 17 '\'
-ar_set_idx a1 18 't'
-ar_set_idx a1 19 't'
-ar_set_idx a1 20 'w'
-ar_set_idx a1 21 'o'
-ar_set_idx a1 22 ' '
-ar_set_idx a1 23 'l'
-ar_set_idx a1 24 'i'
-ar_set_idx a1 25 'n'
-ar_set_idx a1 26 'e'
-ar_set_idx a1 27 's'
-ar_set_idx a1 28 ' '
-ar_set_idx a1 29 '('
-ar_set_idx a1 30 'a'
-ar_set_idx a1 31 'n'
-ar_set_idx a1 32 'd'
-ar_set_idx a1 33 ' '
-ar_set_idx a1 34 'i'
-ar_set_idx a1 35 's'
-ar_set_idx a1 36 ' '
-ar_set_idx a1 37 't'
-ar_set_idx a1 38 'a'
-ar_set_idx a1 39 'b'
-ar_set_idx a1 40 'b'
-ar_set_idx a1 41 'e'
-ar_set_idx a1 42 'd'
-ar_set_idx a1 43 ' '
-ar_set_idx a1 44 'w'
-ar_set_idx a1 45 'i'
-ar_set_idx a1 46 't'
-ar_set_idx a1 47 'h'
-ar_set_idx a1 48 ' '
-ar_set_idx a1 49 '\'
-ar_set_idx a1 50 '"'
-ar_set_idx a1 51 'q'
-ar_set_idx a1 52 'u'
-ar_set_idx a1 53 'o'
-ar_set_idx a1 54 't'
-ar_set_idx a1 55 'e'
-ar_set_idx a1 56 's'
-ar_set_idx a1 57 '\'
-ar_set_idx a1 58 '"'
-ar_set_idx a1 59 ')'
-ar_copy a1 a0
-val_copy 0 s3
-ar_get_siz a0 s2
+ar_set_siz a0 15
+ar_set_idx a0 0 'T'
+ar_set_idx a0 1 'h'
+ar_set_idx a0 2 'i'
+ar_set_idx a0 3 's'
+ar_set_idx a0 4 ' '
+ar_set_idx a0 5 'i'
+ar_set_idx a0 6 's'
+ar_set_idx a0 7 ' '
+ar_set_idx a0 8 'a'
+ar_set_idx a0 9 ' '
+ar_set_idx a0 10 't'
+ar_set_idx a0 11 'e'
+ar_set_idx a0 12 's'
+ar_set_idx a0 13 't'
+ar_set_idx a0 14 '.'
+ar_copy a0 a0
+val_copy 14 s1
+val_copy '!' s2
+ar_set_idx a0 s1 s2
+val_copy 0 s4
+ar_get_siz a0 s3
 print_array_start_0:
-test_gte s3 s2 s4
-jump_if_n0 s4 print_array_end_1
-ar_get_idx a0 s3 s4
-out_char s4
-add s3 1 s3
+test_gte s4 s3 s5
+jump_if_n0 s5 print_array_end_1
+ar_get_idx a0 s4 s5
+out_char s5
+add s4 1 s4
 jump print_array_start_0
 print_array_end_1:
 out_char '\n'

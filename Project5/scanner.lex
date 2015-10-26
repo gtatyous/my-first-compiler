@@ -20,6 +20,8 @@ while                    {return WHILE;}
 break                    {return BREAK;}
 continue                 {return CONTINUE;}
 array                    {return ARRAY;}
+size                     {return SIZE;}
+resize                   {return RESIZE;}
 val|char|string          {yylval.lexeme = strdup(yytext); return TYPE;}
 print                    return COMMAND_PRINT;
 random                   return COMMAND_RANDOM;

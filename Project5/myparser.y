@@ -76,6 +76,8 @@ var* check_var
 %token BREAK
 %token CONTINUE
 %token ARRAY
+%token SIZE
+%token RESIZE
 %token <lexeme> TYPE
 %token COMMAND_PRINT
 %token COMMAND_RANDOM
@@ -239,6 +241,73 @@ expr: ID {check_var($1);}    '='     expr {
     | CHAR_LITERAL {$$ = new CHAR_NODE($1);}
     | STRING_LITERAL {$$ = new ARRAY_CHAR_NODE($1);}
     | ID {std::string t = check_var($1)->type ; $$ = new ID_NODE(t, $1);}
+    | ID '[' expr ']' { //check var for ID
+                        std::string id_type = check_var($1)->type;
+                        if( id_type == "array(char)" or 
+                            id_type == "string"      or
+                            id_type == "array(val)"   )
+                        {
+                           $$ = new INDEX_NODE($3, id_type, $1);
+                        }
+                        else
+                        {
+                          std::cout << "ERROR(line #): array methods cannot" \
+                                    << "be run on type '" << id_type         \
+                                    << "'" << std::endl;
+                          exit(1);
+                        }
+                      }
+    | ID '[' expr ']'        '='     expr {//don't forget to check_var for ID
+                        std::string id_type = check_var($1)->type;
+                        if( id_type == "array(char)" or 
+                            id_type == "string"      or
+                            id_type == "array(val)"   )
+                        {
+                           AST* index_node = new INDEX_NODE($3, id_type, $1); //check er
+                           $$ = new ARRAY_OPR_NODE("=", $1, $3, $6);
+                        }
+                        else
+                        {
+                          std::cout << "ERROR(line #): array methods cannot" \
+                                    << "be run on type '" << id_type         \
+                                    << "'" << std::endl;
+                          exit(1);
+                        }
+                                           
+                                          }
+    | ID '.' SIZE '(' ')' {  std::string id_type = check_var($1)->type;
+                             if( id_type == "array(char)" or 
+                                 id_type == "string"      or
+                                 id_type == "array(val)"  )
+                             {
+                               $$ = new SIZE_NODE($1); 
+                             }
+                             else
+                             {
+                               std::cout << "ERROR(line #): array methods cannot" \
+                                         << "be run on type '" << id_type         \
+                                         << "'" << std::endl;
+                               exit(1);
+                             }
+                              
+                          }
+    | ID '.' RESIZE '(' expr ')' { std::string id_type = check_var($1)->type;
+                                   if ( id_type == "array(char)" or 
+                                        id_type == "string"      or
+                                        id_type == "array(val)"   )
+                                   {
+                                     //chage size of array node here?
+                                     $$ = new RESIZE_NODE($1, $5); 
+                                   }
+                                   else
+                                   {
+                                     std::cout << "ERROR(line #): array methods cannot" \
+                                               << "be run on type '" << id_type         \
+                                               << "'" << std::endl;
+                                     exit(1);
+                                   }
+                                 }
+
     | COMMAND_RANDOM '(' expr ')'  {$$ = new RAND_CMD_NODE($3);}
     ;
 

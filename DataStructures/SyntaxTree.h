@@ -115,17 +115,101 @@ class CHAR_NODE: public AST
     std::string _char ;
 };
 
-class ARRAY_CHAR_NODE: public AST
+class ARRAY_OPR_NODE: public AST
 {
   public:
-    ARRAY_CHAR_NODE(std::string s):_str(s) { _type = "array(char)";}
-    ~ARRAY_CHAR_NODE() { ; }
+    ARRAY_OPR_NODE(std::string, std::string,  AST*,  AST*);
+    ~ARRAY_OPR_NODE() { delete _children[0]; 
+                        delete _children[1];
+                      }
 
     std::string GetType() {return _type;}
     void print() { ; }
     int process();
   private:
+    std::string _name, _opr;
+};
+
+class INDEX_NODE: public AST
+{
+  public:
+    INDEX_NODE(AST* expr, std::string id_type, std::string id_name)
+    {
+      if (expr->GetType() != "val")
+      {
+        std::cout << "ERROR(...): index is not of type val" <<std::endl;
+        exit(1);
+      }
+      else
+      {
+        _children.push_back(expr);
+        _name = id_name;
+        if (id_type == "array(val)") _type = "val";
+        else                          _type = "char" ;
+      }
+    }
+    ~INDEX_NODE() { delete this; }
+    std::string GetType() {return _type;}
+    void print() { ; }
+    int process();
+  private:
+    std::string _name;
+};
+
+class SIZE_NODE: public AST
+{
+  public:
+    SIZE_NODE(std::string name): _name(name) { _type="val" ; }
+    ~SIZE_NODE() { ; }
+
+    std::string GetType() {return _type;}
+    void print() { ; }
+    int process() { int ar_id = check_var(_name)->id;
+                    int out_id = GetID();
+                    TubeIC_out << "ar_get_siz a" << ar_id << " s" \
+                               << out_id << std::endl;
+                    return out_id;
+                  }
+  private:
+    std::string _name;
+};
+
+class RESIZE_NODE: public AST
+{
+  public:
+    RESIZE_NODE(std::string name, AST* expr): _name(name) {_children.push_back(expr); }
+    ~RESIZE_NODE() { ; }
+
+    std::string GetType() {return _type;}
+    void print() { delete _children[0]; }
+    int process() { int ar_id = check_var(_name)->id;
+                    int siz   = _children[0]->process();
+                    TubeIC_out << "ar_set_siz a" << ar_id << " s" \
+                               << siz << std::endl;
+                    return -1;
+                  }
+  private:
+    std::string _name;
+};
+
+class ARRAY_CHAR_NODE: public AST
+{
+  public:
+    ARRAY_CHAR_NODE(std::string s):_str(s) 
+    { 
+      _type = "array(char)";
+      std::size_t count = std::count(_str.begin(), _str.end(), '\\');
+      _size = _str.length() - 2 - count; //ignore both " and \ . 
+    }
+    ~ARRAY_CHAR_NODE() { ; }
+
+    std::string GetType() {return _type;}
+    void set_size(int x) {_size = x;}
+    void print() { ; }
+    int process();
+  private:
     std::string _str ;
+    std::size_t _size;
 };
 
 

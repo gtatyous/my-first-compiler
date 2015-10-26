@@ -39,13 +39,53 @@ int CHAR_NODE::process
 }
 
 /////////////////////////////////string literal
+ARRAY_OPR_NODE::ARRAY_OPR_NODE
+  (std::string opr, std::string name, AST* LHS, AST* RHS)
+  : _opr (opr), _name(name)
+{
+  _children.push_back(LHS);
+  _children.push_back(RHS);
+
+  std::string id_type  = check_var(name)->type;
+  std::string lhs_type = LHS->GetType();
+  std::string rhs_type = RHS->GetType();
+  
+  //std::cout << "id_type: " << id_type << std::endl;
+  //std::cout << "lhs_type: " << lhs_type << std::endl;
+  //std::cout << "rhs_type: " << rhs_type << std::endl;
+
+  _type = id_type;
+  //check if lhs type is == val. otherwise can't index
+  //check if id type == array(char) and rhs == char then its good
+}
+
+int ARRAY_OPR_NODE::process
+  (void)
+{
+  int ID_id  = check_var(_name)->id;
+  int lhs_id = _children[0]->process();
+  int rhs_id = _children[1]->process();
+
+  TubeIC_out << "ar_set_idx a" << ID_id << " s" << lhs_id \
+             << " s" << rhs_id << std::endl;
+}
+
+int INDEX_NODE::process
+  (void)
+{
+  int expr_id = _children[0]->process();
+  int ar_id   = check_var(_name)->id;
+  int out_id  = GetID();
+  TubeIC_out << "ar_get_idx a" << ar_id << " s" << expr_id \
+             << " s" << out_id << std::endl;
+  return out_id;
+}
+  
 int ARRAY_CHAR_NODE::process
   (void)
 {
-  std::size_t count = std::count(_str.begin(), _str.end(), '\\');
-  int len = _str.length() - 2 - count ; /* ignore the first " and the last " as well as \ */ 
   int out_id = GetID();
-  TubeIC_out << "ar_set_siz a" <<out_id << " " << len << std::endl;
+  TubeIC_out << "ar_set_siz a" << out_id << " " << _size << std::endl;
   int i = 1; 
   int index = 0;
   while(i<_str.length()-1)

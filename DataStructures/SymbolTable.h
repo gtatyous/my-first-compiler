@@ -15,11 +15,11 @@ class var
     
     string name;
     string type;
-    bool init;
     int line;
-    int mem_location;
-    int id;
     int scope;
+    int id;
+    bool init;
+    int mem_location;
     void* init_value;
 };
 
