@@ -44,7 +44,7 @@ void SymbolTable::insert
     var_info[name]->type = type;
     var_info[name]->line = line_count;
     var_info[name]->scope = scope_level; 
-    var_info[name]->id = GetID();
+    //var_info[name]->id = GetID();
   }
 }
 

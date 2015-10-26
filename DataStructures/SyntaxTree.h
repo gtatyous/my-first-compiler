@@ -118,9 +118,10 @@ class CHAR_NODE: public AST
 class ARRAY_OPR_NODE: public AST
 {
   public:
-    ARRAY_OPR_NODE(std::string, std::string,  AST*,  AST*);
+    ARRAY_OPR_NODE(std::string, std::string,  AST*,  AST*, AST*);
     ~ARRAY_OPR_NODE() { delete _children[0]; 
                         delete _children[1];
+                        delete _children[2];
                       }
 
     std::string GetType() {return _type;}

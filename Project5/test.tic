@@ -1,31 +1,12 @@
-ar_set_siz a0 15
-ar_set_idx a0 0 'T'
-ar_set_idx a0 1 'h'
-ar_set_idx a0 2 'i'
-ar_set_idx a0 3 's'
-ar_set_idx a0 4 ' '
-ar_set_idx a0 5 'i'
-ar_set_idx a0 6 's'
-ar_set_idx a0 7 ' '
-ar_set_idx a0 8 'a'
-ar_set_idx a0 9 ' '
-ar_set_idx a0 10 't'
-ar_set_idx a0 11 'e'
-ar_set_idx a0 12 's'
-ar_set_idx a0 13 't'
-ar_set_idx a0 14 '.'
-ar_copy a0 a0
-val_copy 14 s1
-val_copy '!' s2
-ar_set_idx a0 s1 s2
+val_copy 3 s1
+ar_set_siz a0 s1
+val_copy 0 s2
+val_copy 0 s3
+ar_set_idx a0 s3 s2
 val_copy 0 s4
-ar_get_siz a0 s3
-print_array_start_0:
-test_gte s4 s3 s5
-jump_if_n0 s5 print_array_end_1
-ar_get_idx a0 s4 s5
-out_char s5
-add s4 1 s4
-jump print_array_start_0
-print_array_end_1:
+val_copy 1 s5
+ar_set_idx a0 s5 s4
+val_copy 7 s6
+val_copy 2 s7
+ar_set_idx a0 s7 s6
 out_char '\n'

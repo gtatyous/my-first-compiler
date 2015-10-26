@@ -40,11 +40,12 @@ int CHAR_NODE::process
 
 /////////////////////////////////string literal
 ARRAY_OPR_NODE::ARRAY_OPR_NODE
-  (std::string opr, std::string name, AST* LHS, AST* RHS)
+  (std::string opr, std::string name, AST* LHS, AST* RHS, AST* index_node)
   : _opr (opr), _name(name)
 {
   _children.push_back(LHS);
   _children.push_back(RHS);
+  _children.push_back(index_node);
 
   std::string id_type  = check_var(name)->type;
   std::string lhs_type = LHS->GetType();
@@ -62,12 +63,21 @@ ARRAY_OPR_NODE::ARRAY_OPR_NODE
 int ARRAY_OPR_NODE::process
   (void)
 {
-  int ID_id  = check_var(_name)->id;
-  int lhs_id = _children[0]->process();
+  int ar_id  = check_var(_name)->id;
   int rhs_id = _children[1]->process();
+  
+  if(_opr == "*=")
+  {
+    int rhs2_id = _children[2]->process();
+    TubeIC_out << "mult s" << rhs2_id << " s" << rhs_id << " s";
+    rhs_id = GetID();
+    TubeIC_out << rhs_id <<std::endl;
+  }
 
-  TubeIC_out << "ar_set_idx a" << ID_id << " s" << lhs_id \
+  int index_id = _children[0]->process();
+  TubeIC_out << "ar_set_idx a" << ar_id << " s" << index_id \
              << " s" << rhs_id << std::endl;
+  return ar_id; //??
 }
 
 int INDEX_NODE::process
@@ -176,9 +186,19 @@ OPR_NODE::OPR_NODE
       exit(1);
     } 
   }
-  _type = rhs_type; //double check this  
-  //std::cout << "opr type : " << _type << std::endl;
 
+  if (  _opr == "+="       or
+          _opr == "-="       or
+          _opr == "/="       or
+          _opr == "*="       or 
+          _opr == "="        )
+  {
+      _type = rhs_type; //double check this  
+  }
+  else //relationship operators
+  {
+      _type = "val";
+  }
 }
 
 int OPR_NODE::process
@@ -201,7 +221,7 @@ int OPR_NODE::process
   
   else if (_opr == "=")   
   {
-    if (_type == "val")
+    if (_type == "val" or _type == "char")
     {
       TubeIC_out << "val_copy s" << rhs       \
                << " s" << lhs << std::endl; return lhs;
@@ -404,6 +424,27 @@ int PRINT_CMD_NODE::process
       TubeIC_out << "jump print_array_start_" << pr_loop_id << std::endl;
       TubeIC_out << "print_array_end_" << pr_end_id << ":" << std::endl;
     }
+    else if (_type == "array(val)")
+    {
+      int len        = GetID();
+      int index      = GetID();
+      int pr_loop_id = GetLabelID();
+      int con_id     = GetID();
+      int pr_end_id  = GetLabelID();
+      
+      TubeIC_out << "val_copy 0 s" << index << std::endl; 
+      TubeIC_out << "ar_get_siz a" << out_id << " s" << len << std::endl;
+      TubeIC_out << "print_array_start_" << pr_loop_id << ":" << std::endl;
+      TubeIC_out << "test_gte s" << index << " s" << len << " s" << con_id << std::endl;
+      TubeIC_out << "jump_if_n0 s" << con_id << " print_array_end_" << pr_end_id << std::endl;
+      TubeIC_out << "ar_get_idx a" << out_id << " s" << index << " s"  \
+                 << con_id << std::endl; //con_id is used as temp scalar
+      TubeIC_out << "out_val s" << con_id << std::endl; 
+      TubeIC_out << "add s" << index << " 1 s" << index << std::endl;
+      TubeIC_out << "jump print_array_start_" << pr_loop_id << std::endl;
+      TubeIC_out << "print_array_end_" << pr_end_id << ":" << std::endl;
+    }
+
     else
     {
       std::cout << "Print: running error, unknow type" << std::endl;

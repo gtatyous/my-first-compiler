@@ -1,84 +1,26 @@
 # Ouput from Dr. Charles Ofria's sample compiler.
-  ar_set_siz a2 68  
-  ar_set_idx a2 0 'T' 
-  ar_set_idx a2 1 'h' 
-  ar_set_idx a2 2 'i' 
-  ar_set_idx a2 3 's' 
-  ar_set_idx a2 4 ' ' 
-  ar_set_idx a2 5 's' 
-  ar_set_idx a2 6 't' 
-  ar_set_idx a2 7 'r' 
-  ar_set_idx a2 8 'i' 
-  ar_set_idx a2 9 'n' 
-  ar_set_idx a2 10 'g' 
-  ar_set_idx a2 11 ' ' 
-  ar_set_idx a2 12 'i' 
-  ar_set_idx a2 13 's' 
-  ar_set_idx a2 14 ' ' 
-  ar_set_idx a2 15 's' 
-  ar_set_idx a2 16 'h' 
-  ar_set_idx a2 17 'o' 
-  ar_set_idx a2 18 'r' 
-  ar_set_idx a2 19 't' 
-  ar_set_idx a2 20 ' ' 
-  ar_set_idx a2 21 'e' 
-  ar_set_idx a2 22 'n' 
-  ar_set_idx a2 23 'o' 
-  ar_set_idx a2 24 'u' 
-  ar_set_idx a2 25 'g' 
-  ar_set_idx a2 26 'h' 
-  ar_set_idx a2 27 ' ' 
-  ar_set_idx a2 28 't' 
-  ar_set_idx a2 29 'o' 
-  ar_set_idx a2 30 ' ' 
-  ar_set_idx a2 31 'e' 
-  ar_set_idx a2 32 'x' 
-  ar_set_idx a2 33 'p' 
-  ar_set_idx a2 34 'e' 
-  ar_set_idx a2 35 'r' 
-  ar_set_idx a2 36 'i' 
-  ar_set_idx a2 37 'm' 
-  ar_set_idx a2 38 'e' 
-  ar_set_idx a2 39 'n' 
-  ar_set_idx a2 40 't' 
-  ar_set_idx a2 41 ' ' 
-  ar_set_idx a2 42 'o' 
-  ar_set_idx a2 43 'n' 
-  ar_set_idx a2 44 ',' 
-  ar_set_idx a2 45 ' ' 
-  ar_set_idx a2 46 'b' 
-  ar_set_idx a2 47 'u' 
-  ar_set_idx a2 48 't' 
-  ar_set_idx a2 49 ' ' 
-  ar_set_idx a2 50 's' 
-  ar_set_idx a2 51 't' 
-  ar_set_idx a2 52 'i' 
-  ar_set_idx a2 53 'l' 
-  ar_set_idx a2 54 'l' 
-  ar_set_idx a2 55 ' ' 
-  ar_set_idx a2 56 'p' 
-  ar_set_idx a2 57 'r' 
-  ar_set_idx a2 58 'e' 
-  ar_set_idx a2 59 't' 
-  ar_set_idx a2 60 't' 
-  ar_set_idx a2 61 'y' 
-  ar_set_idx a2 62 ' ' 
-  ar_set_idx a2 63 'l' 
-  ar_set_idx a2 64 'o' 
-  ar_set_idx a2 65 'n' 
-  ar_set_idx a2 66 'g' 
-  ar_set_idx a2 67 '.' 
-  ar_copy a2 a1  
-  val_copy 20 s4  
-  ar_set_siz a1 s4  
-  val_copy 0 s6                         # Init loop variable for printing array.
-  ar_get_siz a1 s5                      # Save size of array into variable.
+  val_copy 3 s3  
+  ar_set_siz a1 s3  
+  val_copy 0 s4  
+  ar_get_idx a1 s4 s5 
+  val_copy 0 s6  
+  ar_set_idx a1 s4 s6 
+  val_copy 1 s7  
+  ar_get_idx a1 s7 s8 
+  val_copy 0 s9  
+  ar_set_idx a1 s7 s9 
+  val_copy 2 s10  
+  ar_get_idx a1 s10 s11 
+  val_copy 7 s12  
+  ar_set_idx a1 s10 s12 
+  val_copy 0 s14                        # Init loop variable for printing array.
+  ar_get_siz a1 s13                     # Save size of array into variable.
 print_array_start_0: 
-  test_gte s6 s5 s7                     # Test if we are finished yet...
-  jump_if_n0 s7 print_array_end_1       #  ...and jump to end if so.
-  ar_get_idx a1 s6 s7                   # Collect the value at the next index.
-  out_char s7                           # Print this entry!
-  add s6 1 s6                           # Increment to the next index.
+  test_gte s14 s13 s15                  # Test if we are finished yet...
+  jump_if_n0 s15 print_array_end_1      #  ...and jump to end if so.
+  ar_get_idx a1 s14 s15                 # Collect the value at the next index.
+  out_val s15                           # Print this entry!
+  add s14 1 s14                         # Increment to the next index.
   jump print_array_start_0   
 print_array_end_1: 
   out_char '\n'                         # End print statements with a newline.

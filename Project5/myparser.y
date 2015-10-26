@@ -237,6 +237,7 @@ expr: ID {check_var($1);}    '='     expr {
     | expr TERNARY expr COLON expr  {$$ = new TERNARY_OPR_NODE($1, $3, $5);}
     | '(' expr ')' {$$ = $2;}
     | '-' expr {$$ = new UMINUS_NODE($2);}
+    | COMMAND_RANDOM '(' expr ')'  {$$ = new RAND_CMD_NODE($3);}
     | VAL_LITERAL {$$ = new VAL_NODE($1);}
     | CHAR_LITERAL {$$ = new CHAR_NODE($1);}
     | STRING_LITERAL {$$ = new ARRAY_CHAR_NODE($1);}
@@ -257,14 +258,14 @@ expr: ID {check_var($1);}    '='     expr {
                           exit(1);
                         }
                       }
-    | ID '[' expr ']'        '='     expr {//don't forget to check_var for ID
+    | ID '[' expr ']' '='  expr {//don't forget to check_var for ID
                         std::string id_type = check_var($1)->type;
                         if( id_type == "array(char)" or 
                             id_type == "string"      or
                             id_type == "array(val)"   )
                         {
-                           AST* index_node = new INDEX_NODE($3, id_type, $1); //check er
-                           $$ = new ARRAY_OPR_NODE("=", $1, $3, $6);
+                           AST* index_node = new INDEX_NODE($3, id_type, $1);
+                           $$ = new ARRAY_OPR_NODE("=", $1, $3, $6, index_node);
                         }
                         else
                         {
@@ -273,8 +274,27 @@ expr: ID {check_var($1);}    '='     expr {
                                     << "'" << std::endl;
                           exit(1);
                         }
-                                           
                                           }
+    
+    | ID '[' expr ']' ASSIGN_MULT expr  {//don't forget to check_var for ID
+                        std::string id_type = check_var($1)->type;
+                        if( id_type == "array(char)" or 
+                            id_type == "string"      or
+                            id_type == "array(val)"   )
+                        {
+                           AST* index_node = new INDEX_NODE($3, id_type, $1);
+                           $$ = new ARRAY_OPR_NODE("*=", $1, $3, $6, index_node);
+                        }
+                        else
+                        {
+                          std::cout << "ERROR(line #): array methods cannot" \
+                                    << "be run on type '" << id_type         \
+                                    << "'" << std::endl;
+                          exit(1);
+                        }
+
+                                          }
+
     | ID '.' SIZE '(' ')' {  std::string id_type = check_var($1)->type;
                              if( id_type == "array(char)" or 
                                  id_type == "string"      or
@@ -307,8 +327,6 @@ expr: ID {check_var($1);}    '='     expr {
                                      exit(1);
                                    }
                                  }
-
-    | COMMAND_RANDOM '(' expr ')'  {$$ = new RAND_CMD_NODE($3);}
     ;
 
 cmd: COMMAND_PRINT '(' list ')'  {$$ = $3;} 
