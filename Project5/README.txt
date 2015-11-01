@@ -1,10 +1,10 @@
 
 Class  : CSE450
-Project: 04
+Project: 05
 author : Yousef Gtat
 
-Summary: 100% of the code was developed by the author, Yousef Gtat
-         ALL CODE WORKS. IT PASSED ALL TESTS INCLUDING EXTRA CREDITS TESTS.
+Summary: Code was developed by the author, Yousef Gtat
+         ALL CODE WORKS; PASSED ALL TESTS INCLUDING EXTRA CREDITS EXERCISES.
 
 Implementation:
          Using Flex for lexical analysis to create tokens which are sent to bison for parsing.

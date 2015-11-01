@@ -302,6 +302,10 @@ expr: ID {check_var($1);}    '='     expr {
                                {
                                  $$ = new SIZE_NODE($1); 
                                }
+                               else if (std::string($3) == "pop")
+                               {
+                                 $$ = new POP_NODE($1); // still not working
+                               }
                                else if (std::string($3) == "resize")
                                {
                                  std::cout << "ERROR(line " << ++line_count    \
@@ -335,6 +339,10 @@ expr: ID {check_var($1);}    '='     expr {
                                      if (std::string($3) == "resize")
                                      {
                                        $$ = new RESIZE_NODE($1, $5); 
+                                     }
+                                     else if (std::string($3) == "push")
+                                     {
+                                       $$ = new PUSH_NODE($1, $5); //still not working
                                      }
                                      else if (std::string($3) == "size")
                                      {

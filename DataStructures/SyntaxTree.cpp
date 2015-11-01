@@ -90,7 +90,64 @@ int INDEX_NODE::process
              << " s" << out_id << std::endl;
   return out_id;
 }
+
+int SIZE_NODE::process
+  (void)
+{
+  int ar_id = check_var(_name)->id;
+  int out_id = GetID();
+  TubeIC_out << "ar_get_size a" << ar_id << " s" \
+             << out_id << std::endl;
+  return out_id;
+}
+
+int POP_NODE::process
+  (void)
+{
+  //std::cout << "popped type: " << _type << std::endl;
+  int ar_id = check_var(_name)->id;
+  int out_id = GetID();
+  int siz_id = GetID();
+
+  TubeIC_out << "ar_get_siz a" << ar_id  << " s" << siz_id  << std::endl;
   
+  TubeIC_out << "sub s" << siz_id << " 1 s" << siz_id << std::endl;
+  TubeIC_out << "ar_get_idx a" << ar_id << " s" << siz_id  \
+             << " s" << out_id << std::endl;
+  TubeIC_out << "ar_set_siz a" << ar_id << " s" << siz_id << std::endl;
+  
+  return out_id;
+}
+
+int RESIZE_NODE::process
+  (void)
+{
+  int ar_id = check_var(_name)->id;
+  int siz = _children[0]->process();
+
+  TubeIC_out << "ar_set_size a" << ar_id << " s" \
+             << siz << std::endl;
+  //you need to reset the size of the array node as well?
+  return -1;
+}
+
+int PUSH_NODE::process
+  (void)
+{
+  int ar_id = check_var(_name)->id;
+  int expr_id = _children[0]->process(); 
+  int siz_id = GetID();
+  int new_siz_id = GetID();
+  
+  TubeIC_out << "ar_get_siz a" << ar_id  << " s" << siz_id  << std::endl;
+  TubeIC_out << "add s" << siz_id << " 1 s" << new_siz_id << std::endl;
+  TubeIC_out << "ar_set_siz a" << ar_id << " s" << new_siz_id << std::endl;
+  TubeIC_out << "ar_set_idx a" << ar_id << " s" << siz_id << " s"  \
+             << expr_id << std::endl;
+  
+  return -1;
+}
+
 int ARRAY_CHAR_NODE::process
   (void)
 {

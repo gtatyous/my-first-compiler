@@ -165,12 +165,30 @@ class SIZE_NODE: public AST
 
     std::string GetType() {return _type;}
     void print() { ; }
-    int process() { int ar_id = check_var(_name)->id;
-                    int out_id = GetID();
-                    TubeIC_out << "ar_get_siz a" << ar_id << " s" \
-                               << out_id << std::endl;
-                    return out_id;
-                  }
+    int process();
+  private:
+    std::string _name;
+};
+
+class POP_NODE: public AST
+{
+  public:
+    POP_NODE(std::string name): _name(name) { 
+                        std::string type =check_var(_name)->type; 
+                        if (type == "string" or type == "array(char)")
+                        {
+                          _type = "char";  //pop a char
+                        }
+                        else
+                        {
+                          _type = "val";
+                        }
+                                            }
+    ~POP_NODE() { ; }
+    std::string GetType() {return _type;}
+    void print() { ; }
+    int process();
+  
   private:
     std::string _name;
 };
@@ -178,17 +196,29 @@ class SIZE_NODE: public AST
 class RESIZE_NODE: public AST
 {
   public:
-    RESIZE_NODE(std::string name, AST* expr): _name(name) {_children.push_back(expr); }
-    ~RESIZE_NODE() { ; }
+    RESIZE_NODE(std::string name, AST* expr): _name(name) {//make sure expr is val_t 
+                                                          _children.push_back(expr); }
+    ~RESIZE_NODE() { delete _children[0]; }
 
     std::string GetType() {return _type;}
-    void print() { delete _children[0]; }
-    int process() { int ar_id = check_var(_name)->id;
-                    int siz   = _children[0]->process();
-                    TubeIC_out << "ar_set_siz a" << ar_id << " s" \
-                               << siz << std::endl;
-                    return -1;
-                  }
+    void print() { ; }
+    int process();
+  
+  private:
+    std::string _name;
+};
+
+class PUSH_NODE: public AST
+{
+  public:
+    PUSH_NODE(std::string name, AST* expr): _name(name) {//assign _type to name-type
+                                                          //make sure expr fits w/_type
+                                                          _children.push_back(expr); }
+    ~PUSH_NODE() { delete _children[0];  }
+
+    std::string GetType() {return _type;}
+    void print() { ; }
+    int process();
   private:
     std::string _name;
 };

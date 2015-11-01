@@ -1,33 +1,22 @@
-ar_set_siz a1 15
-ar_set_idx a1 0 'T'
-ar_set_idx a1 1 'h'
-ar_set_idx a1 2 'i'
-ar_set_idx a1 3 's'
-ar_set_idx a1 4 ' '
-ar_set_idx a1 5 'i'
-ar_set_idx a1 6 's'
-ar_set_idx a1 7 ' '
-ar_set_idx a1 8 'a'
-ar_set_idx a1 9 ' '
-ar_set_idx a1 10 't'
-ar_set_idx a1 11 'e'
-ar_set_idx a1 12 's'
-ar_set_idx a1 13 't'
-ar_set_idx a1 14 '.'
+ar_set_siz a1 3
+ar_set_idx a1 0 'A'
+ar_set_idx a1 1 'B'
+ar_set_idx a1 2 'C'
 ar_copy a1 a0
-val_copy '!' s2
 ar_get_siz a0 s0
-val_copy 1 s3
-sub s0 s3 s4
-ar_set_idx a0 s4 s2
-val_copy 0 s6
-ar_get_siz a0 s5
-print_array_start_0:
-test_gte s6 s5 s7
-jump_if_n0 s7 print_array_end_1
-ar_get_idx a0 s6 s7
-out_char s7
-add s6 1 s6
-jump print_array_start_0
-print_array_end_1:
+val_copy s0 s2
+val_copy 0 s4
+val_copy s4 s3
+while_start_0:
+test_less s3 s2 s5
+jump_if_0 s5 while_end_0
+ar_get_siz a0 s2
+sub s2 1 s2
+ar_get_idx a0 s2 s1
+ar_set_siz a0 s2
+out_char s1
 out_char '\n'
+val_copy 1 s6
+add s3 s6 s3
+jump while_start_0
+while_end_0:
