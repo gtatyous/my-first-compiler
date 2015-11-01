@@ -1,22 +1,15 @@
-ar_set_siz a1 3
-ar_set_idx a1 0 'A'
-ar_set_idx a1 1 'B'
-ar_set_idx a1 2 'C'
+ar_set_siz a1 10
+ar_set_idx a1 0 'o'
+ar_set_idx a1 1 'n'
+ar_set_idx a1 2 'l'
+ar_set_idx a1 3 'y'
+ar_set_idx a1 4 ' '
+ar_set_idx a1 5 'c'
+ar_set_idx a1 6 'h'
+ar_set_idx a1 7 'a'
+ar_set_idx a1 8 'r'
+ar_set_idx a1 9 's'
 ar_copy a1 a0
-ar_get_siz a0 s0
-val_copy s0 s2
-val_copy 0 s4
-val_copy s4 s3
-while_start_0:
-test_less s3 s2 s5
-jump_if_0 s5 while_end_0
-ar_get_siz a0 s2
-sub s2 1 s2
-ar_get_idx a0 s2 s1
-ar_set_siz a0 s2
-out_char s1
-out_char '\n'
-val_copy 1 s6
-add s3 s6 s3
-jump while_start_0
-while_end_0:
+val_copy 0 s2
+val_copy 2 s3
+ar_set_idx a0 s3 s2

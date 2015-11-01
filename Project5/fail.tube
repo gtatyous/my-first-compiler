@@ -1,4 +1,5 @@
-val x   ; 
-val b= x, c = b+x, d = c/x*b; #nothing
-print(x, b ,       c , d );
-val e, , f , g;
+#should fail 
+
+array(char) arr = "only chars";
+
+arr.resize();
